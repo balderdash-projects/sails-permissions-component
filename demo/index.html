@@ -15,22 +15,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <title>seed-element Demo</title>
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../seed-element.html">
+    <link rel="import" href="../sails-permissions/sails-permissions-card.html">
   </head>
   <body unresolved>
 
-    <p>An example of <code>&lt;seed-element&gt;</code>:</p>
+    <sails-permissions-card model='{"title": "Ryan Quinn", "tagline": "Table Tennis Extraordinaire"}'>
 
-    <button>Say Something</button>
-
-    <seed-element author='{"name": "Lord Meowser", "image": "http://placekitten.com/g/200/300"}' fancy>
-      <h2>Hello seed-element</h2>
-    </seed-element>
-
-    <script>
-      document.querySelector('button').addEventListener('click', function() {
-        alert(document.querySelector('seed-element').sayHello('Hallo!'));
-      });
-    </script>
+    </sails-permissions-card>
 
   </body>
 </html>
