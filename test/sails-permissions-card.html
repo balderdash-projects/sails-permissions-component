@@ -24,7 +24,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <!-- You can use the document as a place to set up your fixtures. -->
     <sails-permissions-card></sails-permissions-card>
-    <sails-permissions-card model='{"title": "Ryan Quinn", "tagline": "Table Tennis Extraordinaire", "summary": {"title": "Roles", "content": "Registered User"}}'></sails-permissions-card>
+    <sails-permissions-card model='{"title": "Ryan Quinn", "summary": {"title": "Roles", "content": ["Public", "Registered User"]}}'></sails-permissions-card>
 
     <script>
       var defaultEl = document.querySelectorAll('sails-permissions-card')[0];
@@ -38,12 +38,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         });
 
-        test('Accepts data over the models attribute', function() {
+        test('Accept values from the model, leaving empty values blank', function() {
 
           assert(myEl.title === 'Ryan Quinn');
-          assert(myEl.tagline === 'Table Tennis Extraordinaire');
+          assert(myEl.tagline === undefined);
           assert(myEl.summary.title === 'Roles');
-          assert(myEl.summary.content === 'Registered User');
+          assert(myEl.summary.content.length === 2);
 
         });
 
