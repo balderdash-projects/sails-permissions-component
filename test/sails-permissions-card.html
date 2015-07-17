@@ -23,18 +23,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
 
     <!-- You can use the document as a place to set up your fixtures. -->
-    <sails-permissions-card></sails-permissions-card>
     <sails-permissions-card model='{"title": "Ryan Quinn", "summary": {"title": "Roles", "content": ["Public", "Registered User"]}}'></sails-permissions-card>
 
     <script>
-      var defaultEl = document.querySelectorAll('sails-permissions-card')[0];
-      var myEl = document.querySelectorAll('sails-permissions-card')[1];
+      var myEl = document.querySelector('sails-permissions-card');
 
       suite('<sails-permissions-card>', function() {
 
         test('Renders the contents of the permissions card.', function() {
 
-          assert(defaultEl.children.length !== 0);
+          assert(myEl.children.length !== 0);
 
         });
 
@@ -46,6 +44,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           assert(myEl.summary.content.length === 2);
 
         });
+
+        test('If the More/Less button is pressed, it should toggle compact/' +
+             'expanded state of the card', function() {
+
+               myEl.addEventListener('click', function() {
+                assert(myEl.compact === false);
+                assert(myEl.expanded === true);
+               });
+
+               document.querySelector('.button--more').click();
+
+             });
 
       });
 
