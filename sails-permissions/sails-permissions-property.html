@@ -15,18 +15,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../lodash.html">
 
 <!--
-An element providing a solution to no problem in particular.
+A single property of the user or role.
 
 Example:
 
-  <sails-permissions-card></sails-permissions-card>
+  <sails-permissions-property></sails-permissions-property>
 
 @group Seed Elements
 @element seed-element
 @demo demo/index.html
 @hero hero.svg
 -->
-<dom-module id="sails-permissions-card">
+
+<dom-module id="sails-permissions-property">
 
   <style>
 
@@ -35,76 +36,9 @@ Example:
       box-sizing: border-box;
     }
 
-    /** Typography */
-
-    h1, h2, h3, h4, p {
-      margin: .25rem 0;
-    }
-
-    paper-item {
-      align-items: center;
-      padding: 0.5rem;
-      margin: 0 0.33em;
-    }
-
-    paper-item > * {
-      margin: 0 0.33em;
-    }
-
-    .button {}
-
-    .tagline, .summary--content {
-      color: #666666;
-    }
-
-    .summary--content {
-      font-style: italic;
-    }
-
-    .button--less {
-      background-color: #00BCD4;
-    }
-
-    .button--more {
-      background-color: #FFB300;
-    }
-
   </style>
 
   <template>
-
-    <paper-material elevation="1">
-      <paper-item>
-
-        <header>
-          <h3 class="title">[[title]]</h3>
-          <p class="tagline">[[tagline]]</p>
-        </header>
-
-        <template is="dom-if" if="{{compact}}">
-
-          <section>
-            <aside>
-              <h4 class="summary--title">[[summary.title]]</h4>
-              <p class="summary--content">[[summary.content]]</p>
-            </aside>
-          </section>
-
-          <paper-button class="button--more" on-click="_toggleSize">More</paper-button>
-
-        </template>
-
-        <template is="dom-if" if="{{expanded}}">
-
-          <section>
-            <sails-permissions-list/>
-            <paper-button class="button--less" on-click="_toggleSize">Less</paper-button>
-          </section>
-
-        </template>
-
-      </paper-item>
-    </paper-material>
 
   </template>
 
@@ -123,27 +57,7 @@ Example:
       },
 
       title: {
-        type: String,
-      },
-
-      tagline: {
-        type: String,
-      },
-
-      summary: {
-        type: Object,
-        value: {
-        }
-      },
-
-      compact: {
-        type: Boolean,
-        value: true
-      },
-
-      expanded: {
-        type: Boolean,
-        value: false
+        type: String
       }
 
     },
@@ -185,17 +99,6 @@ Example:
     },
 
     // Element Behavior
-
-    /** A function that toggles the compact/expanded state of <sails-permissions-card> */
-
-    _toggleSize: function() {
-
-      var self = this;
-
-      self.compact = !self.compact;
-      self.expanded = !self.expanded;
-
-    },
 
   });
 
