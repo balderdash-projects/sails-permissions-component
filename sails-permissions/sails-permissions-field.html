@@ -27,7 +27,7 @@ Example:
 @hero hero.svg
 -->
 
-<dom-module id="sails-permissions-property">
+<dom-module id="sails-permissions-field">
 
   <style>
 
@@ -40,6 +40,11 @@ Example:
 
   <template>
 
+    <paper-item>
+      <p>{{Title}}</p>
+      <paper-button value="Permissions"></paper-button>
+    </paper-item>
+
   </template>
 
 </dom-module>
@@ -48,7 +53,7 @@ Example:
 
   Polymer({
 
-    is: 'sails-permissions-card',
+    is: 'sails-permissions-field',
 
     properties: {
 
@@ -57,7 +62,12 @@ Example:
       },
 
       title: {
-        type: String
+        type: String,
+        value: 'Title'
+      },
+
+      displayPermissionsButton: {
+        type: Boolean
       }
 
     },
