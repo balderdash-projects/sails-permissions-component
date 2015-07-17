@@ -12,25 +12,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../paper-styles/paper-styles.html">
 <link rel="import" href="../../paper-item/paper-item.html">
 <link rel="import" href="../../paper-button/paper-button.html">
+<link rel="import" href="../../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../iron-icons/iron-icons.html">
+<link rel="import" href="sails-permissions-field.html">
+
 <link rel="import" href="../lodash.html">
 
-<link rel="import" href="sails-permissions-field.html">
-<link rel="import" href="sails-permissions-field-list.html">
-
-
 <!--
-An element providing a solution to no problem in particular.
+A single property of the user or role.
 
 Example:
 
-  <sails-permissions-card></sails-permissions-card>
+  <sails-permissions-field-list></sails-permissions-field-list>
 
 @group Seed Elements
 @element seed-element
 @demo demo/index.html
 @hero hero.svg
 -->
-<dom-module id="sails-permissions-card">
+
+<dom-module id="sails-permissions-field-list">
 
   <style>
 
@@ -39,79 +40,17 @@ Example:
       box-sizing: border-box;
     }
 
-    /** Typography */
-
-    h1, h2, h3, h4, p {
-      margin: .25rem 0;
-    }
-
-    paper-item {
-      align-items: center;
-      padding: 0.5rem;
-      margin: 0 0.33em;
-    }
-
-    paper-item > * {
-      margin: 0 0.33em;
-    }
-
-    .button {}
-
-    .tagline, .summary--content {
-      color: #666666;
-    }
-
-    .summary--content {
-      font-style: italic;
-    }
-
-    .button--less {
-      background-color: #00BCD4;
-    }
-
-    .button--more {
-      background-color: #FFB300;
-    }
-
   </style>
 
   <template>
 
-    <paper-material elevation="1">
-      <paper-item>
+      <paper-input value="new role"></paper-input>
 
-        <header>
-          <h3 class="title">[[title]]</h3>
-          <p class="tagline">[[tagline]]</p>
-        </header>
+      <template is="dom-repeat" items="{{model}}">
 
-        <template is="dom-if" if="{{compact}}">
+        <sails-permissions-field model="{{item}}"/>
 
-          <section>
-            <aside>
-              <h4 class="summary--title">[[summary.title]]</h4>
-              <p class="summary--content">[[summary.content]]</p>
-            </aside>
-          </section>
-
-          <paper-button class="button--more" on-click="_toggleSize">More</paper-button>
-
-        </template>
-
-        <template is="dom-if" if="{{expanded}}">
-
-          <section>
-            <sails-permissions-list/>
-            <paper-button class="button--less" on-click="_toggleSize">Less</paper-button>
-          </section>
-
-        </template>
-
-      </paper-item>
-
-      <sails-permissions-field-list></sails-permissions-field-list>
-
-    </paper-material>
+      </template>
 
   </template>
 
@@ -121,36 +60,18 @@ Example:
 
   Polymer({
 
-    is: 'sails-permissions-card',
+    is: 'sails-permissions-field-list',
 
     properties: {
 
       model: {
-        type: Object,
-      },
-
-      title: {
-        type: String,
-      },
-
-      tagline: {
-        type: String,
-      },
-
-      summary: {
-        type: Object,
-        value: {
-        }
-      },
-
-      compact: {
-        type: Boolean,
-        value: true
-      },
-
-      expanded: {
-        type: Boolean,
-        value: false
+        type: Array,
+        value: [
+          'Registered User',
+          'Public',
+          'Astronaut',
+          'Priest'
+        ]
       }
 
     },
@@ -194,17 +115,6 @@ Example:
     },
 
     // Element Behavior
-
-    /** A function that toggles the compact/expanded state of <sails-permissions-card> */
-
-    _toggleSize: function() {
-
-      var self = this;
-
-      self.compact = !self.compact;
-      self.expanded = !self.expanded;
-
-    },
 
   });
 
