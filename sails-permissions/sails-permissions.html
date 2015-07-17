@@ -8,11 +8,8 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../../paper-input/paper-input.html">
-<link rel="import" href="sails-permissions-field.html">
 <link rel="import" href="../../polymer/polymer.html">
-
-<link rel="import" href="../lodash.html">
+<link rel="import" href="sails-permissions-card-list.html">
 
 <!--
 A single property of the user or role.
@@ -27,7 +24,7 @@ Example:
 @hero hero.svg
 -->
 
-<dom-module id="sails-permissions-field-list">
+<dom-module id="sails-permissions">
 
   <style>
 
@@ -36,17 +33,37 @@ Example:
       box-sizing: border-box;
     }
 
+    sails-permissions-card {
+      margin: .5em;
+    }
+
+    article {
+      margin: -.33em;
+      @apply(--layout);
+    }
+
+    article > * {
+      margin: 0.33em;
+    }
+
+    sails-permissions-users {
+      @apply(--layout-flex-2);
+    }
+
+    sails-permissions-roles {
+      @apply(--layout-flex-3);
+    }
+
   </style>
 
   <template>
 
-      <form is="iron-form" on-submit="addNewField">
-        <paper-input label="New Role" value="{{newField}}"></paper-input>
-      </form>
+    <article>
 
-      <template is="dom-repeat" items="{{fields}}">
-        <sails-permissions-field model="{{item}}"/>
-      </template>
+      <sails-permissions-card-list type="user" model="{{users}}"/>
+      <sails-permissions-card-list type="roles" model="{{roles}}"/>
+
+    </article>
 
   </template>
 
@@ -56,17 +73,79 @@ Example:
 
   Polymer({
 
-    is: 'sails-permissions-field-list',
+    is: 'sails-permissions',
 
     properties: {
 
-      fields: {
+      users: {
         type: Array,
-        notify: true
+        value: [
+          {
+            title: 'Ryan Quinn',
+            tagline: 'Medical Person',
+            fields: [
+              'Soldier',
+              'Sailor',
+              'Tinker',
+              'Spy'
+            ]
+          },
+          {
+            title: 'Konstantin Zolotarev',
+            tagline: 'Polymer Pro',
+            fields: [
+              "Development",
+              "Of",
+              "All",
+              "Varieties"
+            ]
+          },
+          {
+            title: 'Blaine Price',
+            tagline: 'Polymer Peon',
+            fields: [
+              'UX',
+              'Front-end Design',
+              'Running'
+            ]
+          },
+          {
+            title: 'Travis Webb',
+            tagline: 'CEO Person',
+            fields: [
+              'Backend',
+              'Business',
+              'Wagner'
+            ]
+          }
+        ]
       },
 
-      newField: {
-        type: String
+      roles: {
+        type: Array,
+        value: [
+          {
+            title: 'Admin',
+            fields: [
+              'Blog Posts',
+              'Product Pages',
+            ]
+          },
+          {
+            title: 'Registered User',
+            fields: [
+              'Blog Posts',
+              'Product Pages'
+            ]
+          },
+          {
+            title: 'Public',
+            fields: [
+              'Blog Posts',
+              'Product Pages'
+            ]
+          }
+        ]
       }
 
     },
@@ -82,13 +161,6 @@ Example:
       // necessary), or kick off any processes the element wants to perform.
 
       var self = this;
-
-      if (self.summary_body) {
-
-        _.extend(self, self.summary_body);
-
-      }
-
 
     },
 
@@ -112,25 +184,6 @@ Example:
     },
 
     // Element Behavior
-
-    addNewField: function(event) {
-
-      var self = this;
-
-      event.preventDefault();
-
-      self.unshift('fields', self.newField);
-
-    },
-
-    removeField: function(field) {
-
-      var self = this,
-          index = this.summary_body.indexOf(field);
-
-      self.splice('summary_body', index, 1);
-
-    }
 
   });
 

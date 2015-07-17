@@ -11,18 +11,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../paper-material/paper-material.html">
 <link rel="import" href="../../paper-styles/paper-styles.html">
 <link rel="import" href="../../paper-item/paper-item.html">
+<link rel="import" href="../../paper-input/paper-input.html">
 <link rel="import" href="../../paper-button/paper-button.html">
 <link rel="import" href="../../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../iron-icons/iron-icons.html">
-<link rel="import" href="../lodash.html">
+<link rel="import" href="sails-permissions-card.html">
 <link rel="import" href="../../polymer/polymer.html">
+
+<link rel="import" href="../lodash.html">
 
 <!--
 A single property of the user or role.
 
 Example:
 
-  <sails-permissions-field></sails-permissions-field>
+  <sails-permissions-field-list></sails-permissions-field-list>
 
 @group Seed Elements
 @element seed-element
@@ -30,7 +33,7 @@ Example:
 @hero hero.svg
 -->
 
-<dom-module id="sails-permissions-field">
+<dom-module id="sails-permissions-card-list">
 
   <style>
 
@@ -39,25 +42,19 @@ Example:
       box-sizing: border-box;
     }
 
-    .button--permissions {
-      background: #66BB6A;
+    sails-permissions-card {
+      margin: .5em;
     }
 
   </style>
 
   <template>
 
-    <paper-item>
-      <div>
-        <p>{{model}}</p>
-      </div>
-      <div>
-        <paper-button class="button--permissions">Permissions</paper-button>
-      </div>
-      <div>
-        <paper-icon-button icon="highlight-off"></paper-icon-button>
-      <div>
-    </paper-item>
+      <template is="dom-repeat" items="{{model}}">
+
+        <sails-permissions-card model="{{item}}" type="[[type]]"></sails-permissions-card>
+
+      </template>
 
   </template>
 
@@ -67,21 +64,12 @@ Example:
 
   Polymer({
 
-    is: 'sails-permissions-field',
+    is: 'sails-permissions-card-list',
 
     properties: {
 
       model: {
-        type: Object,
-      },
-
-      title: {
-        type: String,
-        value: 'Title'
-      },
-
-      displayPermissionsButton: {
-        type: Boolean
+        type: Object
       }
 
     },
@@ -98,12 +86,6 @@ Example:
 
       var self = this;
 
-      if (self.model) {
-
-        _.extend(self, self.model);
-
-      }
-
     },
 
     attached: function() {
@@ -113,6 +95,8 @@ Example:
       // This is a good place to perform any work related to your element's
       // visual state or active behavior (measuring sizes, beginning animations,
       // loading resources, etc).
+
+      var self = this;
 
     },
 
