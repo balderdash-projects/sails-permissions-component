@@ -12,6 +12,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../paper-styles/paper-styles.html">
 <link rel="import" href="../../paper-item/paper-item.html">
 <link rel="import" href="../../paper-button/paper-button.html">
+<link rel="import" href="../../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../iron-icons/iron-icons.html">
 <link rel="import" href="../lodash.html">
 
 <!--
@@ -19,7 +21,7 @@ A single property of the user or role.
 
 Example:
 
-  <sails-permissions-property></sails-permissions-property>
+  <sails-permissions-field></sails-permissions-field>
 
 @group Seed Elements
 @element seed-element
@@ -36,13 +38,34 @@ Example:
       box-sizing: border-box;
     }
 
+    .button--permissions {
+      background: #66BB6A;
+    }
+
+    paper-item {
+      align-items: center;
+      padding: 0.5rem;
+      margin: -0.33em;
+    }
+
+    paper-item > * {
+      margin: 0.33em;
+    }
+
   </style>
 
   <template>
 
     <paper-item>
-      <p>{{Title}}</p>
-      <paper-button value="Permissions"></paper-button>
+      <div>
+        <p>{{title}}</p>
+      </div>
+      <div>
+        <paper-button class="button--permissions">Permissions</paper-button>
+      </div>
+      <div>
+        <paper-icon-button icon="highlight-off"></paper-icon-button>
+      <div>
     </paper-item>
 
   </template>
