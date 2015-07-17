@@ -24,15 +24,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <!-- You can use the document as a place to set up your fixtures. -->
     <sails-permissions-card></sails-permissions-card>
+    <sails-permissions-card model='{"title": "Ryan Quinn", "tagline": "Table Tennis Extraordinaire", "summary": {"title": "Roles", "content": "Registered User"}}'></sails-permissions-card>
 
     <script>
-      var myEl = document.querySelector('sails-permissions-card');
+      var defaultEl = document.querySelectorAll('sails-permissions-card')[0];
+      var myEl = document.querySelectorAll('sails-permissions-card')[1];
 
       suite('<sails-permissions-card>', function() {
 
         test('Renders the contents of the permissions card.', function() {
 
-          assert(myEl.children.length !== 0);
+          assert(defaultEl.children.length !== 0);
+
+        });
+
+        test('Accepts data over the models attribute', function() {
+
+          assert(myEl.title === 'Ryan Quinn');
+          assert(myEl.tagline === 'Table Tennis Extraordinaire');
+          assert(myEl.summary.title === 'Roles');
+          assert(myEl.summary.content === 'Registered User');
 
         });
 
