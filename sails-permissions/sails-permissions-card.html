@@ -83,10 +83,10 @@ Example:
 
         <header>
           <h3 class="title">[[title]]</h3>
-          <p class="tagline">[[tagline]]</p>
+          <p class="tagline">[[subtitle]]</p>
         </header>
 
-        <template is="dom-if" if="{{compact}}">
+        <template is="dom-if" if="{{!expanded}}">
 
           <section>
             <aside>
@@ -128,15 +128,7 @@ Example:
         type: String,
       },
 
-      elevation: {
-        type: Number
-      },
-
-      type: {
-        type: String,
-      },
-
-      tagline: {
+      subtitle: {
         type: String,
       },
 
@@ -153,11 +145,6 @@ Example:
       fieldsLabel: {
         type: String,
         computed: '_makeFieldsLabel(fields)'
-      },
-
-      compact: {
-        type: Boolean,
-        value: true
       },
 
       expanded: {
@@ -191,10 +178,6 @@ Example:
         self.fieldTitle = 'Models';
       }
 
-      self.addEventListener('fields-changed', function() {
-        debugger;
-      });
-
     },
 
     attached: function() {
@@ -224,12 +207,11 @@ Example:
 
       var self = this;
 
-      self.compact = !self.compact;
       self.expanded = !self.expanded;
 
       if (self.expanded) {
         self.elevation = 2;
-      } else if (!self.expanded) {
+      } else {
         self.elevation = 1;
       }
 
@@ -238,10 +220,6 @@ Example:
     _makeFieldsLabel: function(fields) {
       return fields.join(", ");
     },
-
-    _updateFields: function() {
-
-    }
 
   });
 
