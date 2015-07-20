@@ -40,11 +40,11 @@ Example:
 
   <template>
 
-      <form is="iron-form" on-submit="addNewField">
-        <paper-input label="New Role" value="{{newField}}"></paper-input>
+      <form is="iron-form" on-submit="_addNewField">
+        <paper-input label="New Role" value="{{newProp}}"></paper-input>
       </form>
 
-      <template is="dom-repeat" items="{{fields}}">
+      <template is="dom-repeat" items="{{props}}">
         <sails-permissions-field model="{{item}}"/>
       </template>
 
@@ -60,12 +60,12 @@ Example:
 
     properties: {
 
-      fields: {
+      props: {
         type: Array,
         notify: true
       },
 
-      newField: {
+      newProp: {
         type: String
       }
 
@@ -80,15 +80,6 @@ Example:
       //
       // This is the point where you should make modifications to the DOM (when
       // necessary), or kick off any processes the element wants to perform.
-
-      var self = this;
-
-      if (self.summary_body) {
-
-        _.extend(self, self.summary_body);
-
-      }
-
 
     },
 
@@ -113,22 +104,22 @@ Example:
 
     // Element Behavior
 
-    addNewField: function(event) {
-
-      var self = this;
+    _addNewField: function(event) {
 
       event.preventDefault();
 
-      self.unshift('fields', self.newField);
+      var self = this;
+
+      self.unshift('props', self.newProp);
 
     },
 
-    removeField: function(field) {
+    _removeField: function(field) {
 
       var self = this,
           index = this.summary_body.indexOf(field);
 
-      self.splice('summary_body', index, 1);
+      self.splice('props', index, 1);
 
     }
 

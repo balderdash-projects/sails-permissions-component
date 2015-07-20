@@ -90,8 +90,8 @@ Example:
 
           <section>
             <aside>
-              <h4 class="summary--title">{{fieldTitle}}</h4>
-              <p class="summary--content">{{fields}}</p>
+              <h4 class="summary--title">{{propsTitle}}</h4>
+              <p class="summary--content">{{propsList}}</p>
             </aside>
           </section>
 
@@ -102,7 +102,7 @@ Example:
         <template is="dom-if" if="{{expanded}}">
 
           <section>
-            <sails-permissions-field-list type="{{type}}" fields="{{fields}}"></sails-permissions-field-list>
+            <sails-permissions-field-list type="{{type}}" props="{{props}}"></sails-permissions-field-list>
             <paper-button class="button--less" on-click="_toggleSize">Done</paper-button>
           </section>
 
@@ -132,19 +132,17 @@ Example:
         type: String,
       },
 
-      fieldTitle: {
+      propsTitle: {
         type: String
       },
 
-      fields: {
-        type: Array,
-        observer: '_updateFields',
-        notify: true
+      props: {
+        type: Array
       },
 
-      fieldsLabel: {
-        type: String,
-        computed: '_makeFieldsLabel(fields)'
+      propsList: {
+        type: Array,
+        computed: '_makePropsList(props.*)'
       },
 
       expanded: {
@@ -188,8 +186,6 @@ Example:
       // visual state or active behavior (measuring sizes, beginning animations,
       // loading resources, etc).
 
-      var self = this;
-
     },
 
     detached: function() {
@@ -217,8 +213,8 @@ Example:
 
     },
 
-    _makeFieldsLabel: function(fields) {
-      return fields.join(", ");
+    _makePropsList: function(props) {
+      return props.base.join(", ");
     },
 
   });
