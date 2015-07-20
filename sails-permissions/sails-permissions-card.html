@@ -56,6 +56,18 @@ Example:
       margin: 0 0.33em;
     }
 
+    header {
+      max-width: 25%;
+    }
+
+    .summary {
+      @apply(--layout-flex-2);
+    }
+
+    .props {
+      @apply(--layout-flex-2);
+    }
+
     .button {}
 
     .tagline, .summary--content {
@@ -88,20 +100,19 @@ Example:
 
         <template is="dom-if" if="{{!expanded}}">
 
-          <section>
+          <section class="summary">
             <aside>
               <h4 class="summary--title">{{propsTitle}}</h4>
               <p class="summary--content">{{propsList}}</p>
             </aside>
+            <paper-button class="button--more" on-click="_toggleSize">Edit</paper-button>
           </section>
-
-          <paper-button class="button--more" on-click="_toggleSize">Edit</paper-button>
 
         </template>
 
         <template is="dom-if" if="{{expanded}}">
 
-          <section>
+          <section class="props">
             <sails-permissions-props-list type="{{type}}" props="{{props}}"></sails-permissions-props-list>
             <paper-button class="button--less" on-click="_toggleSize">Done</paper-button>
           </section>

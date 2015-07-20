@@ -38,14 +38,16 @@ Example:
       box-sizing: border-box;
     }
 
+    .title {
+      @apply(--layout-flex-2);
+    }
+
   </style>
 
   <template>
 
     <paper-item>
-      <div>
-        <p>{{title}}</p>
-      </div>
+      <p class="title">{{title}}</p>
       <div>
         <paper-button class="button--permissions">Permissions</paper-button>
       </div>

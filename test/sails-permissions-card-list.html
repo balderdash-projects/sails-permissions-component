@@ -23,10 +23,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
 
     <!-- You can use the document as a place to set up your fixtures. -->
-    <sails-permissions-card-list model='[{"title":"Ryan Quinn","subtitle":"Medical Person","props":["Soldier","Sailor","Tinker","Spy"]}, {"title": "Blaine Price", "subtitle": "Not good at skating", "props": ["Polymer", "MacBook"]}]' type="user"></sails-permissions-props-list>
+    <sails-permissions-card-list model="[{"title":"Ryan Quinn","subtitle":"Medical Person","props":["Soldier","Sailor","Tinker","Spy"]}, {"title": "Blaine Price", "subtitle": "Not good at skating", "props": ["Polymer", "MacBook"]}]" type="user"></sails-permissions-props-list>
 
     <script>
-      var myEl = document.querySelector('sails-permissions-card-list');
+      var myEl = document.querySelector("sails-permissions-card-list");
 
       function getArrayOfProps(htmlCollection) {
         return [].slice.call(htmlCollection);
@@ -38,23 +38,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       }
 
-      suite('<sails-permissions-card-list>', function() {
+      suite("<sails-permissions-card-list>", function() {
 
         teardown(function(done) {
           flush(done);
         });
 
-        test('Should render the component', function() {
+        test("Should render the component", function() {
 
             expect(myEl.children.length).to.not.equal(0);
 
         });
 
-        test('It should render as many sails-permissions-cards as object were passed into the model attribute', function() {
+        test("It should render as many sails-permissions-cards as object were passed into the model attribute", function() {
 
             flush(function() {
 
-              expect(filterArrayOfProps(getArrayOfProps(myEl.children), 'sails-permissions-card').length).to.equal(2);
+              expect(filterArrayOfProps(getArrayOfProps(myEl.children), "sails-permissions-card").length).to.equal(2);
 
             });
 

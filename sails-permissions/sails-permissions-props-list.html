@@ -10,6 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../../paper-input/paper-input.html">
 <link rel="import" href="sails-permissions-prop.html">
+<link rel="import" href="sails-permissions-autocomplete.html">
 <link rel="import" href="../../polymer/polymer.html">
 
 <link rel="import" href="../lodash.html">
@@ -40,9 +41,11 @@ Example:
 
   <template>
 
-      <form is="iron-form" on-submit="_addNewProp">
+      <!-- <form is="iron-form" on-submit="_addNewProp">
         <paper-input label="New Role" value="{{newProp}}"></paper-input>
-      </form>
+      </form> -->
+
+      <sails-permissions-autocomplete on-submit="_submit"></sails-permissions-autocomplete>
 
       <template is="dom-repeat" items="{{props}}">
         <sails-permissions-prop title="{{item}}"/>
@@ -85,6 +88,10 @@ Example:
       // This is the point where you should make modifications to the DOM (when
       // necessary), or kick off any processes the element wants to perform.
 
+      self.addEventListener('selection-changed', function() {
+        debugger;
+      });
+
     },
 
     attached: function() {
@@ -106,13 +113,11 @@ Example:
 
     // Element Behavior
 
-    _addNewProp: function(event) {
-
-      event.preventDefault();
+    _addNewProp: function(newProp) {
 
       var self = this;
 
-      self.unshift('props', self.newProp);
+      self.unshift('props', newProp);
 
     },
 
@@ -122,6 +127,14 @@ Example:
           index = self.props.indexOf(prop);
 
       self.splice('props', index, 1);
+
+    },
+
+    _submit: function(event) {
+
+      var self = this;
+
+      self._addNewProp(event.detail.selection);
 
     }
 

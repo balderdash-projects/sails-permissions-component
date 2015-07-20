@@ -26,29 +26,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <sails-permissions-prop title="Astronaut"></sails-permissions-prop>
 
     <script>
-      var myEl = document.querySelector('sails-permissions-prop');
+      var myEl = document.querySelector("sails-permissions-prop");
 
-      suite('<sails-permissions-prop>', function() {
+      suite("<sails-permissions-prop>", function() {
 
-        test('Should render the component', function() {
+        test("Should render the component", function() {
 
           expect(myEl.children.length).to.not.equal(0);
 
         });
 
-        test('Should set the prop\'s title', function() {
+        test("Should set the prop\"s title", function() {
 
-          expect(myEl.title).to.equal('Astronaut');
+          expect(myEl.title).to.equal("Astronaut");
 
         });
 
-        test('Should remove the prop when the remove button is clicked', function() {
+        test("Should remove the prop when the remove button is clicked", function() {
 
-          var stub = sinon.stub(myEl, '_removeThisProp', function() {
+          var stub = sinon.stub(myEl, "_removeThisProp", function() {
             return true;
           });
 
-          var button = myEl.$$('paper-icon-button');
+          var button = myEl.$$("paper-icon-button");
           button.click();
 
           expect(stub).to.have.been.called;

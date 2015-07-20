@@ -30,7 +30,11 @@
     "bower": "*",
     "install": "~1.0.4",
     "sinonjs": "~1.14.1",
-    "sinon": "~1.15.4"
+    "sinon": "~1.15.4",
+    "algoliasearch": "~3.7.4",
+    "algoliasearch-helper": "~2.1.2",
+    "paper-menu": "PolymerElements/paper-menu#~1.0.1",
+    "iron-form": "PolymerElements/iron-form#~1.0.7"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

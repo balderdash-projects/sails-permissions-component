@@ -1,0 +1,368 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-form/iron-form.html">
+<link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../paper-input/paper-input.html">
+<link rel="import" href="../../paper-menu/paper-menu.html">
+<link rel="import" href="../../paper-item/paper-item.html">
+
+<script src="../../algoliasearch/dist/algoliasearch.min.js"></script>
+<script src="../../algoliasearch-helper/dist/algoliasearch.helper.min.js"></script>
+
+<!--
+An element that provides a search box to make calls to the Algolia search service.
+When a selection has been made, exposes the ID of the company on the
+selected-organization attribute.
+
+Example:
+
+    <app-algolia-search/>
+
+@demo
+-->
+
+<dom-module id="sails-permissions-autocomplete">
+
+  <style>
+
+    /**
+     * Provisional Colors: Should be moved into a centralized style sheet and
+     * guide at some point.
+     *
+     * gray-darker: #808286;
+     * gray-dark: #85878A;
+     * gray: #8A8D8F;
+     * gray-light: #E2E3E4;
+     *
+     * .border {
+     *   border: 1px solid #efefef;
+     * }
+     *
+     * .border--gray {
+     *   border-color: #E2E3E4;
+     * }
+     */
+
+     a {
+       text-decoration: none;
+       color: #8A8D8F;
+     }
+
+    :host {
+      display: block;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    :host::shadow paper-input-container {
+      padding: 0;
+    }
+
+    :host::shadow .underline {
+      display: none;
+    }
+
+    paper-input {
+      margin: .5em;
+      padding: .125em .5em;
+      border: 2px solid #E2E3E4;
+      background: white;
+    }
+
+    .menu--container {
+      position: absolute;
+      z-index: 1;
+      margin: .5em;
+      left: 0;
+      right: 0;
+      top: 60;
+      border: 2px solid #E2E3E4;
+      background: white;
+    }
+
+    paper-menu {
+      padding: 0;
+    }
+
+    paper-menu paper-item {
+      margin-top: 8px;
+    }
+
+    paper-item {
+      color: #85878A;
+      padding-top: .5em;
+      padding-bottom: .5em;
+    }
+
+    paper-item-body {
+      @apply(--layout-flex);
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+      margin: 0 -.33em;
+    }
+
+    paper-item-body div {
+      @apply(--layout-flex);
+      @apply(--layout-center);
+      margin: 0 .33em;
+    }
+
+    .org--thumbnail {
+      max-width: 100px;
+    }
+
+    .org--thumbnail img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .org--address {
+      font-size: .75em;
+      color: #8A8D8F;
+    }
+
+  </style>
+
+  <template>
+
+    <form id="algoliaForm" on-submit="_search">
+      <paper-input id="algoliaInput" class="border border--gray" value="{{query}}" label="New Role"></paper-input>
+
+      <template is="dom-if" if="[[displayDropdown]]">
+        <section class="menu--container">
+
+          <paper-menu on-iron-select="_select">
+            <template is="dom-repeat" items="[[results]]">
+              <paper-item data-id="[[item.name]]">
+                <paper-item-body>
+                  <div>[[item.name]]</div>
+                </paper-item-body>
+              </paper-item>
+            </template>
+          </paper-menu>
+
+        </section>
+      </template>
+
+    </form>
+
+  </template>
+
+</dom-module>
+
+<script>
+
+    var client, helper, throttle;
+
+    Polymer({
+
+      is: 'sails-permissions-autocomplete',
+
+      properties: {
+
+        /** The current contents of the search input */
+        query: {
+          type: String,
+        },
+        /** Results coming from Algolia */
+        results: {
+          type: Array
+        },
+        /** Whether or not the dropdown menu should be displayed */
+        displayDropdown: {
+          type: Boolean,
+          computed: '_shouldDisplay(results, query)'
+        },
+        /** Whether or not the component itself should be displayed */
+        display: {
+          type: Boolean,
+          value: true,
+          reflectToAttribute: true,
+          observer: '_toggleVisibility'
+        },
+        /** The organization selected in the dropdown */
+        selection: {
+          type: String,
+          reflectToAttribute: true,
+          notify: true
+        }
+      },
+
+      /**
+       * Configures and creates a connection to Algolia, setting up a
+       * helper function to make calls and listen for results.
+       */
+
+      ready: function() {
+
+        var self = this;
+
+        client = algoliasearch('32IYXAAIS8', '9beb6f922d72f88e1611849dbcc8390d');
+        helper = algoliasearchHelper( client, 'dev_sailsPermissionsComponent', {
+          facets: ['name']
+        });
+
+        helper.on('result', function(data) {
+            self.results = data.hits;
+        });
+
+        helper.on('error', function(error) {
+          console.log(error);
+        });
+
+      },
+
+      /**
+       * @name algolia-search#attached
+       * @description
+       * Sets event listeners on various components of algolia form.
+       */
+
+      attached: function() {
+
+        var self = this;
+
+        /**
+         * On keyup, if the query is undefined, set the results to null.
+         * This closes the dropdown.
+         * If the last key pressed was Enter, prevent default action.
+         * Make a call to algolia-search#search, passing in self.query.
+         */
+
+        self.$.algoliaForm.addEventListener('keyup', function(event) {
+
+          if (!self.query) {
+            self.results = null;
+            return;
+          }
+
+          if (event.keyCode === 13 || event.keyIdentifier === 'Enter') {
+            event.preventDefault();
+          }
+
+          self._search(self.query);
+
+        });
+
+        /**
+         * When query changes, make a call to algolia-search#search
+         */
+
+        self.$.algoliaForm.addEventListener('query-changed', function() {
+          self._search(self.query);
+        });
+
+        /**
+         * When the input is blurred, set self.results and self.query to null,
+         * closing the dropdown.  Uses a 300ms delay to make allow organization
+         * selection to occur.
+         */
+
+        self.$.algoliaInput.addEventListener('blur', function() {
+
+            setTimeout(function() {
+              self.results = null;
+              self.query = null;
+            }, 300);
+
+        });
+
+      },
+
+      /**
+       * Remove event listeners set in algolia-search#attach
+       */
+
+      detached: function() {
+
+        var self = this;
+
+        self.$.algoliaForm.removeEventListener('keyup');
+        self.$.algoliaForm.removeEventListener('query-changed');
+        self.$.algoliaInput.removeEventLisftener('blur');
+
+      },
+
+      /**
+       * A helper function that checks the truthiness of a and b and
+       * returns the result. 
+       *
+       * @param {boolean} a
+       * Statement One
+       * @param {boolean} b
+       * Statment Two
+       */
+
+      _shouldDisplay: function(a, b) {
+        if (a || b) {
+          return true;
+        }
+      },
+
+      /**
+       * When user clicks a given item in the dropdown, will
+       * set self.selectedOrganization to the value of the given
+       * selection.
+       * @param {object} event
+       * Event object passed by click handler
+       * @param {object} details
+       * Details object passed by click handler
+       */
+
+      _select: function(event, details) {
+        var self = this;
+
+        self.selection = details.item.dataId;
+
+        self.fire('submit', {selection: self.selection});
+
+      },
+
+      /**
+       * Toggle the visibility of the algolia-search element.  Triggered when
+       * display changes.
+       */
+
+      _toggleVisibility: function() {
+
+        var self = this;
+        self.toggleClass('hidden', !self.display, self.$.algoliaForm);
+
+      },
+
+      /**
+       * Makes a throttled search call to Algolia.
+       * @param {string} query
+       * The contents of the input field.
+       */
+
+      _search: function(query) {
+
+        var self = this;
+
+        if (throttle) {
+          return;
+        }
+
+        helper.setQuery(query).search();
+
+        throttle = true;
+        setTimeout(function() {
+          throttle = false;
+        }, 500);
+
+      }
+
+  });
+
+</script>
