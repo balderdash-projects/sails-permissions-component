@@ -8,18 +8,21 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../../paper-input/paper-input.html">
-<link rel="import" href="sails-permissions-field.html">
-<link rel="import" href="../../polymer/polymer.html">
-
+<link rel="import" href="../../paper-material/paper-material.html">
+<link rel="import" href="../../paper-styles/paper-styles.html">
+<link rel="import" href="../../paper-item/paper-item.html">
+<link rel="import" href="../../paper-button/paper-button.html">
+<link rel="import" href="../../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../iron-icons/iron-icons.html">
 <link rel="import" href="../lodash.html">
+<link rel="import" href="../../polymer/polymer.html">
 
 <!--
 A single property of the user or role.
 
 Example:
 
-  <sails-permissions-field-list></sails-permissions-field-list>
+  <sails-permissions-field></sails-permissions-field>
 
 @group Seed Elements
 @element seed-element
@@ -27,7 +30,7 @@ Example:
 @hero hero.svg
 -->
 
-<dom-module id="sails-permissions-field-list">
+<dom-module id="sails-permissions-field">
 
   <style>
 
@@ -40,13 +43,17 @@ Example:
 
   <template>
 
-      <form is="iron-form" on-submit="_addNewField">
-        <paper-input label="New Role" value="{{newProp}}"></paper-input>
-      </form>
-
-      <template is="dom-repeat" items="{{props}}">
-        <sails-permissions-field model="{{item}}"/>
-      </template>
+    <paper-item>
+      <div>
+        <p>{{model}}</p>
+      </div>
+      <div>
+        <paper-button class="button--permissions">Permissions</paper-button>
+      </div>
+      <div>
+        <paper-icon-button on-click="_removeThisProp" model="{{model}}" icon="highlight-off"></paper-icon-button>
+      <div>
+    </paper-item>
 
   </template>
 
@@ -56,17 +63,16 @@ Example:
 
   Polymer({
 
-    is: 'sails-permissions-field-list',
+    is: 'sails-permissions-field',
 
     properties: {
 
-      props: {
-        type: Array,
-        notify: true
+      model: {
+        type: Object,
       },
 
-      newProp: {
-        type: String
+      displayPermissionsButton: {
+        type: Boolean
       }
 
     },
@@ -81,6 +87,14 @@ Example:
       // This is the point where you should make modifications to the DOM (when
       // necessary), or kick off any processes the element wants to perform.
 
+      var self = this;
+
+      if (self.model) {
+
+        _.extend(self, self.model);
+
+      }
+
     },
 
     attached: function() {
@@ -90,8 +104,6 @@ Example:
       // This is a good place to perform any work related to your element's
       // visual state or active behavior (measuring sizes, beginning animations,
       // loading resources, etc).
-
-      var self = this;
 
     },
 
@@ -103,23 +115,11 @@ Example:
     },
 
     // Element Behavior
-
-    _addNewField: function(event) {
-
-      event.preventDefault();
+    _removeThisProp: function(event) {
 
       var self = this;
 
-      self.unshift('props', self.newProp);
-
-    },
-
-    _removeField: function(field) {
-
-      var self = this,
-          index = this.summary_body.indexOf(field);
-
-      self.splice('props', index, 1);
+      self.parentNode._removeProp(self.model);
 
     }
 
