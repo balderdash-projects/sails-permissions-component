@@ -32,20 +32,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('Should render the prop', function() {
 
-          assert(myEl.children.length !== 0);
+          expect(myEl.children.length).to.not.equal(0);
 
         });
 
         test('Should set the prop\'s title', function() {
 
-          assert(myEl.title === 'Astronaut');
+          expect(myEl.title).to.equal('Astronaut');
 
         });
 
         test('Should remove the prop when the remove button is clicked', function() {
 
+          var stub = sinon.stub(myEl, '_removeThisProp', function() {
+            return true;
+          });
+
           var button = myEl.$$('paper-icon-button');
           button.click();
+
+          expect(stub).to.have.been.called;
+
+          myEl._removeThisProp.restore();
 
         });
 
