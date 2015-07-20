@@ -23,40 +23,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
 
     <!-- You can use the document as a place to set up your fixtures. -->
-    <sails-permissions-card type="user" model='{"title": "Ryan Quinn", "props": ["Soldier", "Sailor", "Tinker", "Spy"]}'/>
+    <sails-permissions-card type="user" model='{"title": "Ryan Quinn", "subtitle": "Ping-Pong Aficionado", "props": ["Soldier", "Sailor", "Tinker", "Spy"]}'></sails-permissions-card>
 
     <script>
       var myEl = document.querySelector('sails-permissions-card');
 
       suite('<sails-permissions-card>', function() {
 
-        test('Renders the contents of the permissions card.', function() {
+        test('Should render the component', function() {
 
-          assert(myEl.children.length !== 0);
-
-        });
-
-        test('Accept values from the model, leaving empty values blank', function() {
-
-          alert(myEl.title);
-
-          assert(myEl.title === 'Ryan Quinn');
-          // assert(myEl.subtitle === undefined);
-          // assert(myEl.propsTitle === 'Roles');
+          expect(myEl.children.length).to.not.equal(0);
 
         });
 
-        test('If the More/Less button is pressed, it should toggle compact/' +
-             'expanded state of the card', function() {
+        test('Should set the title', function() {
 
-               myEl.addEventListener('click', function() {
-                assert(myEl.compact === false);
-                assert(myEl.expanded === true);
-               });
+          expect(myEl.title).to.equal('Ryan Quinn');
 
-               document.querySelector('.button--more').click();
+        });
 
-             });
+        test('Should set the subtitle', function() {
+
+          expect(myEl.subtitle).to.equal('Ping-Pong Aficionado');
+
+        });
+
+        test('Should set the prop title', function() {
+
+            expect(myEl.propsTitle).to.equal('Roles');
+
+        });
+
+        test('Should create a comma separated list of props', function() {
+
+            expect(myEl.propsList).to.equal('Soldier, Sailor, Tinker, Spy');
+
+        });
 
       });
 
