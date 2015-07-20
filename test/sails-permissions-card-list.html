@@ -17,17 +17,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script src="../../web-component-tester/browser.js"></script>
 
     <!-- Step 1: import the element to test -->
-    <link rel="import" href="../sails-permissions/sails-permissions-prop.html">
-    <link rel="import" href="../sails-permissions/sails-permissions-props-list.html">
+    <link rel="import" href="../sails-permissions/sails-permissions-card-list.html">
 
   </head>
   <body>
 
     <!-- You can use the document as a place to set up your fixtures. -->
-    <sails-permissions-props-list props='["Oregano", "Jumpsuit", "Potato", "Farm"]' type="user"></sails-permissions-props-list>
+    <sails-permissions-card-list model='[{"title":"Ryan Quinn","subtitle":"Medical Person","props":["Soldier","Sailor","Tinker","Spy"]}, {"title": "Blaine Price", "subtitle": "Not good at skating", "props": ["Polymer", "MacBook"]}]' type="user"></sails-permissions-props-list>
 
     <script>
-      var myEl = document.querySelector('sails-permissions-props-list');
+      var myEl = document.querySelector('sails-permissions-card-list');
 
       function getArrayOfProps(htmlCollection) {
         return [].slice.call(htmlCollection);
@@ -39,7 +38,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       }
 
-      suite('<sails-permissions-props-list>', function() {
+      suite('<sails-permissions-card-list>', function() {
 
         teardown(function(done) {
           flush(done);
@@ -51,53 +50,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         });
 
-        test('Should set the prop\'s type', function() {
+        test('It should render as many sails-permissions-cards as object were passed into the model attribute', function() {
 
-            expect(myEl.type).to.equal('user');
+            flush(function() {
 
-        });
+              expect(filterArrayOfProps(getArrayOfProps(myEl.children), 'sails-permissions-card').length).to.equal(2);
 
-        test('Should render four sails-permissions-prop components', function() {
-
-          flush(function() {
-
-            var propNodesArray = getArrayOfProps(myEl.children);
-
-            propNodesArray = propNodesArray.filter(function(el) {
-              return el.localName === 'sails-permissions-prop';
             });
-
-            expect(propNodesArray.length).to.equal(4);
-
-          });
-
-        });
-
-        test('Should add a new sails-permissions-prop', function() {
-
-          var fakeEvent = new Event('submit');
-
-          myEl.newProp = "Potato Brain";
-
-          myEl._addNewProp(fakeEvent);
-
-          flush(function() {
-
-            expect(myEl.props.length).to.equal(5);
-            expect(filterArrayOfProps(getArrayOfProps(myEl.children), 'sails-permissions-prop').length).to.equal(5);
-
-          });
-
-        });
-
-        test('Should remove a specific sails-permissions-prop', function() {
-
-          myEl._removeProp('Oregano');
-
-          flush(function() {
-            expect(myEl.props.indexOf('Oregano')).to.equal(-1);
-            expect(getArrayOfProps(myEl.children).indexOf('Oregano')).to.equal(-1);
-          });
 
         });
 
