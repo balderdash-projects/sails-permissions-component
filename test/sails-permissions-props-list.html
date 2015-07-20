@@ -31,32 +31,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       suite('<sails-permissions-prop>', function() {
 
+        teardown(function(done) {
+          flush(done);
+        });
+
         test('Should render the component', function() {
 
-          expect(myEl.children.length).to.not.equal(0);
+          flush(function() {
 
+            expect(myEl.children.length).to.not.equal(0);
+
+          });
         });
 
         test('Should set the prop\'s type', function() {
+          flush(function() {
 
-          debugger;
+            expect(myEl.type).to.equal('user');
 
-          expect(myEl.type).to.equal('user');
-
+          });
         });
 
-        test.skip('Should remove the prop when the remove button is clicked', function() {
+        test('Should render four sails-permissions-prop components', function() {
 
-          var stub = sinon.stub(myEl, '_removeThisProp', function() {
-            return true;
+          flush(function() {
+
+            var propNodesArray = [].slice.call(myEl.children);
+
+            propNodesArray = propNodesArray.filter(function(el) {
+              return el.localName === 'sails-permissions-prop';
+            });
+
+            expect(propNodesArray.length).to.equal(4);
+
           });
-
-          var button = myEl.$$('paper-icon-button');
-          button.click();
-
-          expect(stub).to.have.been.called;
-
-          myEl._removeThisProp.restore();
 
         });
 
