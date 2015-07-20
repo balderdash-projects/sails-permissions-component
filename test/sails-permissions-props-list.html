@@ -39,7 +39,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       }
 
-      suite('<sails-permissions-prop>', function() {
+      suite('<sails-permissions-props-list>', function() {
 
         teardown(function(done) {
           flush(done);
@@ -86,6 +86,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             expect(myEl.props.length).to.equal(5);
             expect(filterArrayOfProps(getArrayOfProps(myEl.children), 'sails-permissions-prop').length).to.equal(5);
 
+          });
+
+        });
+
+        test('Should remove a specific sails-permissions-prop', function() {
+
+          myEl._removeProp('Oregano');
+
+          flush(function() {
+            expect(myEl.props.indexOf('Oregano')).to.equal(-1);
+            expect(getArrayOfProps(myEl.children).indexOf('Oregano')).to.equal(-1);
           });
 
         });
