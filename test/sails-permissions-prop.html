@@ -17,28 +17,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script src="../../web-component-tester/browser.js"></script>
 
     <!-- Step 1: import the element to test -->
-    <link rel="import" href="../sails-permissions/sails-permissions-field.html">
+    <link rel="import" href="../sails-permissions/sails-permissions-prop.html">
 
   </head>
   <body>
 
     <!-- You can use the document as a place to set up your fixtures. -->
-    <sails-permissions-field model='{"title": "Astronaut"}'></sails-permissions-field>
+    <sails-permissions-prop title="Astronaut"></sails-permissions-prop>
 
     <script>
-      var myEl = document.querySelector('sails-permissions-field');
+      var myEl = document.querySelector('sails-permissions-prop');
 
       suite('<sails-permissions-field>', function() {
 
-        test('Renders the contents of the permissions card.', function() {
+        test('Should render the prop', function() {
 
           assert(myEl.children.length !== 0);
 
         });
 
-        test('Accept values from the model', function() {
+        test('Should set the prop\'s title', function() {
 
           assert(myEl.title === 'Astronaut');
+
+        });
+
+        test('Should remove the prop when the remove button is clicked', function() {
+
+          var button = myEl.$$('paper-icon-button');
+          button.click();
 
         });
 

@@ -27,7 +27,7 @@ Example:
 @hero hero.svg
 -->
 
-<dom-module id="sails-permissions-field-list">
+<dom-module id="sails-permissions-props-list">
 
   <style>
 
@@ -45,7 +45,7 @@ Example:
       </form>
 
       <template is="dom-repeat" items="{{props}}">
-        <sails-permissions-field model="{{item}}"/>
+        <sails-permissions-prop title="{{item}}"/>
       </template>
 
   </template>
@@ -56,7 +56,7 @@ Example:
 
   Polymer({
 
-    is: 'sails-permissions-field-list',
+    is: 'sails-permissions-props-list',
 
     properties: {
 

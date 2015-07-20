@@ -8,12 +8,13 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
+<link rel="import" href="../../polymer/polymer.html">
+
 <link rel="import" href="../../paper-material/paper-material.html">
 <link rel="import" href="../../paper-styles/paper-styles.html">
 <link rel="import" href="../../paper-item/paper-item.html">
 <link rel="import" href="../../paper-button/paper-button.html">
 <link rel="import" href="../lodash.html">
-<link rel="import" href="../../polymer/polymer.html">
 
 <link rel="import" href="sails-permissions-props-list.html">
 
@@ -101,7 +102,7 @@ Example:
         <template is="dom-if" if="{{expanded}}">
 
           <section>
-            <sails-permissions-field-list type="{{type}}" props="{{props}}"></sails-permissions-field-list>
+            <sails-permissions-props-list type="{{type}}" props="{{props}}"></sails-permissions-props-list>
             <paper-button class="button--less" on-click="_toggleSize">Done</paper-button>
           </section>
 

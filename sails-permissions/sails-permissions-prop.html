@@ -8,12 +8,11 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../../paper-material/paper-material.html">
-<link rel="import" href="../../paper-styles/paper-styles.html">
 <link rel="import" href="../../paper-item/paper-item.html">
 <link rel="import" href="../../paper-button/paper-button.html">
 <link rel="import" href="../../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../iron-icons/iron-icons.html">
+
 <link rel="import" href="../lodash.html">
 <link rel="import" href="../../polymer/polymer.html">
 
@@ -30,7 +29,7 @@ Example:
 @hero hero.svg
 -->
 
-<dom-module id="sails-permissions-field">
+<dom-module id="sails-permissions-prop">
 
   <style>
 
@@ -45,13 +44,13 @@ Example:
 
     <paper-item>
       <div>
-        <p>{{model}}</p>
+        <p>{{title}}</p>
       </div>
       <div>
         <paper-button class="button--permissions">Permissions</paper-button>
       </div>
       <div>
-        <paper-icon-button on-click="_removeThisProp" model="{{model}}" icon="highlight-off"></paper-icon-button>
+        <paper-icon-button on-click="_removeThisProp" title="{{title}}" icon="highlight-off"></paper-icon-button>
       <div>
     </paper-item>
 
@@ -63,12 +62,12 @@ Example:
 
   Polymer({
 
-    is: 'sails-permissions-field',
+    is: 'sails-permissions-prop',
 
     properties: {
 
-      model: {
-        type: Object,
+      title: {
+        type: String,
       },
 
       displayPermissionsButton: {
@@ -86,14 +85,6 @@ Example:
       //
       // This is the point where you should make modifications to the DOM (when
       // necessary), or kick off any processes the element wants to perform.
-
-      var self = this;
-
-      if (self.model) {
-
-        _.extend(self, self.model);
-
-      }
 
     },
 
@@ -119,7 +110,7 @@ Example:
 
       var self = this;
 
-      self.parentNode._removeProp(self.model);
+      self.parentNode._removeProp(self.title);
 
     }
 
