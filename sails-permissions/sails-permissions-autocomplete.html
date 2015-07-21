@@ -257,7 +257,7 @@ Example:
          * selection to occur.
          */
 
-        self.$$('form').addEventListener('blur', function() {
+        self.$$('paper-input').addEventListener('blur', function() {
 
             setTimeout(function() {
               self.results = null;
@@ -278,7 +278,7 @@ Example:
 
         self.$$('form').removeEventListener('keyup');
         self.$$('form').removeEventListener('query-changed');
-        self.$$('form').removeEventListener('blur');
+        self.$$('paper-input').removeEventListener('blur');
 
       },
 
@@ -323,6 +323,7 @@ Example:
        */
 
       _select: function(event, details) {
+
         var self = this;
 
         self.selection = details.item.dataId;
@@ -330,6 +331,10 @@ Example:
         self.results = null;
 
         self.$$('paper-menu').selected = null;
+
+        if (!self.selection) {
+          return;
+        }
 
         self.fire('submit', {selection: self.selection});
 
