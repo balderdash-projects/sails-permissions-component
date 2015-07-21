@@ -95,10 +95,6 @@ Example:
       padding: 0;
     }
 
-    paper-menu paper-item {
-      margin-top: 8px;
-    }
-
     paper-item {
       color: #85878A;
       padding-top: .5em;
@@ -240,22 +236,10 @@ Example:
          */
 
         self.addEventListener('query-changed', function() {
-          self._search();
-        });
 
-        /**
-         * When the input is blurred, set self.results and self.query to null,
-         * closing the dropdown.  This is delayed for min. 300ms to allow time
-         * for the iron-selection event to be heard.
-         */
-
-        self.$$('paper-input').addEventListener('blur', function() {
-
-            setTimeout(function() {
-              self.results = null;
-              self.query = null;
-            }, 300);
-
+          if (!self.throttle) {
+            self._search();
+          }
         });
 
       },
@@ -344,6 +328,7 @@ Example:
 
         if (event) {
           event.preventDefault();
+          event.stopPropagation();
         }
 
         if (!self.query) {
@@ -354,8 +339,6 @@ Example:
           self.results = null;
           return;
         }
-
-        console.log('query:' + self.query);
 
         helper.setQuery(self.query).search();
 
