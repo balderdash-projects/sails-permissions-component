@@ -20,12 +20,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <!--
 An element that provides a search box to make calls to the Algolia search service.
-When a selection has been made, exposes the ID of the company on the
-selected-organization attribute.
+When a selection has been made, it exposes the selection on an 'selection' attribute
+and fires off a 'submit' event, which can be handled with a callback on the component.
 
 Example:
 
-    <app-algolia-search/>
+    <app-algolia-search on-submit="callback"/>
 
 @demo
 -->
@@ -116,27 +116,12 @@ Example:
       margin: 0 .33em;
     }
 
-    .org--thumbnail {
-      max-width: 100px;
-    }
-
-    .org--thumbnail img {
-      max-width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .org--address {
-      font-size: .75em;
-      color: #8A8D8F;
-    }
-
   </style>
 
   <template>
 
-    <form id="algoliaForm" on-submit="_search">
-      <paper-input id="algoliaInput" class="border border--gray" value="{{query}}" label="New Role"></paper-input>
+    <form on-submit="_search">
+      <paper-input class="border border--gray" value="{{query}}" label="New Role"></paper-input>
 
       <template is="dom-if" if="[[displayDropdown]]">
         <section class="menu--container">
@@ -182,13 +167,6 @@ Example:
         displayDropdown: {
           type: Boolean,
           computed: '_shouldDisplay(results, query)'
-        },
-        /** Whether or not the component itself should be displayed */
-        display: {
-          type: Boolean,
-          value: true,
-          reflectToAttribute: true,
-          observer: '_toggleVisibility'
         },
         /** The organization selected in the dropdown */
         selection: {
@@ -239,7 +217,7 @@ Example:
          * Make a call to algolia-search#search, passing in self.query.
          */
 
-        self.$.algoliaForm.addEventListener('keyup', function(event) {
+        self.$$('form').addEventListener('keyup', function(event) {
 
           if (!self.query) {
             self.results = null;
@@ -258,7 +236,7 @@ Example:
          * When query changes, make a call to algolia-search#search
          */
 
-        self.$.algoliaForm.addEventListener('query-changed', function() {
+        self.$$('form').addEventListener('query-changed', function() {
           self._search(self.query);
         });
 
@@ -268,7 +246,7 @@ Example:
          * selection to occur.
          */
 
-        self.$.algoliaInput.addEventListener('blur', function() {
+        self.$$('form').addEventListener('blur', function() {
 
             setTimeout(function() {
               self.results = null;
@@ -287,9 +265,9 @@ Example:
 
         var self = this;
 
-        self.$.algoliaForm.removeEventListener('keyup');
-        self.$.algoliaForm.removeEventListener('query-changed');
-        self.$.algoliaInput.removeEventLisftener('blur');
+        self.$$('form').removeEventListener('keyup');
+        self.$$('form').removeEventListener('query-changed');
+        self.$$('form').removeEventListener('blur');
 
       },
 
@@ -323,20 +301,12 @@ Example:
         var self = this;
 
         self.selection = details.item.dataId;
+        self.query = null;
+        self.results = null;
+
+        self.$$('paper-menu').selected = null;
 
         self.fire('submit', {selection: self.selection});
-
-      },
-
-      /**
-       * Toggle the visibility of the algolia-search element.  Triggered when
-       * display changes.
-       */
-
-      _toggleVisibility: function() {
-
-        var self = this;
-        self.toggleClass('hidden', !self.display, self.$.algoliaForm);
 
       },
 
