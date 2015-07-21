@@ -136,6 +136,12 @@ Example:
             </template>
           </paper-menu>
 
+          <template is="dom-if" if="{{displayNoResults}}">
+            <paper-item>
+              <div>No results found.</div>
+            </paper-item>
+          </template>
+
         </section>
       </template>
 
@@ -166,13 +172,20 @@ Example:
         /** Whether or not the dropdown menu should be displayed */
         displayDropdown: {
           type: Boolean,
-          computed: '_shouldDisplay(results, query)'
+          computed: '_displayDropdown(results, query)'
+        },
+        displayNoResults: {
+          type: Boolean,
+          computed: '_displayNoResults(results)'
         },
         /** The organization selected in the dropdown */
         selection: {
           type: String,
           reflectToAttribute: true,
           notify: true
+        },
+        throttle: {
+          type: Boolean
         }
       },
 
@@ -219,15 +232,13 @@ Example:
 
         self.$$('form').addEventListener('keyup', function(event) {
 
+          /** The search field is blank, return early */
           if (!self.query) {
             self.results = null;
             return;
           }
 
-          if (event.keyCode === 13 || event.keyIdentifier === 'Enter') {
-            event.preventDefault();
-          }
-
+          /** Otherwise, pass the query to the search function */
           self._search(self.query);
 
         });
@@ -281,10 +292,24 @@ Example:
        * Statment Two
        */
 
-      _shouldDisplay: function(a, b) {
-        if (a || b) {
+      _displayDropdown: function(results, query) {
+        if (results || query) {
           return true;
         }
+      },
+
+      /**
+       * A helper function that checks to see if the no results message should
+       * be displayed
+       *
+       * @param {array} results
+       * The array of current results coming from Algolia
+       */
+
+      _displayNoResults: function(results) {
+          if (!results || !results.length) {
+            return true;
+          }
       },
 
       /**
@@ -320,15 +345,15 @@ Example:
 
         var self = this;
 
-        if (throttle) {
+        if (self.throttle) {
           return;
         }
 
         helper.setQuery(query).search();
 
-        throttle = true;
+        self.throttle = true;
         setTimeout(function() {
-          throttle = false;
+          self.throttle = false;
         }, 500);
 
       }
