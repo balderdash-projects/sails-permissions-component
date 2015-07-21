@@ -252,9 +252,7 @@ Example:
 
         var self = this;
 
-        self.$$('form').removeEventListener('keyup');
-        self.$$('form').removeEventListener('query-changed');
-        self.$$('paper-input').removeEventListener('blur');
+        self.removeEventListener('query-changed');
 
       },
 
