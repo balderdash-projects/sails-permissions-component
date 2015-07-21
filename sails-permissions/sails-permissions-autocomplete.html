@@ -203,6 +203,9 @@ Example:
         /** A throttle property */
         throttle: {
           type: Boolean
+        },
+        timer: {
+          value: null
         }
       },
 
@@ -254,13 +257,18 @@ Example:
          */
 
         self.addEventListener('query-changed', function() {
-            self._search();
+
+            self.cancelAsync(self.timer);
+            self.timer = self.async(function() {
+              self._search();
+            }, 500);
+
         });
 
       },
 
       /**
-       * Remove event listeners set in algolia-search#attach
+       * Remove event listeners set in #attach
        */
 
       detached: function() {
@@ -271,21 +279,7 @@ Example:
 
       },
 
-      /**
-       * A helper function that checks the truthiness of a and b and
-       * returns the result. 
-       *
-       * @param {boolean} results
-       * Statement One
-       * @param {boolean} query
-       * Statment Two
-       */
-
-      _displayDropdown: function(results, query) {
-        if (results || query) {
-          return true;
-        }
-      },
+      /** A function to manually hide the dropdown */
 
       _hideDropdown: function() {
 
@@ -305,9 +299,26 @@ Example:
        */
 
       _displayNoResults: function(results) {
-          if (!results || !results.length) {
+          if (results && !results.length) {
             return true;
           }
+      },
+
+      /**
+       * A helper function that checks the truthiness of results and query and
+       * returns the result. 
+       *
+       * @param {boolean} results
+       * Statement One
+       * @param {boolean} query
+       * Statment Two
+       */
+
+      _displayDropdown: function(results, query) {
+        var self = this;
+        if ((results && results.length) || self._displayNoResults(results)) {
+          return true;
+        }
       },
 
       /**
@@ -357,7 +368,6 @@ Example:
         }
 
         if (self.throttle) {
-          console.log('throttle was on');
           self.results = null;
           return;
         }
@@ -365,7 +375,7 @@ Example:
         self.helper.setQuery(self.query).search();
 
         self.throttle = true;
-        setTimeout(function() {
+        self.async(function() {
           self.throttle = false;
         }, 500);
 

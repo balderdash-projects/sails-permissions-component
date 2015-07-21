@@ -28,16 +28,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script>
       var myEl = document.querySelector("sails-permissions-autocomplete");
 
-      function getArrayOfProps(htmlCollection) {
-        return [].slice.call(htmlCollection);
-      }
-
-      function filterArrayOfProps(array, target) {
-        return array.filter(function(el) {
-          return el.localName === target;
-        });
-      }
-
       suite("<sails-permissions-autocomplete>", function() {
 
         teardown(function(done) {
@@ -50,23 +40,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         });
 
-        test('should search when the query is changed', function() {
+        test('should set a timeout to call the search function when the query is changed', function(done) {
 
-          var stub = sinon.stub(myEl, '_search', function() {
-            return true;
-          });
+          var stub = sinon.stub(myEl, 'cancelAsync', function() {
+                return true;
+              }),
+              stub2 = sinon.stub(myEl, 'async', function() {
+                return true;
+              });
 
-          myEl.query = 'I am Iron Man!';
+          fakeEvent = new Event('query-changed');
+          myEl.dispatchEvent(fakeEvent);
 
-          flush(function() {
+          flush(function () {
             expect(stub).to.have.been.called;
-          });
+            expect(stub2).to.have.been.called;
+            done();
 
-          myEl._search.restore();
+            myEl.cancelAsync.restore();
+            myEl.async.restore();
+
+          });
 
         });
 
-        test('shouldn\'t search if there isn\'t a query', function() {
+        test('shouldn\'t search if there isn\'t a query', function(done) {
 
           var stub = sinon.stub(myEl.helper, 'search', function() {
             return true;
@@ -77,32 +75,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           flush(function() {
             expect(stub).to.have.not.been.called;
             myEl.helper.search.restore();
+            done();
           });
 
         });
 
-        test('should show the dropdown when there are results', function() {
+        test('should show the dropdown when there are results', function(done) {
 
             myEl.results = [{name: 'Arugala'}, {name: 'Breadsticks'}, {name: 'Peonies'}];
 
             flush(function() {
               expect(myEl.$$('.menu--container')).to.not.be.undefined;
+              done();
             });
 
         });
 
-        test('should show a \'No results\' message in the dropdown when no results come back from the server', function() {
+        test('should show a \'No results\' message in the dropdown when no results come back from the server', function(done) {
 
           myEl.results = [];
 
           flush(function() {
             expect(myEl.$$('.menu--container')).to.not.be.undefined;
             expect(myEl.$$('.menu--container').children[1].children[0].innerHTML).to.equal('No results found.');
+            done();
           });
 
         });
 
-        test('should hide the dropdown', function() {
+        test('should provide a method to manually hide the dropdown', function(done) {
 
           myEl.results = [{name: 'Arugala'}, {name: 'Breadsticks'}, {name: 'Peonies'}];
           myEl.query = 'Arugala';
@@ -111,23 +112,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           flush(function() {
             expect(myEl.$$('.menu--container').attributes[1].value).to.equal('display: none;');
+            done();
           });
 
         });
 
-        test('should hide the dropdown when the query is cleared by the user', function() {
-
-          myEl.query = 'Arugala';
+        myEl.query = 'Potato';
+        test('should hide the dropdown when the query is cleared by the user', function(done) {
 
           myEl.query = '';
 
-          flush(function(done) {
+          flush(function() {
             expect(myEl.$$('.menu--container').attributes[1].value).to.equal('display: none;');
+            done();
           });
 
         });
 
-        test('should submit the item when it is selected by the user', function() {
+        test('should submit the item when it is selected by the user', function(done) {
 
           var stub = sinon.stub(myEl, 'fire', function() {
             return true;
@@ -141,13 +143,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           myEl._select(event, details);
 
-          expect(stub).to.have.been.called;
-
-          myEl.fire.restore();
+          flush(function() {
+            expect(stub).to.have.been.called;
+            myEl.fire.restore();
+            done();
+          });
 
         });
 
-        test('shouldn\'t submit the item if the selection is undefined', function() {
+        test('shouldn\'t search if the throttle is active', function(done) {
+
+          var stub = sinon.stub(myEl.helper, 'search', function() {
+            return true;
+          });
+
+          myEl.query = 'Potato';
+          myEl.throttle = true;
+
+          flush(function() {
+            expect(stub).to.have.not.been.called;
+            myEl.helper.search.restore();
+            done();
+          });
+
+        });
+
+        test('shouldn\'t submit the item if the selection is undefined', function(done) {
 
           var stub = sinon.stub(myEl, 'fire', function() {
             return true;
@@ -161,24 +182,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           myEl._select(fakeEvent, details);
 
-          expect(stub).to.have.not.been.called;
-
-          myEl.fire.restore();
-
-        });
-
-        test('shouldn\'t search if the throttle is active', function() {
-
-          var stub = sinon.stub(myEl.helper, 'search', function() {
-            return true;
-          });
-
-          myEl.query = 'Potato';
-          myEl.throttle = true;
-
           flush(function() {
             expect(stub).to.have.not.been.called;
-            myEl.helper.search.restore();
+            myEl.fire.restore();
+            done();
           });
 
         });
