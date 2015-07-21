@@ -164,7 +164,7 @@ Example:
 
 <script>
 
-    var client, helper, throttle;
+    var client;
 
     Polymer({
 
@@ -196,6 +196,11 @@ Example:
           reflectToAttribute: true,
           notify: true
         },
+        /** The algolia helper, exposed to help with testing. */
+        helper: {
+          type: Object
+        },
+        /** A throttle property */
         throttle: {
           type: Boolean
         }
@@ -211,11 +216,11 @@ Example:
         var self = this;
 
         client = algoliasearch('32IYXAAIS8', '9beb6f922d72f88e1611849dbcc8390d');
-        helper = algoliasearchHelper( client, 'dev_sailsPermissionsComponent', {
+        self.helper = algoliasearchHelper( client, 'dev_sailsPermissionsComponent', {
           facets: ['name']
         });
 
-        helper.on('result', function(data) {
+        self.helper.on('result', function(data) {
 
             /**
              * todo - filter out unhelpful matches on the server side rather than
@@ -228,7 +233,7 @@ Example:
 
         });
 
-        helper.on('error', function(error) {
+        self.helper.on('error', function(error) {
           console.log(error);
         });
 
@@ -249,10 +254,7 @@ Example:
          */
 
         self.addEventListener('query-changed', function() {
-
-          if (!self.throttle) {
             self._search();
-          }
         });
 
       },
@@ -323,9 +325,7 @@ Example:
         var self = this;
 
         self.selection = details.item.dataId;
-        self.query = null;
-        self.results = null;
-
+        self._hideDropdown();
         self.$$('paper-menu').selected = null;
 
         if (!self.selection) {
@@ -352,15 +352,17 @@ Example:
         }
 
         if (!self.query) {
+          self._hideDropdown();
           return;
         }
 
         if (self.throttle) {
+          console.log('throttle was on');
           self.results = null;
           return;
         }
 
-        helper.setQuery(self.query).search();
+        self.helper.setQuery(self.query).search();
 
         self.throttle = true;
         setTimeout(function() {

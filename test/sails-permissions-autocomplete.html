@@ -52,17 +52,133 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('should search when the query is changed', function() {
 
-          var fakeEvent = new Event('query-changed'),
-              stub = sinon.stub(myEl, '_search', function() {
-                return true;
-              });
+          var stub = sinon.stub(myEl, '_search', function() {
+            return true;
+          });
 
           myEl.query = 'I am Iron Man!';
 
-          myEl.$$('form').dispatchEvent(fakeEvent);
-
           flush(function() {
             expect(stub).to.have.been.called;
+          });
+
+          myEl._search.restore();
+
+        });
+
+        test('shouldn\'t search if there isn\'t a query', function() {
+
+          var stub = sinon.stub(myEl.helper, 'search', function() {
+            return true;
+          });
+
+          myEl.query = '';
+
+          flush(function() {
+            expect(stub).to.have.not.been.called;
+            myEl.helper.search.restore();
+          });
+
+        });
+
+        test('should show the dropdown when there are results', function() {
+
+            myEl.results = [{name: 'Arugala'}, {name: 'Breadsticks'}, {name: 'Peonies'}];
+
+            flush(function() {
+              expect(myEl.$$('.menu--container')).to.not.be.undefined;
+            });
+
+        });
+
+        test('should show a \'No results\' message in the dropdown when no results come back from the server', function() {
+
+          myEl.results = [];
+
+          flush(function() {
+            expect(myEl.$$('.menu--container')).to.not.be.undefined;
+            expect(myEl.$$('.menu--container').children[1].children[0].innerHTML).to.equal('No results found.');
+          });
+
+        });
+
+        test('should hide the dropdown', function() {
+
+          myEl.results = [{name: 'Arugala'}, {name: 'Breadsticks'}, {name: 'Peonies'}];
+          myEl.query = 'Arugala';
+
+          myEl._hideDropdown();
+
+          flush(function() {
+            expect(myEl.$$('.menu--container').attributes[1].value).to.equal('display: none;');
+          });
+
+        });
+
+        test('should hide the dropdown when the query is cleared by the user', function() {
+
+          myEl.query = 'Arugala';
+
+          myEl.query = '';
+
+          flush(function(done) {
+            expect(myEl.$$('.menu--container').attributes[1].value).to.equal('display: none;');
+          });
+
+        });
+
+        test('should submit the item when it is selected by the user', function() {
+
+          var stub = sinon.stub(myEl, 'fire', function() {
+            return true;
+          }),
+              fakeEvent,
+              details = {
+                item: {
+                  dataId: 'Arugala'
+                }
+              };
+
+          myEl._select(event, details);
+
+          expect(stub).to.have.been.called;
+
+          myEl.fire.restore();
+
+        });
+
+        test('shouldn\'t submit the item if the selection is undefined', function() {
+
+          var stub = sinon.stub(myEl, 'fire', function() {
+            return true;
+          }),
+              fakeEvent,
+              details = {
+                  item: {
+                    dataId: null
+                  }
+              };
+
+          myEl._select(fakeEvent, details);
+
+          expect(stub).to.have.not.been.called;
+
+          myEl.fire.restore();
+
+        });
+
+        test('shouldn\'t search if the throttle is active', function() {
+
+          var stub = sinon.stub(myEl.helper, 'search', function() {
+            return true;
+          });
+
+          myEl.query = 'Potato';
+          myEl.throttle = true;
+
+          flush(function() {
+            expect(stub).to.have.not.been.called;
+            myEl.helper.search.restore();
           });
 
         });
