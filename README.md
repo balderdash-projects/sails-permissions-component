@@ -10,7 +10,7 @@ install that via:
 
     npm install -g bower
 
-Then, go ahead and download the element's dependencies:
+Then, go ahead and download the element"s dependencies:
 
     bower install
 
@@ -18,7 +18,7 @@ Then, go ahead and download the element's dependencies:
 ## Playing With Your Element
 
 If you wish to work on your element in isolation, we recommend that you use
-[Polyserve](https://github.com/PolymerLabs/polyserve) to keep your element's
+[Polyserve](https://github.com/PolymerLabs/polyserve) to keep your element"s
 bower dependencies in line. You can install it via:
 
     npm install -g polyserve

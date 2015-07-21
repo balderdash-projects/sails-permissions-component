@@ -27,7 +27,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <sails-permissions-props-list props='["Oregano", "Jumpsuit", "Potato", "Farm"]' type="user"></sails-permissions-props-list>
 
     <script>
-      var myEl = document.querySelector('sails-permissions-props-list');
+      var myEl = document.querySelector("sails-permissions-props-list");
 
       function getArrayOfProps(htmlCollection) {
         return [].slice.call(htmlCollection);
@@ -39,32 +39,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       }
 
-      suite('<sails-permissions-props-list>', function() {
+      suite("<sails-permissions-props-list>", function() {
 
         teardown(function(done) {
           flush(done);
         });
 
-        test('Should render the component', function() {
+        test("Should render the component", function() {
 
             expect(myEl.children.length).to.not.equal(0);
 
         });
 
-        test('Should set the prop\'s type', function() {
+        test("Should set the prop\"s type", function() {
 
-            expect(myEl.type).to.equal('user');
+            expect(myEl.type).to.equal("user");
 
         });
 
-        test('Should render four sails-permissions-prop components', function() {
+        test("Should render four sails-permissions-prop components", function() {
 
           flush(function() {
 
             var propNodesArray = getArrayOfProps(myEl.children);
 
             propNodesArray = propNodesArray.filter(function(el) {
-              return el.localName === 'sails-permissions-prop';
+              return el.localName === "sails-permissions-prop";
             });
 
             expect(propNodesArray.length).to.equal(4);
@@ -73,9 +73,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         });
 
-        test('Should add a new sails-permissions-prop', function() {
+        test("Should add a new sails-permissions-prop", function() {
 
-          var fakeEvent = new Event('submit');
+          var fakeEvent = new Event("submit");
 
           myEl.newProp = "Potato Brain";
 
@@ -84,19 +84,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           flush(function() {
 
             expect(myEl.props.length).to.equal(5);
-            expect(filterArrayOfProps(getArrayOfProps(myEl.children), 'sails-permissions-prop').length).to.equal(5);
+            expect(filterArrayOfProps(getArrayOfProps(myEl.children), "sails-permissions-prop").length).to.equal(5);
 
           });
 
         });
 
-        test('Should remove a specific sails-permissions-prop', function() {
+        test("Should remove a specific sails-permissions-prop", function() {
 
-          myEl._removeProp('Oregano');
+          myEl._removeProp("Oregano");
 
           flush(function() {
-            expect(myEl.props.indexOf('Oregano')).to.equal(-1);
-            expect(getArrayOfProps(myEl.children).indexOf('Oregano')).to.equal(-1);
+            expect(myEl.props.indexOf("Oregano")).to.equal(-1);
+            expect(getArrayOfProps(myEl.children).indexOf("Oregano")).to.equal(-1);
           });
 
         });
