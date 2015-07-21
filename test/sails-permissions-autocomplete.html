@@ -16,17 +16,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
 
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../sails-permissions/sails-permissions-autocomplete.html">
+
   </head>
   <body>
+
+    <!-- You can use the document as a place to set up your fixtures. -->
+    <sails-permissions-autocomplete/>
+
     <script>
-      // Load and run all tests (.html, .js):
-      WCT.loadSuites([
-        'sails-permissions-card.html',
-        'sails-permissions-card-list.html',
-        'sails-permissions-prop.html',
-        'sails-permissions-props-list.html',
-        'sails-permissions-autocomplete.html'
-      ]);
+      var myEl = document.querySelector("sails-permissions-autocomplete");
+
+      function getArrayOfProps(htmlCollection) {
+        return [].slice.call(htmlCollection);
+      }
+
+      function filterArrayOfProps(array, target) {
+        return array.filter(function(el) {
+          return el.localName === target;
+        });
+      }
+
+      suite("<sails-permissions-autocomplete>", function() {
+
+        teardown(function(done) {
+          flush(done);
+        });
+
+        test("Should render the component", function() {
+
+            expect(myEl.children.length).to.not.equal(0);
+
+        });
+
+      });
+
     </script>
+
   </body>
 </html>

@@ -15,6 +15,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../paper-menu/paper-menu.html">
 <link rel="import" href="../../paper-item/paper-item.html">
 
+<link rel="import" href="../lodash.html">
+
 <script src="../../algoliasearch/dist/algoliasearch.min.js"></script>
 <script src="../../algoliasearch-helper/dist/algoliasearch.helper.min.js"></script>
 
@@ -204,7 +206,16 @@ Example:
         });
 
         helper.on('result', function(data) {
-            self.results = data.hits;
+
+            /**
+             * todo - filter out unhelpful matches on the server side rather than
+             * doing it here
+             */
+
+            self.results = data.hits.filter(function(el) {
+              return el.name;
+            });
+
         });
 
         helper.on('error', function(error) {
