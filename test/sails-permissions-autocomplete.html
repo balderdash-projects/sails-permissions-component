@@ -44,9 +44,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           flush(done);
         });
 
-        test("Should render the component", function() {
+        test('Should render the component', function() {
 
-            expect(myEl.children.length).to.not.equal(0);
+          expect(myEl.children.length).to.not.equal(0);
+
+        });
+
+        test('should search when the query is changed', function() {
+
+          var fakeEvent = new Event('query-changed'),
+              stub = sinon.stub(myEl, '_search', function() {
+                return true;
+              });
+
+          myEl.query = 'I am Iron Man!';
+
+          myEl.$$('form').dispatchEvent(fakeEvent);
+
+          flush(function() {
+            expect(stub).to.have.been.called;
+          });
 
         });
 

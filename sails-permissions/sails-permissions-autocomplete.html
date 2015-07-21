@@ -166,6 +166,7 @@ Example:
         /** The current contents of the search input */
         query: {
           type: String,
+          notify: true
         },
         /** Results coming from Algolia */
         results: {
@@ -235,37 +236,17 @@ Example:
         var self = this;
 
         /**
-         * On keyup, if the query is undefined, set the results to null.
-         * This closes the dropdown.
-         * If the last key pressed was Enter, prevent default action.
-         * Make a call to algolia-search#search, passing in self.query.
+         * When query changes, make a call to #_search.
          */
 
-        self.$$('form').addEventListener('keyup', function(event) {
-
-          /** The search field is blank, return early */
-          if (!self.query) {
-            self.results = null;
-            return;
-          }
-
-          /** Otherwise, pass the query to the search function */
-          self._search(self.query);
-
-        });
-
-        /**
-         * When query changes, make a call to algolia-search#search
-         */
-
-        self.$$('form').addEventListener('query-changed', function() {
-          self._search(self.query);
+        self.addEventListener('query-changed', function() {
+          self._search();
         });
 
         /**
          * When the input is blurred, set self.results and self.query to null,
-         * closing the dropdown.  Uses a 300ms delay to make allow organization
-         * selection to occur.
+         * closing the dropdown.  This is delayed for min. 300ms to allow time
+         * for the iron-selection event to be heard.
          */
 
         self.$$('paper-input').addEventListener('blur', function() {
@@ -297,9 +278,9 @@ Example:
        * A helper function that checks the truthiness of a and b and
        * returns the result. 
        *
-       * @param {boolean} a
+       * @param {boolean} results
        * Statement One
-       * @param {boolean} b
+       * @param {boolean} query
        * Statment Two
        */
 
@@ -357,15 +338,26 @@ Example:
        * The contents of the input field.
        */
 
-      _search: function(query) {
+      _search: function(event) {
 
         var self = this;
 
-        if (self.throttle) {
+        if (event) {
+          event.preventDefault();
+        }
+
+        if (!self.query) {
           return;
         }
 
-        helper.setQuery(query).search();
+        if (self.throttle) {
+          self.results = null;
+          return;
+        }
+
+        console.log('query:' + self.query);
+
+        helper.setQuery(self.query).search();
 
         self.throttle = true;
         setTimeout(function() {
