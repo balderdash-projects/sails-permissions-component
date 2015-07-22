@@ -47,6 +47,10 @@ Example:
 
   <template>
 
+      <template is="dom-if" if="[[shouldDisplayNewRoleCard]]">
+        <p>New role card here.</p>
+      </template>
+
       <template is="dom-repeat" items="{{model}}">
         <sails-permissions-card model="{{item}}" type="[[type]]"></sails-permissions-card>
       </template>
@@ -77,6 +81,11 @@ Example:
       shouldDisplayNewButton: {
         type: Boolean,
         computed: '_shouldDisplayNewButton(type)',
+        readOnly: true
+      },
+
+      displayNewRoleForm: {
+        type: Boolean,
         readOnly: true
       }
 
@@ -115,8 +124,27 @@ Example:
 
     // Element Behavior
 
+    /** Determines if the 'new role button' should be displayed */
     _shouldDisplayNewButton: function(type) {
       return type === 'role';
+    },
+
+    /**
+     * Toggles display of the 'New Role Form'.  Optionally accepts a boolean
+     * to force a specific state.
+     *
+     * @param {boolean=} state
+     * If defined, will force display to true or false.
+     */
+
+    _toggleDisplayNewRoleForm: function(state) {
+
+      if (state !== undefined) {
+        self.displayNewRoleForm = state;
+      }
+
+      self.displayNewRoleForm = !self.displayNewRoleForm;
+
     }
 
   });

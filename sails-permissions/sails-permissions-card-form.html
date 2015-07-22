@@ -1,0 +1,241 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../polymer/polymer.html">
+
+<link rel="import" href="../../paper-material/paper-material.html">
+<link rel="import" href="../../paper-styles/paper-styles.html">
+<link rel="import" href="../../paper-item/paper-item.html">
+<link rel="import" href="../../paper-button/paper-button.html">
+<link rel="import" href="../lodash.html">
+
+<link rel="import" href="sails-permissions-props-list.html">
+
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+  <sails-permissions-card></sails-permissions-card>
+
+@group Seed Elements
+@element seed-element
+@demo demo/index.html
+@hero hero.svg
+-->
+<dom-module id="sails-permissions-card">
+
+  <style>
+
+    :host {
+      display: block;
+      box-sizing: border-box;
+    }
+
+    /** Typography */
+
+    h1, h2, h3, h4, p {
+      margin: .25rem 0;
+    }
+
+    paper-item {
+      align-items: flex-start;
+      padding: 0.5rem;
+      margin: 0 0.33em;
+    }
+
+    paper-item > * {
+      margin: 0 0.33em;
+    }
+
+    header {
+      max-width: 25%;
+    }
+
+    .summary {
+      @apply(--layout-flex-2);
+    }
+
+    .props {
+      @apply(--layout-flex-2);
+    }
+
+    .button {}
+
+    .tagline, .summary--content {
+      color: #666666;
+    }
+
+    .summary--content {
+      font-style: italic;
+    }
+
+    .button--less {
+      background-color: #00BCD4;
+    }
+
+    .button--more {
+      background-color: #FFB300;
+    }
+
+  </style>
+
+  <template>
+
+    <paper-material elevation="{{elevation}}">
+      <paper-item>
+
+        <header>
+          <h3 class="title">[[title]]</h3>
+          <p class="tagline">[[subtitle]]</p>
+        </header>
+
+        <template is="dom-if" if="{{!expanded}}">
+
+          <section class="summary">
+            <aside>
+              <h4 class="summary--title">{{propsTitle}}</h4>
+              <p class="summary--content">{{propsList}}</p>
+            </aside>
+            <paper-button class="button--more" on-click="_toggleSize">Edit</paper-button>
+          </section>
+
+        </template>
+
+        <template is="dom-if" if="{{expanded}}">
+
+          <section class="props">
+            <sails-permissions-props-list type="{{type}}" props="{{props}}"></sails-permissions-props-list>
+            <paper-button class="button--less" on-click="_toggleSize">Done</paper-button>
+          </section>
+
+        </template>
+
+      </paper-item>
+
+    </paper-material>
+
+  </template>
+
+</dom-module>
+
+<script>
+
+  Polymer({
+
+    is: 'sails-permissions-card',
+
+    properties: {
+
+      title: {
+        type: String,
+      },
+
+      type: {
+        type: String
+      },
+
+      model: {
+        type: Object
+      },
+
+      subtitle: {
+        type: String,
+      },
+
+      propsTitle: {
+        type: String
+      },
+
+      props: {
+        type: Array
+      },
+
+      propsList: {
+        type: Array,
+        computed: '_makePropsList(props.*)'
+      },
+
+      expanded: {
+        type: Boolean,
+        value: false
+      }
+
+    },
+
+    // Element Lifecycle
+
+    ready: function() {
+      // `ready` is called after all elements have been configured, but
+      // propagates bottom-up. This element's children are ready, but parents
+      // are not.
+      //
+      // This is the point where you should make modifications to the DOM (when
+      // necessary), or kick off any processes the element wants to perform.
+
+      var self = this;
+
+      if (self.model) {
+
+        _.extend(self, self.model);
+
+      }
+
+      if (self.type === 'user') {
+        self.propsTitle = 'Roles';
+      } else if (self.type === 'role') {
+        self.propsTitle = 'Models';
+      }
+
+    },
+
+    attached: function() {
+      // `attached` fires once the element and its parents have been inserted
+      // into a document.
+      //
+      // This is a good place to perform any work related to your element's
+      // visual state or active behavior (measuring sizes, beginning animations,
+      // loading resources, etc).
+
+    },
+
+    detached: function() {
+      // The analog to `attached`, `detached` fires when the element has been
+      // removed from a document.
+      //
+      // Use this to clean up anything you did in `attached`.
+    },
+
+    // Element Behavior
+
+    /** A function that toggles the compact/expanded state of <sails-permissions-card> */
+
+    _toggleSize: function() {
+
+      var self = this;
+
+      self.expanded = !self.expanded;
+
+      if (self.expanded) {
+        self.elevation = 2;
+      } else {
+        self.elevation = 1;
+      }
+
+    },
+
+    _makePropsList: function(props) {
+      return props.base.join(", ");
+    },
+
+  });
+
+</script>
