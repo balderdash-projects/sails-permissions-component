@@ -41,10 +41,10 @@ Example:
 
   <template>
 
-      <sails-permissions-autocomplete on-submit="_submit"></sails-permissions-autocomplete>
+      <sails-permissions-autocomplete type="{{type}}" on-submit="_submit"></sails-permissions-autocomplete>
 
       <template is="dom-repeat" items="{{props}}">
-        <sails-permissions-prop title="{{item}}"/>
+        <sails-permissions-prop type="{{type}}" title="{{item}}"/>
       </template>
 
   </template>

@@ -48,9 +48,9 @@ Example:
 
     <paper-item>
       <p class="title">{{title}}</p>
-      <div>
+      <template is="dom-if" if="{{displayPermissionsButton}}">
         <paper-button class="button--permissions">Permissions</paper-button>
-      </div>
+      </template>
       <div>
         <paper-icon-button on-click="_removeThisProp" title="{{title}}" icon="highlight-off"></paper-icon-button>
       <div>
@@ -73,7 +73,8 @@ Example:
       },
 
       displayPermissionsButton: {
-        type: Boolean
+        type: Boolean,
+        value: false
       }
 
     },
@@ -87,6 +88,12 @@ Example:
       //
       // This is the point where you should make modifications to the DOM (when
       // necessary), or kick off any processes the element wants to perform.
+
+      var self = this;
+
+      if (self.type === 'role', function() {
+        self.displayPermissionsButton = true;
+      });
 
     },
 

@@ -131,7 +131,7 @@ Example:
   <template>
 
     <form on-submit="_search">
-      <paper-input class="border border--gray" value="{{query}}" label="New Role"></paper-input>
+      <paper-input class="border border--gray" value="{{query}}" label="{{label}}"></paper-input>
 
       <template is="dom-if" if="[[displayDropdown]]">
         <div on-click="_hideDropdown" class="dropdown-screen"></div>
@@ -176,6 +176,13 @@ Example:
         query: {
           type: String,
           notify: true
+        },
+        /** The label for the input */
+        label: {
+          type: String
+        },
+        type: {
+          type: String
         },
         /** Results coming from Algolia */
         results: {
@@ -239,6 +246,12 @@ Example:
         self.helper.on('error', function(error) {
           console.log(error);
         });
+
+        if (self.type === 'user') {
+          self.label = 'New Role';
+        } else if (self.type === 'role') {
+          self.label = 'New Model';
+        }
 
       },
 

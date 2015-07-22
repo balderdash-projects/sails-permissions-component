@@ -23,10 +23,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
 
     <!-- You can use the document as a place to set up your fixtures. -->
-    <sails-permissions-autocomplete/>
+    <sails-permissions-autocomplete type="user"></sails-permissions-autocomplete>
+    <sails-permissions-autocomplete type="role"></sails-permissions-autocomplete>
 
     <script>
-      var myEl = document.querySelector("sails-permissions-autocomplete");
+      var myEl = document.querySelectorAll("sails-permissions-autocomplete")[0];
+      var myEl2 = document.querySelectorAll("sails-permissions-autocomplete")[1];
 
       suite("<sails-permissions-autocomplete>", function() {
 
@@ -185,6 +187,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           flush(function() {
             expect(stub).to.have.not.been.called;
             myEl.fire.restore();
+            done();
+          });
+
+        });
+
+        test('The input label should be \'New Role\' if the type is \'user\'', function(done) {
+
+          flush(function() {
+            expect(myEl.label).to.equal('New Role');
+            done();
+          });
+
+        });
+
+        test('The input label should read \'New Model\' if the type is \'role\'', function(done) {
+
+          flush(function() {
+            expect(myEl2.label).to.equal('New Model');
             done();
           });
 
