@@ -31,7 +31,7 @@ Example:
 @demo demo/index.html
 @hero hero.svg
 -->
-<dom-module id="sails-permissions-card">
+<dom-module id="sails-permissions-card-form">
 
   <style>
 
@@ -82,10 +82,6 @@ Example:
       background-color: #00BCD4;
     }
 
-    .button--more {
-      background-color: #FFB300;
-    }
-
   </style>
 
   <template>
@@ -94,33 +90,15 @@ Example:
       <paper-item>
 
         <header>
-          <h3 class="title">[[title]]</h3>
-          <p class="tagline">[[subtitle]]</p>
+          <paper-input value="{{title}}" label="New Title"></paper-input>
         </header>
 
-        <template is="dom-if" if="{{!expanded}}">
-
-          <section class="summary">
-            <aside>
-              <h4 class="summary--title">{{propsTitle}}</h4>
-              <p class="summary--content">{{propsList}}</p>
-            </aside>
-            <paper-button class="button--more" on-click="_toggleSize">Edit</paper-button>
-          </section>
-
-        </template>
-
-        <template is="dom-if" if="{{expanded}}">
-
-          <section class="props">
-            <sails-permissions-props-list type="{{type}}" props="{{props}}"></sails-permissions-props-list>
-            <paper-button class="button--less" on-click="_toggleSize">Done</paper-button>
-          </section>
-
-        </template>
+        <section class="props">
+          <sails-permissions-props-list type="{{type}}" props="{{props}}"></sails-permissions-props-list>
+          <paper-button class="button--less" on-click="_submitRole">Done</paper-button>
+        </section>
 
       </paper-item>
-
     </paper-material>
 
   </template>
@@ -131,7 +109,7 @@ Example:
 
   Polymer({
 
-    is: 'sails-permissions-card',
+    is: 'sails-permissions-card-form',
 
     properties: {
 
@@ -139,34 +117,25 @@ Example:
         type: String,
       },
 
-      type: {
-        type: String
-      },
-
       model: {
-        type: Object
+        type: Object,
+        value: {}
       },
 
-      subtitle: {
+      type: {
         type: String,
-      },
-
-      propsTitle: {
-        type: String
+        value: 'role'
       },
 
       props: {
-        type: Array
-      },
-
-      propsList: {
         type: Array,
-        computed: '_makePropsList(props.*)'
+        value: []
       },
 
       expanded: {
         type: Boolean,
-        value: false
+        value: true,
+        readOnly: true
       }
 
     },
@@ -189,12 +158,6 @@ Example:
 
       }
 
-      if (self.type === 'user') {
-        self.propsTitle = 'Roles';
-      } else if (self.type === 'role') {
-        self.propsTitle = 'Models';
-      }
-
     },
 
     attached: function() {
@@ -214,27 +177,32 @@ Example:
       // Use this to clean up anything you did in `attached`.
     },
 
-    // Element Behavior
-
-    /** A function that toggles the compact/expanded state of <sails-permissions-card> */
-
-    _toggleSize: function() {
+    _submitRole: function() {
 
       var self = this;
 
-      self.expanded = !self.expanded;
-
-      if (self.expanded) {
-        self.elevation = 2;
-      } else {
-        self.elevation = 1;
+      if (!self.title && !self.props.length) {
+        console.log('should fire a no title and no props alert');
+        return;
+      } else if (!self.props.length) {
+        console.log('should fire a no props alert');
+        return;
+      } else if (!self.title) {
+        console.log('should fire a no title alert');
+        return;
       }
 
-    },
+      _.extend(self.model, {title: self.title, props: self.props});
 
-    _makePropsList: function(props) {
-      return props.base.join(", ");
-    },
+      self.fire('submit', {model: self.model});
+
+      self.model = {};
+      self.title = null;
+      self.props = [];
+
+    }
+
+    // Element Behavior
 
   });
 

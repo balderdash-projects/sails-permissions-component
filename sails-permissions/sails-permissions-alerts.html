@@ -8,28 +8,24 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../../paper-item/paper-item.html">
-<link rel="import" href="../../paper-button/paper-button.html">
-<link rel="import" href="../../paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../iron-icons/iron-icons.html">
-
-<link rel="import" href="../lodash.html">
 <link rel="import" href="../../polymer/polymer.html">
 
+<link rel="import" href="../../iron-icon/iron-icon.html">
+<link rel="import" href="../lodash.html">
+
 <!--
-A single property of the user or role.
+An element providing a solution to no problem in particular.
 
 Example:
 
-  <sails-permissions-field></sails-permissions-field>
+  <sails-permissions-alerts></sails-permissions-alerts>
 
 @group Seed Elements
 @element seed-element
 @demo demo/index.html
 @hero hero.svg
 -->
-
-<dom-module id="sails-permissions-prop">
+<dom-module id="sails-permissions-card-form">
 
   <style>
 
@@ -38,23 +34,53 @@ Example:
       box-sizing: border-box;
     }
 
-    .title {
+    /** Typography */
+
+    h1, h2, h3, h4, p {
+      margin: .25rem 0;
+    }
+
+    paper-item {
+      align-items: flex-start;
+      padding: 0.5rem;
+      margin: 0 0.33em;
+    }
+
+    paper-item > * {
+      margin: 0 0.33em;
+    }
+
+    header {
+      max-width: 25%;
+    }
+
+    .summary {
       @apply(--layout-flex-2);
+    }
+
+    .props {
+      @apply(--layout-flex-2);
+    }
+
+    .button {}
+
+    .tagline, .summary--content {
+      color: #666666;
+    }
+
+    .summary--content {
+      font-style: italic;
+    }
+
+    .button--less {
+      background-color: #00BCD4;
     }
 
   </style>
 
   <template>
 
-    <paper-item>
-      <p class="title">{{title}}</p>
-      <template is="dom-if" if="{{displayPermissionsButton}}">
-        <paper-button class="button--permissions">Permissions</paper-button>
-      </template>
-      <div>
-        <paper-icon-button on-click="_removeThisProp" title="{{title}}" icon="highlight-off"></paper-icon-button>
-      <div>
-    </paper-item>
+    <iron-icon
 
   </template>
 
@@ -64,17 +90,20 @@ Example:
 
   Polymer({
 
-    is: 'sails-permissions-prop',
+    is: 'sails-permissions-alerts',
 
     properties: {
 
-      title: {
-        type: String,
+      status: {
+        type: String
       },
 
-      displayPermissionsButton: {
-        type: Boolean,
-        value: false
+      message: {
+        type: String
+      },
+
+      icon: {
+        type: String
       }
 
     },
@@ -91,9 +120,20 @@ Example:
 
       var self = this;
 
-      if (self.type === 'role') {
-        self.displayPermissionsButton = true;
-      }
+      self.icon = (function() {
+
+        switch(self.status) {
+
+          case 'good':
+            return 'check-circle';
+          case 'warning':
+            return 'warning';
+          case 'error':
+            return 'error';
+
+        }
+
+      }());
 
     },
 
@@ -115,13 +155,6 @@ Example:
     },
 
     // Element Behavior
-    _removeThisProp: function(event) {
-
-      var self = this;
-
-      self.parentNode._removeProp(self.title);
-
-    }
 
   });
 

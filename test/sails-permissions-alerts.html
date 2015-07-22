@@ -1,0 +1,219 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../sails-permissions/sails-permissions-autocomplete.html">
+
+  </head>
+  <body>
+
+    <!-- You can use the document as a place to set up your fixtures. -->
+    <sails-permissions-alerts status="good" message="Everything is cool."></sails-permissions-alerts>
+    <sails-permissions-alerts status="warning" message="Ya'll got issues."></sails-permissions-alerts>
+    <sails-permissions-alerts status="error" message="These things need to be fixed"></sails-permissions-alerts>
+
+    <script>
+      var myEl = document.querySelectorAll("sails-permissions-autocomplete")[0];
+      var myEl2 = document.querySelectorAll("sails-permissions-autocomplete")[1];
+
+      suite("<sails-permissions-autocomplete>", function() {
+
+        teardown(function(done) {
+          flush(done);
+        });
+
+        test('Should render the component', function() {
+
+          expect(myEl.children.length).to.not.equal(0);
+
+        });
+
+        test('should set a timeout to call the search function when the query is changed', function(done) {
+
+          var stub = sinon.stub(myEl, 'cancelAsync', function() {
+                return true;
+              }),
+              stub2 = sinon.stub(myEl, 'async', function() {
+                return true;
+              });
+
+          fakeEvent = new Event('query-changed');
+          myEl.dispatchEvent(fakeEvent);
+
+          flush(function () {
+            expect(stub).to.have.been.called;
+            expect(stub2).to.have.been.called;
+            done();
+
+            myEl.cancelAsync.restore();
+            myEl.async.restore();
+
+          });
+
+        });
+
+        test('shouldn\'t search if there isn\'t a query', function(done) {
+
+          var stub = sinon.stub(myEl.helper, 'search', function() {
+            return true;
+          });
+
+          myEl.query = '';
+
+          flush(function() {
+            expect(stub).to.have.not.been.called;
+            myEl.helper.search.restore();
+            done();
+          });
+
+        });
+
+        test('should show the dropdown when there are results', function(done) {
+
+            myEl.results = [{name: 'Arugala'}, {name: 'Breadsticks'}, {name: 'Peonies'}];
+
+            flush(function() {
+              expect(myEl.$$('.menu--container')).to.not.be.undefined;
+              done();
+            });
+
+        });
+
+        test('should show a \'No results\' message in the dropdown when no results come back from the server', function(done) {
+
+          myEl.results = [];
+
+          flush(function() {
+            expect(myEl.$$('.menu--container')).to.not.be.undefined;
+            expect(myEl.$$('.menu--container').children[1].children[0].innerHTML).to.equal('No results found.');
+            done();
+          });
+
+        });
+
+        test('should provide a method to manually hide the dropdown', function(done) {
+
+          myEl.results = [{name: 'Arugala'}, {name: 'Breadsticks'}, {name: 'Peonies'}];
+          myEl.query = 'Arugala';
+
+          myEl._hideDropdown();
+
+          flush(function() {
+            expect(myEl.$$('.menu--container').attributes[1].value).to.equal('display: none;');
+            done();
+          });
+
+        });
+
+        myEl.query = 'Potato';
+        test('should hide the dropdown when the query is cleared by the user', function(done) {
+
+          myEl.query = '';
+
+          flush(function() {
+            expect(myEl.$$('.menu--container').attributes[1].value).to.equal('display: none;');
+            done();
+          });
+
+        });
+
+        test('should submit the item when it is selected by the user', function(done) {
+
+          var stub = sinon.stub(myEl, 'fire', function() {
+            return true;
+          }),
+              fakeEvent,
+              details = {
+                item: {
+                  dataId: 'Arugala'
+                }
+              };
+
+          myEl._select(event, details);
+
+          flush(function() {
+            expect(stub).to.have.been.called;
+            myEl.fire.restore();
+            done();
+          });
+
+        });
+
+        test('shouldn\'t search if the throttle is active', function(done) {
+
+          var stub = sinon.stub(myEl.helper, 'search', function() {
+            return true;
+          });
+
+          myEl.query = 'Potato';
+          myEl.throttle = true;
+
+          flush(function() {
+            expect(stub).to.have.not.been.called;
+            myEl.helper.search.restore();
+            done();
+          });
+
+        });
+
+        test('shouldn\'t submit the item if the selection is undefined', function(done) {
+
+          var stub = sinon.stub(myEl, 'fire', function() {
+            return true;
+          }),
+              fakeEvent,
+              details = {
+                  item: {
+                    dataId: null
+                  }
+              };
+
+          myEl._select(fakeEvent, details);
+
+          flush(function() {
+            expect(stub).to.have.not.been.called;
+            myEl.fire.restore();
+            done();
+          });
+
+        });
+
+        test('The input label should be \'New Role\' if the type is \'user\'', function(done) {
+
+          flush(function() {
+            expect(myEl.label).to.equal('New Role');
+            done();
+          });
+
+        });
+
+        test('The input label should read \'New Model\' if the type is \'role\'', function(done) {
+
+          flush(function() {
+            expect(myEl2.label).to.equal('New Model');
+            done();
+          });
+
+        });
+
+      });
+
+    </script>
+
+  </body>
+</html>

@@ -11,6 +11,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../polymer/polymer.html">
 
 <link rel="import" href="sails-permissions-card.html">
+<link rel="import" href="sails-permissions-card-form.html">
+
 <link rel="import" href="../../paper-icon/paper-icon.html">
 <link rel="import" href="../../iron-icon/iron-icon.html">
 <link rel="import" href="../../paper-button/paper-button.html">
@@ -35,31 +37,46 @@ Example:
   <style>
 
     :host {
-      display: block;
       box-sizing: border-box;
+      padding: 0 0.5em;
     }
 
-    sails-permissions-card {
-      margin: .5em;
+    sails-permissions-card, sails-permissions-card-form {
+      margin-bottom: 1em;
+    }
+
+    .new-role--container {
+      font-family: 'Roboto';
+      text-align: center;
+      font-size: 1.25em;
+      padding: 1em 0 2em 0;
+    }
+
+    :host::shadow .new-role--container paper-material {
+      @apply(--layout);
     }
 
   </style>
 
   <template>
 
-      <template is="dom-if" if="[[displayNewRoleForm]]">
-        <p>New role card here.</p>
-      </template>
-
       <template is="dom-repeat" items="{{model}}">
         <sails-permissions-card model="{{item}}" type="[[type]]"></sails-permissions-card>
       </template>
 
-      <template is="dom-if" if="[[shouldDisplayNewButton]]">
-        <paper-button on-click="_toggleDisplayNewRoleForm">
-          New Role
-          <iron-icon icon="menu"></iron-icon>
-        </paper-button>
+      <template is="dom-if" if="[[displayNewRoleForm]]">
+        <sails-permissions-card-form on-submit="_addNewCard"></sails-permissions-card-form>
+      </template>
+
+      <template is="dom-if" if="[[displayNewRoleButton]]">
+
+        <section class="new-role new-role--container">
+          <paper-button on-click="_displayNewRoleForm">
+            <span>New Role</span>
+            <iron-icon icon="add"></iron-icon>
+          </paper-button>
+        </section>
+
       </template>
 
   </template>
@@ -75,17 +92,18 @@ Example:
     properties: {
 
       model: {
-        type: Object
+        type: Object,
+        notify: true
       },
 
-      shouldDisplayNewButton: {
+      displayNewRoleButton: {
         type: Boolean,
-        computed: '_shouldDisplayNewButton(type)',
-        readOnly: true
+        value: false
       },
 
       displayNewRoleForm: {
-        type: Boolean
+        type: Boolean,
+        value: false
       }
 
     },
@@ -100,6 +118,12 @@ Example:
       // This is the point where you should make modifications to the DOM (when
       // necessary), or kick off any processes the element wants to perform.
 
+      var self = this;
+
+      if (self.type === 'role') {
+        self.displayNewRoleButton = true;
+      }
+
     },
 
     attached: function() {
@@ -109,8 +133,6 @@ Example:
       // This is a good place to perform any work related to your element's
       // visual state or active behavior (measuring sizes, beginning animations,
       // loading resources, etc).
-
-      var self = this;
 
     },
 
@@ -123,18 +145,29 @@ Example:
 
     // Element Behavior
 
-    /** Determines if the 'new role button' should be displayed */
-    _shouldDisplayNewButton: function(type) {
-      return type === 'role';
-    },
-
     /** Toggles display of the 'New Role Form'. */
 
-    _toggleDisplayNewRoleForm: function() {
+    _displayNewRoleForm: function() {
 
       var self = this;
 
-      self.displayNewRoleForm = !self.displayNewRoleForm;
+      self.displayNewRoleForm = true;
+      self.displayNewRoleButton = false;
+
+    },
+
+    /** Adds a new card to the list by mutating the list. */
+
+    _addNewCard: function(event) {
+
+      var self = this;
+
+      event.stopPropagation();
+
+      self.push('model', event.detail.model);
+
+      self.displayNewRoleForm = false;
+      self.displayNewRoleButton = true;
 
     }
 
