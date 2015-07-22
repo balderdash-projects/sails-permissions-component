@@ -44,9 +44,11 @@ Example:
   <template>
 
       <template is="dom-repeat" items="{{model}}">
-
         <sails-permissions-card model="{{item}}" type="[[type]]"></sails-permissions-card>
+      </template>
 
+      <template is="dom-if" if="[[shouldDisplayNewButton]]">
+        <p>New button here</p>
       </template>
 
   </template>
@@ -63,6 +65,12 @@ Example:
 
       model: {
         type: Object
+      },
+
+      shouldDisplayNewButton: {
+        type: Boolean,
+        computed: '_shouldDisplayNewButton(type)',
+        readOnly: true
       }
 
     },
@@ -99,6 +107,10 @@ Example:
     },
 
     // Element Behavior
+
+    _shouldDisplayNewButton: function(type) {
+      return type === 'role';
+    }
 
   });
 
