@@ -11,7 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../polymer/polymer.html">
 
 <link rel="import" href="../../iron-icon/iron-icon.html">
-<link rel="import" href="../lodash.html">
+<link rel="import" href="../../iron-icons/iron-icons.html">
 
 <!--
 An element providing a solution to no problem in particular.
@@ -25,62 +25,57 @@ Example:
 @demo demo/index.html
 @hero hero.svg
 -->
-<dom-module id="sails-permissions-card-form">
+<dom-module id="sails-permissions-alerts">
 
   <style>
 
     :host {
       display: block;
       box-sizing: border-box;
+      margin-top: 0.5em !important;
     }
 
     /** Typography */
 
-    h1, h2, h3, h4, p {
-      margin: .25rem 0;
+    .alert--container {
+      padding: 1em;
+      border-radius: 0.25em;
+      background: #efefef;
+      text-align: left;
+      @apply(--layout);
+      @apply(--layout-center);
+      @apply(--layout-center-justified);
     }
 
-    paper-item {
-      align-items: flex-start;
-      padding: 0.5rem;
-      margin: 0 0.33em;
+    .alert--container > * {
+      margin: 0 .66em;
     }
 
-    paper-item > * {
-      margin: 0 0.33em;
+    .big {
+      --iron-icon-height: 36px;
+      --iron-icon-width: 36px;
     }
 
-    header {
-      max-width: 25%;
+    .good {
+      background: green;
     }
 
-    .summary {
-      @apply(--layout-flex-2);
+    .warning {
+      background: yellow;
     }
 
-    .props {
-      @apply(--layout-flex-2);
-    }
-
-    .button {}
-
-    .tagline, .summary--content {
-      color: #666666;
-    }
-
-    .summary--content {
-      font-style: italic;
-    }
-
-    .button--less {
-      background-color: #00BCD4;
+    .alert {
+      background: red;
     }
 
   </style>
 
   <template>
 
-    <iron-icon
+    <section class="alert--container">
+      <div>{{message}}</div>
+      <iron-icon class="big" icon="{{icon}}"></iron-icon>
+    </section>
 
   </template>
 
@@ -118,8 +113,19 @@ Example:
       // This is the point where you should make modifications to the DOM (when
       // necessary), or kick off any processes the element wants to perform.
 
+    },
+
+    attached: function() {
+      // `attached` fires once the element and its parents have been inserted
+      // into a document.
+      //
+      // This is a good place to perform any work related to your element's
+      // visual state or active behavior (measuring sizes, beginning animations,
+      // loading resources, etc).
+
       var self = this;
 
+      self.toggleClass(self.status, true, self.$$('.alert--container'));
       self.icon = (function() {
 
         switch(self.status) {
@@ -130,20 +136,11 @@ Example:
             return 'warning';
           case 'error':
             return 'error';
-
         }
 
       }());
 
-    },
-
-    attached: function() {
-      // `attached` fires once the element and its parents have been inserted
-      // into a document.
-      //
-      // This is a good place to perform any work related to your element's
-      // visual state or active behavior (measuring sizes, beginning animations,
-      // loading resources, etc).
+      (self.domHost || Polymer).updateStyles();
 
     },
 

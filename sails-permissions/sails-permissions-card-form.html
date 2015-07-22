@@ -17,7 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../lodash.html">
 
 <link rel="import" href="sails-permissions-props-list.html">
-
+<link rel="import" href="sails-permissions-alerts.html">
 
 <!--
 An element providing a solution to no problem in particular.
@@ -47,7 +47,8 @@ Example:
     }
 
     paper-item {
-      align-items: flex-start;
+      /*align-items: flex-start;*/
+      display: block;
       padding: 0.5rem;
       margin: 0 0.33em;
     }
@@ -56,23 +57,7 @@ Example:
       margin: 0 0.33em;
     }
 
-    header {
-      max-width: 25%;
-    }
-
-    .summary {
-      @apply(--layout-flex-2);
-    }
-
-    .props {
-      @apply(--layout-flex-2);
-    }
-
     .button {}
-
-    .tagline, .summary--content {
-      color: #666666;
-    }
 
     .summary--content {
       font-style: italic;
@@ -82,6 +67,10 @@ Example:
       background-color: #00BCD4;
     }
 
+    .button--cancel {
+      background-color: #F44336;
+    }
+
   </style>
 
   <template>
@@ -89,14 +78,22 @@ Example:
     <paper-material elevation="{{elevation}}">
       <paper-item>
 
-        <header>
-          <paper-input value="{{title}}" label="New Title"></paper-input>
-        </header>
+        <p>Please give the new role a title and at least one model.</p>
 
-        <section class="props">
-          <sails-permissions-props-list type="{{type}}" props="{{props}}"></sails-permissions-props-list>
-          <paper-button class="button--less" on-click="_submitRole">Done</paper-button>
+        <section>
+          <header>
+            <paper-input value="{{title}}" label="New Title"></paper-input>
+          </header>
+          <section class="props">
+            <sails-permissions-props-list type="{{type}}" props="{{props}}"></sails-permissions-props-list>
+            <paper-button class="button--less" on-click="_submitRole">Done</paper-button>
+            <paper-button class="button--cancel" on-click="_cancelSubmitRole">Cancel</paper-button>
+          </section>
         </section>
+
+        <template is="dom-repeat" items="{{errors}}">
+          <sails-permissions-alerts status="{{item.status}}" message="{{item.message}}"></sails-permissions-alerts>
+        </template>
 
       </paper-item>
     </paper-material>
@@ -136,6 +133,12 @@ Example:
         type: Boolean,
         value: true,
         readOnly: true
+      },
+
+      errors: {
+        type: Array,
+        value: [],
+        notify: true
       }
 
     },
@@ -181,14 +184,18 @@ Example:
 
       var self = this;
 
+      self.errors = [];
+
       if (!self.title && !self.props.length) {
-        console.log('should fire a no title and no props alert');
+        self.unshift('errors', {'status': 'error', 'message': 'Please add a title and at least one property.'});
         return;
+
       } else if (!self.props.length) {
-        console.log('should fire a no props alert');
+        self.unshift('errors', {'status': 'error', 'message': 'Please add at least one property.'});
         return;
+
       } else if (!self.title) {
-        console.log('should fire a no title alert');
+        self.unshift('errors', {status: 'error', message: 'Please add a title.'});
         return;
       }
 
@@ -200,6 +207,18 @@ Example:
       self.title = null;
       self.props = [];
 
+    },
+
+    _cancelSubmitRole: function() {
+
+      var self = this;
+
+      self.errors = [];
+      self.model = {};
+      self.title = null;
+      self.props = [];
+
+      self.parentNode._toggleNewRoleForm();
     }
 
     // Element Behavior

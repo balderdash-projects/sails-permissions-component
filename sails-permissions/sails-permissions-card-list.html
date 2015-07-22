@@ -60,10 +60,6 @@ Example:
 
   <template>
 
-      <template is="dom-repeat" items="{{model}}">
-        <sails-permissions-card model="{{item}}" type="[[type]]"></sails-permissions-card>
-      </template>
-
       <template is="dom-if" if="[[displayNewRoleForm]]">
         <sails-permissions-card-form on-submit="_addNewCard"></sails-permissions-card-form>
       </template>
@@ -71,12 +67,16 @@ Example:
       <template is="dom-if" if="[[displayNewRoleButton]]">
 
         <section class="new-role new-role--container">
-          <paper-button on-click="_displayNewRoleForm">
+          <paper-button on-click="_toggleNewRoleForm">
             <span>New Role</span>
             <iron-icon icon="add"></iron-icon>
           </paper-button>
         </section>
 
+      </template>
+
+      <template is="dom-repeat" items="{{model}}">
+        <sails-permissions-card model="{{item}}" type="[[type]]"></sails-permissions-card>
       </template>
 
   </template>
@@ -147,12 +147,12 @@ Example:
 
     /** Toggles display of the 'New Role Form'. */
 
-    _displayNewRoleForm: function() {
+    _toggleNewRoleForm: function() {
 
       var self = this;
 
-      self.displayNewRoleForm = true;
-      self.displayNewRoleButton = false;
+      self.displayNewRoleForm = !self.displayNewRoleForm;
+      self.displayNewRoleButton = !self.displayNewRoleButton;
 
     },
 
@@ -164,7 +164,7 @@ Example:
 
       event.stopPropagation();
 
-      self.push('model', event.detail.model);
+      self.unshift('model', event.detail.model);
 
       self.displayNewRoleForm = false;
       self.displayNewRoleButton = true;
