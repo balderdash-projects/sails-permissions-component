@@ -11,6 +11,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../polymer/polymer.html">
 
 <link rel="import" href="sails-permissions-card.html">
+<link rel="import" href="../../paper-icon/paper-icon.html">
+<link rel="import" href="../../iron-icon/iron-icon.html">
+<link rel="import" href="../../paper-button/paper-button.html">
+
 <link rel="import" href="../lodash.html">
 
 <!--
@@ -48,7 +52,10 @@ Example:
       </template>
 
       <template is="dom-if" if="[[shouldDisplayNewButton]]">
-        <p>New button here</p>
+        <paper-button>
+          New Role
+          <iron-icon icon="menu"></iron-icon>
+        </paper-button>
       </template>
 
   </template>

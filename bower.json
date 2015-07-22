@@ -34,7 +34,8 @@
     "algoliasearch": "~3.7.4",
     "algoliasearch-helper": "~2.1.2",
     "paper-menu": "PolymerElements/paper-menu#~1.0.1",
-    "iron-form": "PolymerElements/iron-form#~1.0.7"
+    "iron-form": "PolymerElements/iron-form#~1.0.7",
+    "iron-icon": "PolymerElements/iron-icon#~1.0.2"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
