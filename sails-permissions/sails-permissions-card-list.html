@@ -47,7 +47,7 @@ Example:
 
   <template>
 
-      <template is="dom-if" if="[[shouldDisplayNewRoleCard]]">
+      <template is="dom-if" if="[[displayNewRoleForm]]">
         <p>New role card here.</p>
       </template>
 
@@ -56,7 +56,7 @@ Example:
       </template>
 
       <template is="dom-if" if="[[shouldDisplayNewButton]]">
-        <paper-button>
+        <paper-button on-click="_toggleDisplayNewRoleForm">
           New Role
           <iron-icon icon="menu"></iron-icon>
         </paper-button>
@@ -85,8 +85,7 @@ Example:
       },
 
       displayNewRoleForm: {
-        type: Boolean,
-        readOnly: true
+        type: Boolean
       }
 
     },
@@ -129,19 +128,11 @@ Example:
       return type === 'role';
     },
 
-    /**
-     * Toggles display of the 'New Role Form'.  Optionally accepts a boolean
-     * to force a specific state.
-     *
-     * @param {boolean=} state
-     * If defined, will force display to true or false.
-     */
+    /** Toggles display of the 'New Role Form'. */
 
-    _toggleDisplayNewRoleForm: function(state) {
+    _toggleDisplayNewRoleForm: function() {
 
-      if (state !== undefined) {
-        self.displayNewRoleForm = state;
-      }
+      var self = this;
 
       self.displayNewRoleForm = !self.displayNewRoleForm;
 
