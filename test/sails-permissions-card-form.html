@@ -78,6 +78,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         });
 
+        test('If the new role has a title and at least one model, submit it to the parent compoent', function() {
+
+          var stub = sinon.stub(myEl, 'fire', function() {
+            return true;
+          });
+
+          myEl.props = ['Potato', 'Latke', 'Puppies'];
+          myEl.title = 'A few of my favorite things';
+
+          myEl._submitRole();
+
+          expect(myEl.errors.length).to.equal(0);
+          expect(stub).to.have.been.called;
+          myEl.fire.restore();
+
+        });
+
       });
 
     </script>

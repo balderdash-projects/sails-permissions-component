@@ -23,9 +23,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
 
     <!-- You can use the document as a place to set up your fixtures. -->
-    <sails-permissions-alerts status="good" message="Everything is cool"></sails-permissions-alerts>
-    <sails-permissions-alerts status="warning" message="Ya'll got issues"></sails-permissions-alerts>
-    <sails-permissions-alerts status="error" message="These things need to be fixed"></sails-permissions-alerts>
+    <paper-item>
+      <sails-permissions-alerts status="good" message="Everything is cool"></sails-permissions-alerts>
+      <sails-permissions-alerts status="warning" message="Ya'll got issues"></sails-permissions-alerts>
+      <sails-permissions-alerts status="error" message="These things need to be fixed"></sails-permissions-alerts>
+    </paper-item>
 
     <script>
 
@@ -45,7 +47,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         });
 
-        test('It should display the message', function() {
+        test('It should display the correct message', function() {
 
           expect(goodAlert.children[0].children[0].innerHTML).to.equal(goodAlert.message);
           expect(warningAlert.children[0].children[0].innerHTML).to.equal(warningAlert.message);
@@ -55,9 +57,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('It should display the right icon', function() {
 
+          debugger;
+
           expect(goodAlert.icon).to.equal('check-circle');
           expect(warningAlert.icon).to.equal('warning');
           expect(errorAlert.icon).to.equal('error');
+
 
         });
 

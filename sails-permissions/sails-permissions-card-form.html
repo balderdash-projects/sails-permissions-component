@@ -57,20 +57,17 @@ Example:
       margin: 0 0.33em;
     }
 
-    .button {}
-
     .instructions--container {
       font-style: italic;
       margin: 1em 0;
     }
 
-    .button--less {
-      background-color: #00BCD4;
-      margin-left: 0;
+    .button--container {
+      margin: 1em inherit;
     }
 
-    .button--cancel {
-      background-color: #F44336;
+    .button--less {
+      background-color: #00BCD4;
     }
 
   </style>
@@ -80,9 +77,8 @@ Example:
     <paper-material elevation="{{elevation}}">
       <paper-item>
 
-        <aside class="instructions--container">
-          <p>Please give the new role a title and at least one model.</p>
-        </aside>
+        <h1>New Role Creator</h1>
+        <p>Please enter a title for the role and at least one model.</p>
 
         <section>
           <header>
@@ -90,8 +86,10 @@ Example:
           </header>
           <section class="props">
             <sails-permissions-props-list type="role" props="{{props}}"></sails-permissions-props-list>
-            <paper-button class="button--less" on-click="_submitRole">Done</paper-button>
-            <paper-button class="button--cancel" on-click="_cancelSubmitRole">Cancel</paper-button>
+            <div class="button--container">
+              <paper-button class="button--less" on-click="_submitRole">Done</paper-button>
+              <paper-button class="button--cancel" on-click="_cancelSubmitRole">Cancel</paper-button>
+            </div>
           </section>
         </section>
 
@@ -182,12 +180,12 @@ Example:
 
       /** User didn't enter a title or any props for the role */
       if (!self.title && !self.props.length) {
-        self.unshift('errors', {'status': 'error', 'message': 'Please add a title and at least one property.'});
+        self.unshift('errors', {'status': 'error', 'message': 'Please add a title and at least one model.'});
         return;
 
       /** User didn't enter a prop for the role */
       } else if (!self.props.length) {
-        self.unshift('errors', {'status': 'error', 'message': 'Please add at least one property.'});
+        self.unshift('errors', {'status': 'error', 'message': 'Please add at least one model.'});
         return;
 
       /** User didn't enter a title */
