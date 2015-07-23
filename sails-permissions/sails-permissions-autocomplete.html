@@ -148,8 +148,8 @@ Example:
           </paper-menu>
 
           <template is="dom-if" if="[[displayNoResults]]">
-            <paper-item>
-              <div>No results found.</div>
+            <paper-item on-click="_toggleNewRoleForm">
+              <div>{{noResultsMessage}}</div>
             </paper-item>
           </template>
 
@@ -211,8 +211,14 @@ Example:
         throttle: {
           type: Boolean
         },
+        /** A timer to wait for text-entry to finish before autocompletion */
         timer: {
           value: null
+        },
+        /** No results message */
+        noResultsMessage: {
+          type: String,
+          value: "No results found."
         }
       },
 
@@ -249,6 +255,8 @@ Example:
 
         if (self.type === 'user') {
           self.label = 'New Role';
+          self.noResultsMessage = 'No matching role found.  Would you like to create it?'
+
         } else if (self.type === 'role') {
           self.label = 'New Model';
         }
@@ -264,6 +272,8 @@ Example:
       attached: function() {
 
         var self = this;
+
+        /** If type is user, prompt user to create a new role */
 
         /**
          * When query changes, make a call to #_search.
@@ -287,6 +297,10 @@ Example:
       detached: function() {
 
         var self = this;
+
+        if (self.type === 'user') {
+          self.removeEventListener('click');
+        }
 
         self.removeEventListener('query-changed');
 
@@ -391,6 +405,18 @@ Example:
         self.async(function() {
           self.throttle = false;
         }, 500);
+
+      },
+
+      _toggleNewRoleForm: function() {
+
+        var self = this;
+
+        if (self.type !== 'user') {
+          return;
+        } else {
+          debugger;
+        }
 
       }
 
