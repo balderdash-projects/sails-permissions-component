@@ -415,7 +415,12 @@ Example:
         if (self.type !== 'user') {
           return;
         } else {
-          debugger;
+
+          document.querySelector('sails-permissions-card-list[type="role"]')
+          ._toggleNewRoleForm();
+
+          self.results = null;
+
         }
 
       }
