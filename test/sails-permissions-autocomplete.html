@@ -99,7 +99,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           flush(function() {
             expect(myEl.$$('.menu--container')).to.not.be.undefined;
-            expect(myEl.$$('.menu--container').children[1].children[0].innerHTML).to.equal('No results found.');
+
+            if (myEl.type === 'user') {
+              expect(myEl.$$('.menu--container').children[1].children[0].innerHTML).to.equal('No matching role found.  Would you like to create it?');
+            } else {
+              expect(myEl.$$('.menu--container').children[1].children[0].innerHTML).to.equal('No results found.');
+
+            }
             done();
           });
 

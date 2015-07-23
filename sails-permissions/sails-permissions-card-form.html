@@ -78,19 +78,20 @@ Example:
       <paper-item>
 
         <h1>New Role Creator</h1>
-        <p>Please enter a title for the role and at least one model.</p>
 
         <section>
-          <header>
-            <paper-input value="{{title}}" label="New Title"></paper-input>
-          </header>
-          <section class="props">
-            <sails-permissions-props-list type="role" props="{{props}}"></sails-permissions-props-list>
-            <div class="button--container">
-              <paper-button class="button--less" on-click="_submitRole">Done</paper-button>
-              <paper-button class="button--cancel" on-click="_cancelSubmitRole">Cancel</paper-button>
-            </div>
-          </section>
+
+          <paper-input value="{{title}}" label="New Title"></paper-input>
+          <p>Please enter a title for the new role.</p>
+
+          <sails-permissions-props-list type="role" props="{{props}}"></sails-permissions-props-list>
+          <p>Please enter at least one model for the new role.</p>
+
+          <div class="button--container">
+            <paper-button class="button--less" on-click="_submitRole">Done</paper-button>
+            <paper-button class="button--cancel" on-click="_cancelSubmitRole">Cancel</paper-button>
+          </div>
+
         </section>
 
         <template is="dom-repeat" items="{{errors}}">
