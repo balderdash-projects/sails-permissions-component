@@ -259,7 +259,18 @@ Example:
     },
 
     _makePropsList: function(props) {
-      return props.base.join(", ");
+
+      if (_.isObject(props.base[0])) {
+
+        return _.reduce(props.base, function(prev, current) {
+          prev.push(current.title);
+          return prev;
+        }, []).join(', ');
+
+      } else {
+        return props.base.join(', ');
+      }
+
     },
 
   });
