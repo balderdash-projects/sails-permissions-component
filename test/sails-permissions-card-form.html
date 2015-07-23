@@ -38,43 +38,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('If the \'New Title\' field isn\'t filled out, it should show an appropriate alert.', function(done) {
 
-            var stub = sinon.stub(myEl, 'fire', function() {
-              return true;
-            });
-
             myEl.props = ['Blog Posts', 'Product Pages'];
             myEl.title = '';
 
             myEl._submitRole();
 
-            flush(function() {
+            expect(myEl.errors.length).to.equal(1);
+            expect(myEl.errors[0].message).to.equal('Please add a title.');
 
-              expect(stub).not.be.called;
-              myEl.fire.restore();
-              done();
-
-            });
+            done();
 
         });
 
         test('If the new role doesn\'t have at least one model, it should show an appropriate alert.', function(done) {
-
-            var stub = sinon.stub(myEl, 'fire', function() {
-              return true;
-            });
 
             myEl.props = [];
             myEl.title = 'Oregano';
 
             myEl._submitRole();
 
-            flush(function() {
+            expect(myEl.errors.length).to.equal(1);
+            expect(myEl.errors[0].message).to.equal('Please add at least one property.');
 
-              expect(stub).not.be.called;
-              myEl.fire.restore();
-              done();
+            done();
 
-            });
+        });
+
+        test('If the new role has neither a single model or a title, it should show an appropriate alert.', function(done) {
+
+            myEl.props = [];
+            myEl.title = '';
+
+            myEl._submitRole();
+
+            expect(myEl.errors.length).to.equal(1);
+            expect(myEl.errors[0].message).to.equal('Please add a title and at least one property.');
+
+            done();
 
         });
 
