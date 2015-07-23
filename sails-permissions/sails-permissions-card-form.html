@@ -59,12 +59,14 @@ Example:
 
     .button {}
 
-    .summary--content {
+    .instructions--container {
       font-style: italic;
+      margin: 1em 0;
     }
 
     .button--less {
       background-color: #00BCD4;
+      margin-left: 0;
     }
 
     .button--cancel {
@@ -78,14 +80,16 @@ Example:
     <paper-material elevation="{{elevation}}">
       <paper-item>
 
-        <p>Please give the new role a title and at least one model.</p>
+        <aside class="instructions--container">
+          <p>Please give the new role a title and at least one model.</p>
+        </aside>
 
         <section>
           <header>
             <paper-input value="{{title}}" label="New Title"></paper-input>
           </header>
           <section class="props">
-            <sails-permissions-props-list type="{{type}}" props="{{props}}"></sails-permissions-props-list>
+            <sails-permissions-props-list type="role" props="{{props}}"></sails-permissions-props-list>
             <paper-button class="button--less" on-click="_submitRole">Done</paper-button>
             <paper-button class="button--cancel" on-click="_cancelSubmitRole">Cancel</paper-button>
           </section>
@@ -112,16 +116,6 @@ Example:
 
       title: {
         type: String,
-      },
-
-      model: {
-        type: Object,
-        value: {}
-      },
-
-      type: {
-        type: String,
-        value: 'role'
       },
 
       props: {
@@ -153,14 +147,6 @@ Example:
       // This is the point where you should make modifications to the DOM (when
       // necessary), or kick off any processes the element wants to perform.
 
-      var self = this;
-
-      if (self.model) {
-
-        _.extend(self, self.model);
-
-      }
-
     },
 
     attached: function() {
@@ -180,34 +166,52 @@ Example:
       // Use this to clean up anything you did in `attached`.
     },
 
+    // Element Behavior
+
+    /** A function that collects information provided by the user and performs
+     * simple input validation.  If a given field is missing, an alert is
+     * generated and the submission is prevented.
+     */
+
     _submitRole: function() {
 
       var self = this;
 
+      /** Clear any existing errors before continuing */
       self.errors = [];
 
+      /** User didn't enter a title or any props for the role */
       if (!self.title && !self.props.length) {
         self.unshift('errors', {'status': 'error', 'message': 'Please add a title and at least one property.'});
         return;
 
+      /** User didn't enter a prop for the role */
       } else if (!self.props.length) {
         self.unshift('errors', {'status': 'error', 'message': 'Please add at least one property.'});
         return;
 
+      /** User didn't enter a title */
       } else if (!self.title) {
         self.unshift('errors', {status: 'error', message: 'Please add a title.'});
         return;
       }
 
-      _.extend(self.model, {title: self.title, props: self.props});
+      /** Put title and props onto the model and fire an event to submit to the
+       * parent.
+       */
 
+      _.extend(self.model, {title: self.title, props: self.props});
       self.fire('submit', {model: self.model});
+
+      /** Clear the state of the form for the next new role */
 
       self.model = {};
       self.title = null;
       self.props = [];
 
     },
+
+    /** Allow the user to cancel adding a new role */
 
     _cancelSubmitRole: function() {
 
@@ -218,10 +222,10 @@ Example:
       self.title = null;
       self.props = [];
 
+      /** Call the parent component's toggleNewRoleForm() method. */
       self.parentNode._toggleNewRoleForm();
-    }
 
-    // Element Behavior
+    }
 
   });
 
