@@ -92,7 +92,6 @@ Example:
     .menu--container {
       position: absolute;
       z-index: 1;
-      margin: .5em;
       left: 0;
       right: 0;
       top: 60;
@@ -255,7 +254,7 @@ Example:
 
         if (self.type === 'user') {
           self.label = 'New Role';
-          self.noResultsMessage = 'No matching role found.  Would you like to create it?'
+          self.noResultsMessage = 'No matching role found.  Click to create it.'
 
         } else if (self.type === 'role') {
           self.label = 'New Model';
@@ -420,6 +419,7 @@ Example:
           ._toggleNewRoleForm();
 
           self.results = null;
+          self.query = null;
 
         }
 

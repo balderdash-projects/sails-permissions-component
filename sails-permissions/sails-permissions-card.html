@@ -93,6 +93,10 @@ Example:
       font-style: italic;
     }
 
+    .button--container {
+      margin: 1em 0;
+    }
+
     .button--less {
       background-color: #00BCD4;
       margin-left: 0;
@@ -100,10 +104,6 @@ Example:
 
     .button--more {
       color: #00BCD4;
-      margin-left: 0;
-    }
-
-    paper-button:nth-child(1) {
       margin-left: 0;
     }
 
@@ -136,7 +136,11 @@ Example:
 
           <section class="props">
             <sails-permissions-props-list type="{{type}}" props="{{props}}"></sails-permissions-props-list>
-            <paper-button class="button--less" on-click="_toggleSize">Done</paper-button>
+
+            <div class="button--container">
+              <paper-button class="button--less" on-click="_toggleSize">Done</paper-button>
+            </div>
+
           </section>
 
         </template>
