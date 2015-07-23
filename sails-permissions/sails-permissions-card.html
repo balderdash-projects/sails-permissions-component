@@ -46,26 +46,41 @@ Example:
       margin: .25rem 0;
     }
 
+    @media (min-width: 1024px) {
+
+      .summary {
+        @apply(--layout-flex-2);
+      }
+
+      .props {
+        @apply(--layout-flex-2);
+      }
+
+      paper-item {
+        align-items: flex-start;
+      }
+
+    }
+
+    @media (max-width: 1023px) {
+
+      paper-item {
+        display: block;
+      }
+
+    }
+
     paper-item {
-      align-items: flex-start;
-      padding: 0.5rem;
-      margin: 0 0.33em;
+      padding: 0.66rem;
+      margin: 0 -0.66em;
     }
 
     paper-item > * {
-      margin: 0 0.33em;
+      margin: 0 0.66em;
     }
 
     header {
-      max-width: 25%;
-    }
-
-    .summary {
-      @apply(--layout-flex-2);
-    }
-
-    .props {
-      @apply(--layout-flex-2);
+      min-width: 20%;
     }
 
     .button {}
@@ -80,10 +95,16 @@ Example:
 
     .button--less {
       background-color: #00BCD4;
+      margin-left: 0;
     }
 
     .button--more {
-      background-color: #FFB300;
+      color: #00BCD4;
+      margin-left: 0;
+    }
+
+    paper-button:nth-child(1) {
+      margin-left: 0;
     }
 
   </style>
@@ -105,8 +126,9 @@ Example:
               <h4 class="summary--title">{{propsTitle}}</h4>
               <p class="summary--content">{{propsList}}</p>
             </aside>
-            <paper-button class="button--more" on-click="_toggleSize">Edit</paper-button>
           </section>
+
+          <paper-button class="button--more" on-click="_toggleSize">Edit</paper-button>
 
         </template>
 

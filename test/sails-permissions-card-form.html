@@ -1,0 +1,103 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../sails-permissions/sails-permissions-card-form.html">
+
+  </head>
+  <body>
+
+    <!-- You can use the document as a place to set up your fixtures. -->
+    <sails-permissions-card-form></sails-permissions-card-form>
+
+    <script>
+      var myEl = document.querySelector('sails-permissions-card-form');
+
+      suite('<sails-permissions-card-form>', function() {
+
+        test('Should render the component', function() {
+
+          expect(myEl.children.length).to.not.equal(0);
+
+        });
+
+        test('If the \'New Title\' field isn\'t filled out, it should show an appropriate alert.', function(done) {
+
+            myEl.props = ['Blog Posts', 'Product Pages'];
+            myEl.title = '';
+
+            myEl._submitRole();
+
+            expect(myEl.errors.length).to.equal(1);
+            expect(myEl.errors[0].message).to.equal('Please add a title.');
+
+            done();
+
+        });
+
+        test('If the new role doesn\'t have at least one model, it should show an appropriate alert.', function(done) {
+
+            myEl.props = [];
+            myEl.title = 'Oregano';
+
+            myEl._submitRole();
+
+            expect(myEl.errors.length).to.equal(1);
+            expect(myEl.errors[0].message).to.equal('Please add at least one model.');
+
+            done();
+
+        });
+
+        test('If the new role has neither a single model or a title, it should show an appropriate alert.', function(done) {
+
+            myEl.props = [];
+            myEl.title = '';
+
+            myEl._submitRole();
+
+            expect(myEl.errors.length).to.equal(1);
+            expect(myEl.errors[0].message).to.equal('Please add a title and at least one model.');
+
+            done();
+
+        });
+
+        test('If the new role has a title and at least one model, submit it to the parent compoent', function() {
+
+          var stub = sinon.stub(myEl, 'fire', function() {
+            return true;
+          });
+
+          myEl.props = ['Potato', 'Latke', 'Puppies'];
+          myEl.title = 'A few of my favorite things';
+
+          myEl._submitRole();
+
+          expect(myEl.errors.length).to.equal(0);
+          expect(stub).to.have.been.called;
+          myEl.fire.restore();
+
+        });
+
+      });
+
+    </script>
+
+  </body>
+</html>

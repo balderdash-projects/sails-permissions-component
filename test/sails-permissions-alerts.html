@@ -1,0 +1,74 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../sails-permissions/sails-permissions-alerts.html">
+
+  </head>
+  <body>
+
+    <!-- You can use the document as a place to set up your fixtures. -->
+    <paper-item>
+      <sails-permissions-alerts status="good" message="Everything is cool"></sails-permissions-alerts>
+      <sails-permissions-alerts status="warning" message="Ya'll got issues"></sails-permissions-alerts>
+      <sails-permissions-alerts status="error" message="These things need to be fixed"></sails-permissions-alerts>
+    </paper-item>
+
+    <script>
+
+      var goodAlert = document.querySelectorAll("sails-permissions-alerts")[0];
+      var warningAlert = document.querySelectorAll("sails-permissions-alerts")[1];
+      var errorAlert = document.querySelectorAll("sails-permissions-alerts")[2];
+
+      suite("<sails-permissions-alerts>", function() {
+
+        teardown(function(done) {
+          flush(done);
+        });
+
+        test('Should render the component', function() {
+
+          expect(goodAlert.children.length).to.not.equal(0);
+
+        });
+
+        test('It should display the correct message', function() {
+
+          expect(goodAlert.children[0].children[0].innerHTML).to.equal(goodAlert.message);
+          expect(warningAlert.children[0].children[0].innerHTML).to.equal(warningAlert.message);
+          expect(errorAlert.children[0].children[0].innerHTML).to.equal(errorAlert.message);
+
+        });
+
+        test('It should display the right icon', function() {
+
+          debugger;
+
+          expect(goodAlert.icon).to.equal('check-circle');
+          expect(warningAlert.icon).to.equal('warning');
+          expect(errorAlert.icon).to.equal('error');
+
+
+        });
+
+      });
+
+    </script>
+
+  </body>
+</html>

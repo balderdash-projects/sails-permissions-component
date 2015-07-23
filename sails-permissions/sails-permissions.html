@@ -30,6 +30,9 @@ Example:
 
     :host {
       display: block;
+      position: fixed;
+      height: 100%;
+      width: 100%;
       box-sizing: border-box;
     }
 
@@ -46,12 +49,21 @@ Example:
       margin: 0.33em;
     }
 
+    sails-permissions-card-list {
+      position: fixed;
+      height: 100%;
+      overflow-y: scroll;
+      padding: 0 1em;
+    }
+
     sails-permissions-card-list[type="user"] {
-      min-width: 45%;
+      width: 50%;
+      left: 0;
     }
 
     sails-permissions-card-list[type="role"] {
-      min-width: 33%;
+      width: 50%;
+      right: 0;
     }
 
   </style>
@@ -117,6 +129,44 @@ Example:
               'Business',
               'Wagner'
             ]
+          },
+          {
+            title: 'Ryan Quinn',
+            subtitle: 'Medical Person',
+            props: [
+              'Soldier',
+              'Sailor',
+              'Tinker',
+              'Spy'
+            ]
+          },
+          {
+            title: 'Konstantin Zolotarev',
+            subtitle: 'Polymer Pro',
+            props: [
+              "Development",
+              "Of",
+              "All",
+              "Varieties"
+            ]
+          },
+          {
+            title: 'Blaine Price',
+            subtitle: 'Polymer Peon',
+            props: [
+              'UX',
+              'Front-end Design',
+              'Running'
+            ]
+          },
+          {
+            title: 'Travis Webb',
+            subtitle: 'CEO Person',
+            props: [
+              'Backend',
+              'Business',
+              'Wagner'
+            ]
           }
         ]
       },
@@ -124,6 +174,48 @@ Example:
       roles: {
         type: Array,
         value: [
+          {
+            title: 'Admin',
+            props: [
+              'Blog Posts',
+              'Product Pages',
+            ]
+          },
+          {
+            title: 'Registered User',
+            props: [
+              'Blog Posts',
+              'Product Pages'
+            ]
+          },
+          {
+            title: 'Public',
+            props: [
+              'Blog Posts',
+              'Product Pages'
+            ]
+          },
+          {
+            title: 'Admin',
+            props: [
+              'Blog Posts',
+              'Product Pages',
+            ]
+          },
+          {
+            title: 'Registered User',
+            props: [
+              'Blog Posts',
+              'Product Pages'
+            ]
+          },
+          {
+            title: 'Public',
+            props: [
+              'Blog Posts',
+              'Product Pages'
+            ]
+          },
           {
             title: 'Admin',
             props: [

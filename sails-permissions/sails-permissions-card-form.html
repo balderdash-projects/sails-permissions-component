@@ -1,0 +1,231 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../polymer/polymer.html">
+
+<link rel="import" href="../../paper-material/paper-material.html">
+<link rel="import" href="../../paper-styles/paper-styles.html">
+<link rel="import" href="../../paper-item/paper-item.html">
+<link rel="import" href="../../paper-button/paper-button.html">
+<link rel="import" href="../lodash.html">
+
+<link rel="import" href="sails-permissions-props-list.html">
+<link rel="import" href="sails-permissions-alerts.html">
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+  <sails-permissions-card></sails-permissions-card>
+
+@group Seed Elements
+@element seed-element
+@demo demo/index.html
+@hero hero.svg
+-->
+<dom-module id="sails-permissions-card-form">
+
+  <style>
+
+    :host {
+      display: block;
+      box-sizing: border-box;
+    }
+
+    /** Typography */
+
+    h1, h2, h3, h4, p {
+      margin: .25rem 0;
+    }
+
+    paper-item {
+      /*align-items: flex-start;*/
+      display: block;
+      padding: 0.5rem;
+      margin: 0 0.33em;
+    }
+
+    paper-item > * {
+      margin: 0 0.33em;
+    }
+
+    .instructions--container {
+      font-style: italic;
+      margin: 1em 0;
+    }
+
+    .button--container {
+      margin: 1em inherit;
+    }
+
+    .button--less {
+      background-color: #00BCD4;
+    }
+
+  </style>
+
+  <template>
+
+    <paper-material elevation="{{elevation}}">
+      <paper-item>
+
+        <h1>New Role Creator</h1>
+
+        <section>
+
+          <paper-input value="{{title}}" label="New Title"></paper-input>
+          <p>Please enter a title for the new role.</p>
+
+          <sails-permissions-props-list type="role" props="{{props}}"></sails-permissions-props-list>
+          <p>Please enter at least one model for the new role.</p>
+
+          <div class="button--container">
+            <paper-button class="button--less" on-click="_submitRole">Done</paper-button>
+            <paper-button class="button--cancel" on-click="_cancelSubmitRole">Cancel</paper-button>
+          </div>
+
+        </section>
+
+        <template is="dom-repeat" items="{{errors}}">
+          <sails-permissions-alerts status="{{item.status}}" message="{{item.message}}"></sails-permissions-alerts>
+        </template>
+
+      </paper-item>
+    </paper-material>
+
+  </template>
+
+</dom-module>
+
+<script>
+
+  Polymer({
+
+    is: 'sails-permissions-card-form',
+
+    properties: {
+
+      title: {
+        type: String,
+      },
+
+      props: {
+        type: Array,
+        value: []
+      },
+
+      expanded: {
+        type: Boolean,
+        value: true,
+        readOnly: true
+      },
+
+      errors: {
+        type: Array,
+        value: [],
+        notify: true
+      }
+
+    },
+
+    // Element Lifecycle
+
+    ready: function() {
+      // `ready` is called after all elements have been configured, but
+      // propagates bottom-up. This element's children are ready, but parents
+      // are not.
+      //
+      // This is the point where you should make modifications to the DOM (when
+      // necessary), or kick off any processes the element wants to perform.
+
+    },
+
+    attached: function() {
+      // `attached` fires once the element and its parents have been inserted
+      // into a document.
+      //
+      // This is a good place to perform any work related to your element's
+      // visual state or active behavior (measuring sizes, beginning animations,
+      // loading resources, etc).
+
+    },
+
+    detached: function() {
+      // The analog to `attached`, `detached` fires when the element has been
+      // removed from a document.
+      //
+      // Use this to clean up anything you did in `attached`.
+    },
+
+    // Element Behavior
+
+    /** A function that collects information provided by the user and performs
+     * simple input validation.  If a given field is missing, an alert is
+     * generated and the submission is prevented.
+     */
+
+    _submitRole: function() {
+
+      var self = this;
+
+      /** Clear any existing errors before continuing */
+      self.errors = [];
+
+      /** User didn't enter a title or any props for the role */
+      if (!self.title && !self.props.length) {
+        self.unshift('errors', {'status': 'error', 'message': 'Please add a title and at least one model.'});
+        return;
+
+      /** User didn't enter a prop for the role */
+      } else if (!self.props.length) {
+        self.unshift('errors', {'status': 'error', 'message': 'Please add at least one model.'});
+        return;
+
+      /** User didn't enter a title */
+      } else if (!self.title) {
+        self.unshift('errors', {status: 'error', message: 'Please add a title.'});
+        return;
+      }
+
+      /** Put title and props onto the model and fire an event to submit to the
+       * parent.
+       */
+
+      _.extend(self.model, {title: self.title, props: self.props});
+      self.fire('submit', {model: self.model});
+
+      /** Clear the state of the form for the next new role */
+
+      self.model = {};
+      self.title = null;
+      self.props = [];
+
+    },
+
+    /** Allow the user to cancel adding a new role */
+
+    _cancelSubmitRole: function() {
+
+      var self = this;
+
+      self.errors = [];
+      self.model = {};
+      self.title = null;
+      self.props = [];
+
+      /** Call the parent component's toggleNewRoleForm() method. */
+      self.parentNode._toggleNewRoleForm();
+
+    }
+
+  });
+
+</script>

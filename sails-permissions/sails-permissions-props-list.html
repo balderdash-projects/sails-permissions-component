@@ -35,6 +35,11 @@ Example:
     :host {
       display: block;
       box-sizing: border-box;
+      margin-bottom: .5em;
+    }
+
+    sails-permissions-prop:nth-child(odd) {
+      background-color: #efefef;
     }
 
   </style>
@@ -62,12 +67,10 @@ Example:
       type: {
         type: String
       },
-
       props: {
         type: Array,
         notify: true
       },
-
       newProp: {
         type: String
       }
@@ -125,6 +128,8 @@ Example:
     _submit: function(event) {
 
       var self = this;
+
+      event.stopPropagation();
 
       self._addNewProp(event.detail.selection);
 

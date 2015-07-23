@@ -8,57 +8,78 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../../paper-item/paper-item.html">
-<link rel="import" href="../../paper-button/paper-button.html">
-<link rel="import" href="../../paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../iron-icons/iron-icons.html">
-
-<link rel="import" href="../lodash.html">
 <link rel="import" href="../../polymer/polymer.html">
 
+<link rel="import" href="../../iron-icon/iron-icon.html">
+<link rel="import" href="../../iron-icons/iron-icons.html">
+
 <!--
-A single property of the user or role.
+An element providing a solution to no problem in particular.
 
 Example:
 
-  <sails-permissions-field></sails-permissions-field>
+  <sails-permissions-alerts></sails-permissions-alerts>
 
 @group Seed Elements
 @element seed-element
 @demo demo/index.html
 @hero hero.svg
 -->
-
-<dom-module id="sails-permissions-prop">
+<dom-module id="sails-permissions-alerts">
 
   <style>
 
     :host {
       display: block;
       box-sizing: border-box;
+      margin-top: 0.5em !important;
     }
 
-    .title {
-      @apply(--layout-flex-2);
+    /** Typography */
+
+    .alert--container {
+      padding: 1em;
+      border-radius: 0.25em;
+      background: #efefef;
+      text-align: left;
+      margin-bottom: .5em;
+      @apply(--layout);
+      @apply(--layout-center);
+      @apply(--layout-center-justified);
     }
 
-    paper-icon-button {
-      color: #F44336;
+    .alert--container > * {
+      margin: 0 .66em;
+    }
+
+    .big {
+      --iron-icon-height: 48px;
+      --iron-icon-width: 48px;
+    }
+
+    .good {
+      background: #DCEDC8;
+      color: #689F38;
+    }
+
+    .warning {
+      background: #FFF9C4;
+      color: #FBC02D;
+    }
+
+    .error {
+      background: #FFCCBC;
+      color: #E64A19;
     }
 
   </style>
 
   <template>
 
-    <paper-item>
-      <p class="title">{{title}}</p>
-      <template is="dom-if" if="{{displayPermissionsButton}}">
-        <paper-button class="button--permissions">Permissions</paper-button>
-      </template>
-      <div>
-        <paper-icon-button on-click="_removeThisProp" title="{{title}}" icon="highlight-off"></paper-icon-button>
-      <div>
-    </paper-item>
+    <section class="alert--container">
+      <div>{{message}}</div>
+      <iron-icon class="big" icon="{{icon}}"></iron-icon>
+    </section>
 
   </template>
 
@@ -68,17 +89,20 @@ Example:
 
   Polymer({
 
-    is: 'sails-permissions-prop',
+    is: 'sails-permissions-alerts',
 
     properties: {
 
-      title: {
-        type: String,
+      status: {
+        type: String
       },
 
-      displayPermissionsButton: {
-        type: Boolean,
-        value: false
+      message: {
+        type: String
+      },
+
+      icon: {
+        type: String
       }
 
     },
@@ -93,12 +117,6 @@ Example:
       // This is the point where you should make modifications to the DOM (when
       // necessary), or kick off any processes the element wants to perform.
 
-      var self = this;
-
-      if (self.type === 'role') {
-        self.displayPermissionsButton = true;
-      }
-
     },
 
     attached: function() {
@@ -108,6 +126,25 @@ Example:
       // This is a good place to perform any work related to your element's
       // visual state or active behavior (measuring sizes, beginning animations,
       // loading resources, etc).
+
+      var self = this;
+
+      self.toggleClass(self.status, true, self.$$('.alert--container'));
+      self.icon = (function() {
+
+        switch(self.status) {
+
+          case 'good':
+            return 'check-circle';
+          case 'warning':
+            return 'warning';
+          case 'error':
+            return 'error';
+        }
+
+      }());
+
+      (self.domHost || Polymer).updateStyles();
 
     },
 
@@ -119,13 +156,6 @@ Example:
     },
 
     // Element Behavior
-    _removeThisProp: function(event) {
-
-      var self = this;
-
-      self.parentNode._removeProp(self.title);
-
-    }
 
   });
 
