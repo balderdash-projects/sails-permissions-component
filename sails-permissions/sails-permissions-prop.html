@@ -37,6 +37,7 @@ Example:
     :host {
       display: block;
       box-sizing: border-box;
+      padding: 0.5em 0;
     }
 
     .title {
@@ -55,13 +56,17 @@ Example:
       @apply(--layout);
     }
 
+    .button--permissions {
+      background: #80CBC4;
+    }
+
     .description--container {
       @apply(--layout-center);
     }
 
     .permissions--container {
       @apply(--layout-justified);
-      padding: .5em 0 1em 0;
+      padding: 1em 0 1em 0;
     }
 
   </style>
@@ -71,13 +76,17 @@ Example:
     <paper-item>
 
       <section class="description--container">
-        <p class="title">{{title}}</p>
-        <template is="dom-if" if="{{displayPermissionsButton}}">
-          <paper-button on-click="_toggleDisplayPermissions" class="button--permissions">Edit Permissions</paper-button>
-        </template>
+
+          <p class="title">{{title}}</p>
+
+          <template is="dom-if" if="{{displayPermissionsButton}}">
+            <paper-button on-click="_toggleDisplayPermissions" class="button--permissions">Edit Permissions</paper-button>
+          </template>
+
         <div>
           <paper-icon-button on-click="_removeThisProp" title="{{title}}" icon="highlight-off"></paper-icon-button>
         <div>
+
       </section>
 
       <template is="dom-if" if="{{displayPermissions}}">
