@@ -93,68 +93,64 @@ Example:
         type: Array,
         value: [
           {
-            title: 'Ryan Quinn',
-            subtitle: 'Medical Person',
-            props: [
+            username: 'Ryan Quinn',
+            roles: [
               {
-                title: 'Soldier',
+                name: 'Soldier',
               },
               {
-                title: 'Sailor',
+                name: 'Sailor',
               },
               {
-                title: 'Tinker',
+                name: 'Tinker',
               },
               {
-                title: 'Spy'
+                name: 'Spy'
               }
             ]
           },
           {
-            title: 'Konstantin Zolotarev',
-            subtitle: 'Polymer Pro',
-            props: [
+            username: 'Konstantin Zolotarev',
+            roles: [
               {
-                title: "Development",
+                name: "Development",
               },
               {
-                title: "Of",
+                name: "Of",
               },
               {
-                title: "All",
+                name: "All",
               },
               {
-                title: "Varieties"
+                name: "Varieties"
               }
             ]
           },
           {
-            title: 'Blaine Price',
-            subtitle: 'Polymer Peon',
-            props: [
+            username: 'Blaine Price',
+            roles: [
               {
-                title: 'UX',
+                name: 'UX',
               },
               {
-                title: 'Front-end Design',
+                name: 'Front-end Design',
               },
               {
-                title: 'Running'
+                name: 'Running'
               }
             ]
           },
           {
-            title: 'Travis Webb',
-            subtitle: 'CEO Person',
-            props: [
+            username: 'Travis Webb',
+            roles: [
               {
-                title: 'Backend',
+                name: 'Backend',
               },
               {
-                title: 'Business',
+                name: 'Business',
               },
               {
-                title: 'Wagner'
+                name: 'Wagner'
               }
             ]
           }
@@ -165,74 +161,55 @@ Example:
         type: Array,
         value: [
           {
-            title: 'Admin',
-            props: [
+            name: 'Admin',
+            permissions: [
               {
-                title: 'Blog Posts',
-                permissions: {
-                  create: true,
-                  read: true,
-                  update: true,
-                  delete: true
-                }
+                model: 'Blog Posts',
+                action: 'create'
               },
               {
-                title: 'Product Pages',
-                permissions: {
-                  create: true,
-                  read: true,
-                  update: true,
-                  delete: true
-                }
-              }
-            ]
-          },
-          {
-            title: 'Registered User',
-            props: [
-              {
-                title: 'Blog Posts',
-                permissions: {
-                  create: true,
-                  read: true,
-                  update: true,
-                  delete: true
-                }
+                model: 'Blog Posts',
+                action: 'read'
               },
               {
-                title: 'Product Pages',
-                permissions: {
-                  create: true,
-                  read: true,
-                  update: true,
-                  delete: true
-                }
+                model: 'Blog Posts',
+                action: 'update'
+              },
+              {
+                model: 'Blog Posts',
+                action: 'delete'
+              },
+              {
+                model: 'Home Page',
+                action: 'create'
+              },
+              {
+                model: 'Home Page',
+                action: 'read'
+              },
+              {
+                model: 'Home Page',
+                action: 'update'
+              },
+              {
+                model: 'Home Page',
+                action: 'delete'
               },
             ]
           },
           {
-            title: 'Public',
-            props: [
+            name: 'Public',
+            permissions: [
               {
-                title: 'Blog Posts',
-                permissions: {
-                  create: true,
-                  read: true,
-                  update: true,
-                  delete: true
-                }
+                model: 'Blog Posts',
+                action: 'read'
               },
               {
-                title: 'Product Pages',
-                permissions: {
-                  create: true,
-                  read: true,
-                  update: true,
-                  delete: true
-                }
+                model: 'Home Page',
+                action: 'read'
               }
             ]
-          }
+          },
         ]
       }
 

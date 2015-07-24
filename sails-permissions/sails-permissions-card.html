@@ -115,8 +115,7 @@ Example:
       <paper-item>
 
         <header>
-          <h3 class="title">[[title]]</h3>
-          <p class="tagline">[[subtitle]]</p>
+          <h3 class="title">[[name]]</h3>
         </header>
 
         <template is="dom-if" if="{{!expanded}}">
@@ -217,9 +216,13 @@ Example:
 
       if (self.type === 'user') {
         self.propsTitle = 'Roles';
+        self.name = self.model.username;
+        self.props = self.model.roles;
       } else if (self.type === 'role') {
         self.propsTitle = 'Models';
       }
+
+      debugger;
 
     },
 
@@ -260,10 +263,12 @@ Example:
 
     _makePropsList: function(props) {
 
-      if (_.isObject(props.base[0])) {
+      debugger;
+
+      if (_.isObject(props.base[0]))  {
 
         return _.reduce(props.base, function(prev, current) {
-          prev.push(current.title);
+          prev.push(current.username || current.name);
           return prev;
         }, []).join(', ');
 
