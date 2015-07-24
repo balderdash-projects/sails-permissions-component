@@ -49,7 +49,7 @@ Example:
       <sails-permissions-autocomplete type="{{type}}" on-submit="_submit"></sails-permissions-autocomplete>
 
       <template is="dom-repeat" items="{{props}}">
-        <sails-permissions-prop type="{{item.type}}" title="{{item.title}}"/>
+        <sails-permissions-prop type="{{type}}" title="{{item.title}}" permissions="{{item.permissions}}"/>
       </template>
 
   </template>

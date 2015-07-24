@@ -11,6 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../paper-item/paper-item.html">
 <link rel="import" href="../../paper-button/paper-button.html">
 <link rel="import" href="../../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../iron-icons/iron-icons.html">
 
 <link rel="import" href="../lodash.html">
@@ -46,19 +47,49 @@ Example:
       color: #F44336;
     }
 
+    paper-item {
+      display: block;
+    }
+
+    paper-item > section {
+      @apply(--layout);
+    }
+
+    .description--container {
+      @apply(--layout-center);
+    }
+
+    .permissions--container {
+      @apply(--layout-justified);
+      padding: .5em 0 1em 0;
+    }
+
   </style>
 
   <template>
 
     <paper-item>
 
-      <p class="title">{{title}}</p>
-      <template is="dom-if" if="{{displayPermissionsButton}}">
-        <paper-button class="button--permissions">Permissions</paper-button>
+      <section class="description--container">
+        <p class="title">{{title}}</p>
+        <template is="dom-if" if="{{displayPermissionsButton}}">
+          <paper-button on-click="_toggleDisplayPermissions" class="button--permissions">Permissions</paper-button>
+        </template>
+        <div>
+          <paper-icon-button on-click="_removeThisProp" title="{{title}}" icon="highlight-off"></paper-icon-button>
+        <div>
+      </section>
+
+      <template is="dom-if" if="{{displayPermissions}}">
+
+        <section class="permissions--container">
+          <paper-checkbox checked="{{permissions.create}}">Create</paper-checkbox>
+          <paper-checkbox checked="{{permissions.read}}">Read</paper-checkbox>
+          <paper-checkbox checked="{{permissions.update}}">Update</paper-checkbox>
+          <paper-checkbox checked="{{permissions.delete}}">Delete</paper-checkbox>
+        </section>
+
       </template>
-      <div>
-        <paper-icon-button on-click="_removeThisProp" title="{{title}}" icon="highlight-off"></paper-icon-button>
-      <div>
 
     </paper-item>
 
@@ -78,7 +109,16 @@ Example:
         type: String,
       },
 
+      permissions: {
+        type: Array
+      },
+
       displayPermissionsButton: {
+        type: Boolean,
+        value: false
+      },
+
+      displayPermissions: {
         type: Boolean,
         value: false
       }
@@ -126,6 +166,14 @@ Example:
       var self = this;
 
       self.parentNode._removeProp(self.title);
+
+    },
+
+    _toggleDisplayPermissions: function(event) {
+
+      var self = this;
+
+      self.displayPermissions = !self.displayPermissions;
 
     }
 
