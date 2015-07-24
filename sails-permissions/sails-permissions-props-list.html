@@ -49,7 +49,7 @@ Example:
       <sails-permissions-autocomplete type="{{type}}" on-submit="_submit"></sails-permissions-autocomplete>
 
       <template is="dom-repeat" items="{{props}}">
-        <sails-permissions-prop type="{{type}}" title="{{item}}"/>
+        <sails-permissions-prop type="{{type}}" title="{{item.title}}" permissions="{{item.permissions}}"/>
       </template>
 
   </template>
@@ -68,11 +68,11 @@ Example:
         type: String
       },
       props: {
-        type: Array,
+        type: Object,
         notify: true
       },
       newProp: {
-        type: String
+        type: Object
       }
 
     },
@@ -118,8 +118,11 @@ Example:
 
     _removeProp: function(prop) {
 
-      var self = this,
-          index = self.props.indexOf(prop);
+      var self = this;
+
+      index = _.findIndex(self.props, function(obj) {
+        return obj.title === prop;
+      });
 
       self.splice('props', index, 1);
 

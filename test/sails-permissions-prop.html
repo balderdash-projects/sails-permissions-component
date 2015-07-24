@@ -24,31 +24,78 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <!-- You can use the document as a place to set up your fixtures. -->
     <sails-permissions-prop type="user" title="Astronaut"></sails-permissions-prop>
+    <sails-permissions-prop type="role" title="Admin" permissions='{"create": false, "read": true, "update": false, "delete": true}'></sails-permissions-prop>
 
     <script>
-      var myEl = document.querySelector('sails-permissions-prop');
+      var myEl = document.querySelectorAll('sails-permissions-prop')[0];
+      var myEl2 = document.querySelectorAll('sails-permissions-prop')[1];
 
-      suite("<sails-permissions-prop>", function() {
+      suite('<sails-permissions-prop>', function() {
 
-        test("Should render the component", function() {
+        teardown(function(done) {
+          flush(done);
+        });
+
+        test('Should render the component', function(done) {
 
           expect(myEl.children.length).to.not.equal(0);
+          expect(myEl2.children.length).to.not.equal(0);
+
+          done();
 
         });
 
-        test("Should set the prop\"s title", function() {
+        test('Should set the prop\'s title', function(done) {
 
-          expect(myEl.title).to.equal("Astronaut");
+          expect(myEl.title).to.equal('Astronaut');
+          expect(myEl2.title).to.equal('Admin');
+
+          done();
 
         });
 
-        test("Should remove the prop when the remove button is clicked", function() {
+        test('Should display the permissions button if the type is \'role\'', function(done) {
 
-          var stub = sinon.stub(myEl, "_removeThisProp", function() {
+          expect(myEl2.displayPermissionsButton).to.be.true;
+
+          done();
+
+        });
+
+        test('Should set the prop\'s permissions', function() {
+
+          expect(myEl.create).to.be.false;
+          expect(myEl.read).to.be.false;
+          expect(myEl.update).to.be.false;
+          expect(myEl.delete).to.be.false;
+
+          expect(myEl2.create).to.be.false;
+          expect(myEl2.read).to.be.true;
+          expect(myEl2.update).to.be.false;
+          expect(myEl2.delete).to.be.true;
+
+        });
+
+        test('Should display permissions checkboxes when the \'Edit Permissions\' button is pressed', function(done) {
+
+          myEl2.$$('paper-button').click();
+
+          flush(function() {
+
+            expect(document.querySelectorAll('paper-checkbox').length).to.equal(4);
+            done();
+
+          });
+
+        });
+
+        test('Should remove the prop when the remove button is clicked', function() {
+
+          var stub = sinon.stub(myEl, '_removeThisProp', function() {
             return true;
           });
 
-          var button = myEl.$$("paper-icon-button");
+          var button = myEl.$$('paper-icon-button');
           button.click();
 
           expect(stub).to.have.been.called;

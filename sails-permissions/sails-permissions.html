@@ -96,76 +96,66 @@ Example:
             title: 'Ryan Quinn',
             subtitle: 'Medical Person',
             props: [
-              'Soldier',
-              'Sailor',
-              'Tinker',
-              'Spy'
+              {
+                title: 'Soldier',
+              },
+              {
+                title: 'Sailor',
+              },
+              {
+                title: 'Tinker',
+              },
+              {
+                title: 'Spy'
+              }
             ]
           },
           {
             title: 'Konstantin Zolotarev',
             subtitle: 'Polymer Pro',
             props: [
-              "Development",
-              "Of",
-              "All",
-              "Varieties"
+              {
+                title: "Development",
+              },
+              {
+                title: "Of",
+              },
+              {
+                title: "All",
+              },
+              {
+                title: "Varieties"
+              }
             ]
           },
           {
             title: 'Blaine Price',
             subtitle: 'Polymer Peon',
             props: [
-              'UX',
-              'Front-end Design',
-              'Running'
+              {
+                title: 'UX',
+              },
+              {
+                title: 'Front-end Design',
+              },
+              {
+                title: 'Running'
+              }
             ]
           },
           {
             title: 'Travis Webb',
             subtitle: 'CEO Person',
             props: [
-              'Backend',
-              'Business',
-              'Wagner'
-            ]
-          },
-          {
-            title: 'Ryan Quinn',
-            subtitle: 'Medical Person',
-            props: [
-              'Soldier',
-              'Sailor',
-              'Tinker',
-              'Spy'
-            ]
-          },
-          {
-            title: 'Konstantin Zolotarev',
-            subtitle: 'Polymer Pro',
-            props: [
-              "Development",
-              "Of",
-              "All",
-              "Varieties"
-            ]
-          },
-          {
-            title: 'Blaine Price',
-            subtitle: 'Polymer Peon',
-            props: [
-              'UX',
-              'Front-end Design',
-              'Running'
-            ]
-          },
-          {
-            title: 'Travis Webb',
-            subtitle: 'CEO Person',
-            props: [
-              'Backend',
-              'Business',
-              'Wagner'
+              {
+                title: 'Backend',
+              },
+              {
+                title: 'Business',
+              },
+              {
+                title: 'Wagner'
+              }
             ]
           }
         ]
@@ -177,64 +167,70 @@ Example:
           {
             title: 'Admin',
             props: [
-              'Blog Posts',
-              'Product Pages',
+              {
+                title: 'Blog Posts',
+                permissions: {
+                  create: true,
+                  read: true,
+                  update: true,
+                  delete: true
+                }
+              },
+              {
+                title: 'Product Pages',
+                permissions: {
+                  create: true,
+                  read: true,
+                  update: true,
+                  delete: true
+                }
+              }
             ]
           },
           {
             title: 'Registered User',
             props: [
-              'Blog Posts',
-              'Product Pages'
+              {
+                title: 'Blog Posts',
+                permissions: {
+                  create: true,
+                  read: true,
+                  update: true,
+                  delete: true
+                }
+              },
+              {
+                title: 'Product Pages',
+                permissions: {
+                  create: true,
+                  read: true,
+                  update: true,
+                  delete: true
+                }
+              },
             ]
           },
           {
             title: 'Public',
             props: [
-              'Blog Posts',
-              'Product Pages'
-            ]
-          },
-          {
-            title: 'Admin',
-            props: [
-              'Blog Posts',
-              'Product Pages',
-            ]
-          },
-          {
-            title: 'Registered User',
-            props: [
-              'Blog Posts',
-              'Product Pages'
-            ]
-          },
-          {
-            title: 'Public',
-            props: [
-              'Blog Posts',
-              'Product Pages'
-            ]
-          },
-          {
-            title: 'Admin',
-            props: [
-              'Blog Posts',
-              'Product Pages',
-            ]
-          },
-          {
-            title: 'Registered User',
-            props: [
-              'Blog Posts',
-              'Product Pages'
-            ]
-          },
-          {
-            title: 'Public',
-            props: [
-              'Blog Posts',
-              'Product Pages'
+              {
+                title: 'Blog Posts',
+                permissions: {
+                  create: true,
+                  read: true,
+                  update: true,
+                  delete: true
+                }
+              },
+              {
+                title: 'Product Pages',
+                permissions: {
+                  create: true,
+                  read: true,
+                  update: true,
+                  delete: true
+                }
+              }
             ]
           }
         ]

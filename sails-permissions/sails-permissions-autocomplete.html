@@ -361,11 +361,11 @@ Example:
 
         var self = this;
 
-        self.selection = details.item.dataId;
+        self.selection = {title: details.item.dataId, permissions: {}};
         self._hideDropdown();
         self.$$('paper-menu').selected = null;
 
-        if (!self.selection) {
+        if (!self.selection.title) {
           return;
         }
 

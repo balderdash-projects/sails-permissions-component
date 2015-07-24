@@ -48,23 +48,35 @@ Example:
     }
 
     paper-item {
-      /*align-items: flex-start;*/
       display: block;
       padding: 0.5rem;
-      margin: 0 0.33em;
     }
 
-    paper-item > * {
-      margin: 0 0.33em;
+    .input--container {
+      @apply(--layout);
+      @apply(--layout-start);
+      margin: 1em -0.66em;
     }
 
-    .instructions--container {
-      font-style: italic;
-      margin: 1em 0;
+    .input--container > .input--instructions {
+      @apply(--layout-flex);
+      margin: 0 0.66em;
+      max-width: 25%;
+      color: #666666;
+    }
+
+    .input--container > paper-input {
+      @apply(--layout-flex);
+      margin: 0 0.66em;
+    }
+
+    .input--container > sails-permissions-props-list {
+      @apply(--layout-flex);
+      margin: 0 0.66em;
     }
 
     .button--container {
-      margin: 1em inherit;
+      margin: 1em 0;
     }
 
     .button--less {
@@ -84,20 +96,20 @@ Example:
 
         <h1>New Role Creator</h1>
 
-        <section>
-
+        <div class="input--container">
+          <p class="input--instructions">Please enter a title for the new role.</p>
           <paper-input value="{{title}}" label="New Title"></paper-input>
-          <p>Please enter a title for the new role.</p>
+        </div>
 
+        <div class="input--container">
+          <p class="input--instructions">Please enter at least one model for the new role.</p>
           <sails-permissions-props-list type="role" props="{{props}}"></sails-permissions-props-list>
-          <p>Please enter at least one model for the new role.</p>
+        </div>
 
-          <div class="button--container">
-            <paper-button class="button--less" on-click="_submitRole">Done</paper-button>
-            <paper-button class="button--cancel" on-click="_cancelSubmitRole">Cancel</paper-button>
-          </div>
-
-        </section>
+        <div class="button--container">
+          <paper-button class="button--less" on-click="_submitRole">Done</paper-button>
+          <paper-button class="button--cancel" on-click="_cancelSubmitRole">Cancel</paper-button>
+        </div>
 
         <template is="dom-repeat" items="{{errors}}">
           <sails-permissions-alerts status="{{item.status}}" message="{{item.message}}"></sails-permissions-alerts>
@@ -122,9 +134,19 @@ Example:
         type: String,
       },
 
+      model: {
+        type: Object,
+        value: {}
+      },
+
       props: {
         type: Array,
         value: []
+      },
+
+      permissions: {
+        type: Object,
+        value: {}
       },
 
       expanded: {
@@ -211,16 +233,15 @@ Example:
         return;
       }
 
-      /** Put title and props onto the model and fire an event to submit to the
-       * parent.
-       */
+      self.model = {
+        title: self.title,
+        props: self.props
+      };
 
-      _.extend(self.model, {title: self.title, props: self.props});
       self.fire('submit', {model: self.model});
 
       /** Clear the state of the form for the next new role */
 
-      self.model = {};
       self.title = null;
       self.props = [];
 
