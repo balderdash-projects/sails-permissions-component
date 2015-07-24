@@ -40,10 +40,6 @@ Example:
       padding: 0.5em 0;
     }
 
-    .title {
-      @apply(--layout-flex-2);
-    }
-
     paper-icon-button {
       color: #F44336;
     }
@@ -52,21 +48,40 @@ Example:
       display: block;
     }
 
-    paper-item > section {
-      @apply(--layout);
-    }
-
     .button--permissions {
       background: #80CBC4;
     }
 
-    .description--container {
-      @apply(--layout-center);
+    .permissions--container {
+      padding: 1em 0 1em 0;
     }
 
-    .permissions--container {
-      @apply(--layout-justified);
-      padding: 1em 0 1em 0;
+    @media (max-width: 1023px) {
+
+      paper-item {
+        padding: 0;
+      }
+
+    }
+
+    @media (min-width: 1024px) {
+
+      paper-item > section {
+        @apply(--layout);
+      }
+
+      .description--container {
+        @apply(--layout-center);
+      }
+
+      .permissions--container {
+        @apply(--layout-justified);
+      }
+
+      .title {
+        @apply(--layout-flex-2);
+      }
+
     }
 
   </style>
@@ -77,11 +92,15 @@ Example:
 
       <section class="description--container">
 
+        <div>
           <p class="title">{{title}}</p>
 
           <template is="dom-if" if="{{displayPermissionsButton}}">
-            <paper-button on-click="_toggleDisplayPermissions" class="button--permissions">Edit Permissions</paper-button>
+            <paper-button on-click="_toggleDisplayPermissions" class="button--permissions">
+              Edit Permissions
+            </paper-button>
           </template>
+        </div>
 
         <div>
           <paper-icon-button on-click="_removeThisProp" title="{{title}}" icon="highlight-off"></paper-icon-button>

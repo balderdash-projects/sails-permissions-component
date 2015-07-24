@@ -37,7 +37,8 @@
     "iron-form": "PolymerElements/iron-form#~1.0.7",
     "iron-icon": "PolymerElements/iron-icon#~1.0.2",
     "paper-ripple": "PolymerElements/paper-ripple#~1.0.1",
-    "paper-checkbox": "PolymerElements/paper-checkbox#~1.0.5"
+    "paper-checkbox": "PolymerElements/paper-checkbox#~1.0.5",
+    "iron-media-query": "PolymerElements/iron-media-query#~1.0.2"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
