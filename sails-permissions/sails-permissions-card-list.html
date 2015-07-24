@@ -157,7 +157,7 @@ Example:
 
       self.displayNewRoleForm = !self.displayNewRoleForm;
       self.displayNewRoleButton = !self.displayNewRoleButton;
-      
+
     },
 
     /** Adds a new card to the list by mutating the list. */
@@ -169,6 +169,8 @@ Example:
       event.stopPropagation();
 
       self.unshift('model', event.detail.model);
+
+      debugger;
 
       self.displayNewRoleForm = false;
       self.displayNewRoleButton = true;

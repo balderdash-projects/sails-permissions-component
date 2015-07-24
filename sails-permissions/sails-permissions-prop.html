@@ -73,7 +73,7 @@ Example:
       <section class="description--container">
         <p class="title">{{title}}</p>
         <template is="dom-if" if="{{displayPermissionsButton}}">
-          <paper-button on-click="_toggleDisplayPermissions" class="button--permissions">Permissions</paper-button>
+          <paper-button on-click="_toggleDisplayPermissions" class="button--permissions">Edit Permissions</paper-button>
         </template>
         <div>
           <paper-icon-button on-click="_removeThisProp" title="{{title}}" icon="highlight-off"></paper-icon-button>
@@ -83,10 +83,10 @@ Example:
       <template is="dom-if" if="{{displayPermissions}}">
 
         <section class="permissions--container">
-          <paper-checkbox checked="{{permissions.create}}">Create</paper-checkbox>
-          <paper-checkbox checked="{{permissions.read}}">Read</paper-checkbox>
-          <paper-checkbox checked="{{permissions.update}}">Update</paper-checkbox>
-          <paper-checkbox checked="{{permissions.delete}}">Delete</paper-checkbox>
+          <paper-checkbox checked="{{create}}">Create</paper-checkbox>
+          <paper-checkbox checked="{{read}}">Read</paper-checkbox>
+          <paper-checkbox checked="{{update}}">Update</paper-checkbox>
+          <paper-checkbox checked="{{delete}}">Delete</paper-checkbox>
         </section>
 
       </template>
@@ -109,8 +109,38 @@ Example:
         type: String,
       },
 
+      type: {
+        type: String
+      },
+
       permissions: {
-        type: Array
+        type: Object,
+        value: {},
+        notify: true
+      },
+
+      create: {
+        type: Boolean,
+        value: false,
+        notify: true
+      },
+
+      read: {
+        type: Boolean,
+        value: false,
+        notify: true
+      },
+
+      update: {
+        type: Boolean,
+        value: false,
+        notify: true
+      },
+
+      delete: {
+        type: Boolean,
+        value: false,
+        notify: true
       },
 
       displayPermissionsButton: {
@@ -141,6 +171,42 @@ Example:
         self.displayPermissionsButton = true;
       }
 
+      if (self.permissions && Object.keys(self.permissions).length) {
+        _.extend(self, self.permissions);
+      }
+
+      self.addEventListener('create-changed', function(event) {
+
+        event.stopPropagation();
+
+        self.permissions.create = self.create;
+
+      });
+
+      self.addEventListener('read-changed', function(event) {
+
+        event.stopPropagation();
+
+        self.permissions.read = self.read;
+
+      });
+
+      self.addEventListener('update-changed', function(event) {
+
+        event.stopPropagation();
+
+        self.permissions.update = self.update;
+
+      });
+
+      self.addEventListener('delete-changed', function(event) {
+
+        event.stopPropagation();
+
+        self.permissions.delete = self.delete;
+
+      });
+
     },
 
     attached: function() {
@@ -158,6 +224,7 @@ Example:
       // removed from a document.
       //
       // Use this to clean up anything you did in `attached`.
+
     },
 
     // Element Behavior
