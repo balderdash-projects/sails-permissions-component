@@ -13,6 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../iron-icons/iron-icons.html">
+<link rel="import" href="../../iron-media-query/iron-media-query.html">
 
 <link rel="import" href="../lodash.html">
 <link rel="import" href="../../polymer/polymer.html">
@@ -37,15 +38,16 @@ Example:
     :host {
       display: block;
       box-sizing: border-box;
-      padding: 0.5em 0;
+      padding: 0.5em;
     }
 
     paper-icon-button {
       color: #F44336;
     }
 
-    paper-item {
+    :host > paper-item {
       display: block;
+      padding: 0;
     }
 
     .button--permissions {
@@ -56,51 +58,36 @@ Example:
       padding: 1em 0 1em 0;
     }
 
-    @media (max-width: 1023px) {
-
-      paper-item {
-        padding: 0;
-      }
-
+    .description--container {
+      @apply(--layout);
+      @apply(--layout-center);
     }
 
-    @media (min-width: 1024px) {
+    .title {
+      @apply(--layout-flex-2);
+    }
 
-      paper-item > section {
-        @apply(--layout);
-      }
-
-      .description--container {
-        @apply(--layout-center);
-      }
-
-      .permissions--container {
-        @apply(--layout-justified);
-      }
-
-      .title {
-        @apply(--layout-flex-2);
-      }
-
+    .permissions--container {
+      @apply(--layout);
+      @apply(--layout-justified);
     }
 
   </style>
 
   <template>
 
+    <iron-media-query query="(min-width: 1024px)" query-matches="{{tablet}}">
+    </iron-media-query>
+
     <paper-item>
 
       <section class="description--container">
 
-        <div>
-          <p class="title">{{title}}</p>
+        <p class="title">{{title}}</p>
 
-          <template is="dom-if" if="{{displayPermissionsButton}}">
-            <paper-button on-click="_toggleDisplayPermissions" class="button--permissions">
-              Edit Permissions
-            </paper-button>
-          </template>
-        </div>
+        <template is="dom-if" if="{{displayPermissionsButton}}">
+          <paper-button on-click="_toggleDisplayPermissions" class="button--permissions">[[permissionsLabel]]</paper-button>
+        </template>
 
         <div>
           <paper-icon-button on-click="_removeThisProp" title="{{title}}" icon="highlight-off"></paper-icon-button>
@@ -147,6 +134,10 @@ Example:
         notify: true
       },
 
+      permissionsLabel: {
+        type: String
+      },
+
       create: {
         type: Boolean,
         value: false,
@@ -169,6 +160,10 @@ Example:
         type: Boolean,
         value: false,
         notify: true
+      },
+
+      tablet: {
+        type: Boolean
       },
 
       displayPermissionsButton: {
@@ -201,6 +196,12 @@ Example:
 
       if (self.permissions && Object.keys(self.permissions).length) {
         _.extend(self, self.permissions);
+      }
+
+      if (self.tablet) {
+        self.permissionsLabel = 'Edit Permissions';
+      } else {
+        self.permissionsLabel = 'Edit';
       }
 
       self.addEventListener('create-changed', function(event) {
