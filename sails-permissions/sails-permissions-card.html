@@ -220,9 +220,10 @@ Example:
         self.props = self.model.roles;
       } else if (self.type === 'role') {
         self.propsTitle = 'Models';
+        self.name = self.model.name;
+        self.props = self.model.permissions;
+        debugger;
       }
-
-      debugger;
 
     },
 
@@ -263,14 +264,14 @@ Example:
 
     _makePropsList: function(props) {
 
-      debugger;
-
       if (_.isObject(props.base[0]))  {
 
         return _.reduce(props.base, function(prev, current) {
           prev.push(current.username || current.name);
           return prev;
         }, []).join(', ');
+
+        debugger;
 
       } else {
         return props.base.join(', ');

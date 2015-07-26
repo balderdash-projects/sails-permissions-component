@@ -122,10 +122,33 @@ Example:
       // This is the point where you should make modifications to the DOM (when
       // necessary), or kick off any processes the element wants to perform.
 
-      var self = this;
+      var self = this,
+          index;
 
       if (self.type === 'role') {
+
         self.displayNewRoleButton = true;
+
+        _.forEach(self.model, function(card) {
+
+          card.permissions = _.reduce(card.permissions, function(previous, current) {
+
+            index = _.findIndex(previous, function(obj) {
+              return obj.model === current.model;
+            });
+
+            if (index === -1) {
+              previous.push(current);
+            } else {
+              previous[index].action += ', ' + current.action;
+            }
+
+            return previous;
+
+          }, []);
+
+        });
+
       }
 
     },
