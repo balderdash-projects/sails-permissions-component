@@ -9,6 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-ajax/iron-ajax.html">
 <link rel="import" href="sails-permissions-card-list.html">
 
 <!--
@@ -72,8 +73,26 @@ Example:
 
     <article>
 
-      <sails-permissions-card-list type="user" model="{{users}}"></sails-permissions-card-list>
-      <sails-permissions-card-list type="role" model="{{roles}}"></sails-permissions-card-list>
+      <iron-ajax id="user"
+        auto="false"
+        method="get"
+        url="http://localhost:1337/user/"
+        headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
+        handleAs='json'
+        on-response='_handleUserResponse'
+        debounce-duration="300"></iron-ajax>
+
+      <iron-ajax id="role"
+        auto="false"
+        method="get"
+        url="http://localhost:1337/role/"
+        headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
+        handleAs='json'
+        on-response='_handleRoleResponse'
+        debounce-duration="300"></iron-ajax>
+
+      <sails-permissions-card-list type="user" model="{{user}}"></sails-permissions-card-list>
+      <sails-permissions-card-list type="role" model="{{role}}"></sails-permissions-card-list>
 
     </article>
 
@@ -89,115 +108,14 @@ Example:
 
     properties: {
 
-      users: {
+      user: {
         type: Array,
-        value: [
-          {
-            username: 'Ryan Quinn',
-            roles: [
-              {
-                name: 'Soldier',
-              },
-              {
-                name: 'Sailor',
-              },
-              {
-                name: 'Tinker',
-              },
-              {
-                name: 'Spy'
-              }
-            ]
-          },
-          {
-            username: 'Konstantin Zolotarev',
-            roles: [
-              {
-                name: "Development",
-              },
-              {
-                name: "Of",
-              },
-              {
-                name: "All",
-              },
-              {
-                name: "Varieties"
-              }
-            ]
-          },
-          {
-            username: 'Blaine Price',
-            roles: [
-              {
-                name: 'UX',
-              },
-              {
-                name: 'Front-end Design',
-              },
-              {
-                name: 'Running'
-              }
-            ]
-          },
-          {
-            username: 'Travis Webb',
-            roles: [
-              {
-                name: 'Backend',
-              },
-              {
-                name: 'Business',
-              },
-              {
-                name: 'Wagner'
-              }
-            ]
-          }
-        ]
+        value: []
       },
 
-      roles: {
+      role: {
         type: Array,
-        value: [
-          {
-            name: 'Admin',
-            permissions: [
-              {
-                model: 'Blog Posts',
-                action: 'create'
-              },
-              {
-                model: 'Blog Posts',
-                action: 'read'
-              },
-              {
-                model: 'Blog Posts',
-                action: 'update'
-              },
-              {
-                model: 'Blog Posts',
-                action: 'delete'
-              },
-              {
-                model: 'Home Page',
-                action: 'create'
-              },
-              {
-                model: 'Home Page',
-                action: 'read'
-              },
-              {
-                model: 'Home Page',
-                action: 'update'
-              },
-              {
-                model: 'Home Page',
-                action: 'delete'
-              },
-            ]
-          }
-        ]
+        value: []
       }
 
     },
@@ -226,6 +144,14 @@ Example:
 
       var self = this;
 
+      _.forEach(self.roles, function(obj) {
+
+        obj.permissions = self.dehydrate(obj.permissions);
+
+        // self._getInitialState();
+
+      });
+
     },
 
     detached: function() {
@@ -236,6 +162,81 @@ Example:
     },
 
     // Element Behavior
+
+    /**
+     * A method intended to convert Sails per missions into a form that is
+     * easier to work with.  #rehydrate should be called when passing information
+     * back to the API.
+     */
+
+    dehydrate: function(perms) {
+
+      var output, array;
+
+      output = {
+        create: false,
+        read: false,
+        update: false,
+        delete: false
+      },
+
+      array = _.reduce(perms, function(previous, current) {
+
+        index = _.findIndex(previous, function(obj) {
+          return obj.model === current.model;
+        });
+
+        if (index === -1) {
+          current.action = current.action.split();
+          previous.push(current);
+        } else {
+          previous[index].action.push(current.action);
+        }
+
+        return previous;
+
+      },[]);
+
+      array.forEach(function(el, index) {
+
+        var foo = _.clone(output);
+
+        _.forEach(foo, function(el, key) {
+
+          if (array[index].action.indexOf(key) !== -1) {
+            foo[key] = true;
+          }
+
+        });
+
+        el.action = foo;
+
+      });
+
+      return array;
+
+    },
+
+    _handleUserResponse: function(event) {
+
+      this.user = event.detail.response;
+
+    },
+
+    _handleRoleResponse: function(event) {
+
+      this.role = event.detail.response;
+
+    },
+
+    _getInitialState: function() {
+
+      var self = this;
+
+      self.$.user.generateRequest();
+      self.$.role.generateRequest();
+
+    }
 
   });
 

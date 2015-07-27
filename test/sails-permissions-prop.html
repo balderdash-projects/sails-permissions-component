@@ -24,7 +24,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <!-- You can use the document as a place to set up your fixtures. -->
     <sails-permissions-prop type="user" title="Astronaut"></sails-permissions-prop>
-    <sails-permissions-prop type="role" title="Admin" permissions='{"create": false, "read": true, "update": false, "delete": true}'></sails-permissions-prop>
+    <sails-permissions-prop type="role" title="Admin" action='{"create":true,"read":true,"update":true,"delete":true}'></sails-permissions-prop>
 
     <script>
       var myEl = document.querySelectorAll('sails-permissions-prop')[0];
@@ -69,9 +69,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(myEl.update).to.be.false;
           expect(myEl.delete).to.be.false;
 
-          expect(myEl2.create).to.be.false;
+          expect(myEl2.create).to.be.true;
           expect(myEl2.read).to.be.true;
-          expect(myEl2.update).to.be.false;
+          expect(myEl2.update).to.be.true;
           expect(myEl2.delete).to.be.true;
 
         });

@@ -14,6 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../paper-styles/paper-styles.html">
 <link rel="import" href="../../paper-item/paper-item.html">
 <link rel="import" href="../../paper-button/paper-button.html">
+<link rel="import" href="../../iron-ajax/iron-ajax.html">
 <link rel="import" href="../lodash.html">
 
 <link rel="import" href="sails-permissions-props-list.html">
@@ -111,6 +112,14 @@ Example:
 
   <template>
 
+    <iron-ajax
+      auto="false"
+      method="get"
+      handle-as="json"
+      on-response="_handleResponse"
+      headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
+      debounce-duration="300"></iron-ajax>
+
     <paper-material elevation="{{elevation}}">
       <paper-item>
 
@@ -181,7 +190,8 @@ Example:
       },
 
       props: {
-        type: Array
+        type: Array,
+        value: []
       },
 
       propsList: {
@@ -217,12 +227,9 @@ Example:
       if (self.type === 'user') {
         self.propsTitle = 'Roles';
         self.name = self.model.username;
-        self.props = self.model.roles;
       } else if (self.type === 'role') {
         self.propsTitle = 'Models';
         self.name = self.model.name;
-        self.props = self.model.permissions;
-        debugger;
       }
 
     },
@@ -234,6 +241,17 @@ Example:
       // This is a good place to perform any work related to your element's
       // visual state or active behavior (measuring sizes, beginning animations,
       // loading resources, etc).
+
+      var self = this,
+          ironAjax = self.$$('iron-ajax');
+
+      if (self.type === 'user') {
+        ironAjax.url = 'http://localhost:1337/user/' + self.model.id + '/roles/';
+      } else if (self.type === 'role') {
+        ironAjax.url = 'http://localhost:1337/role/' + self.model.id + '/permissions/';
+      }
+
+      ironAjax.generateRequest();
 
     },
 
@@ -264,20 +282,32 @@ Example:
 
     _makePropsList: function(props) {
 
-      if (_.isObject(props.base[0]))  {
+      var self = this,
+          baseObject;
 
-        return _.reduce(props.base, function(prev, current) {
-          prev.push(current.username || current.name);
-          return prev;
-        }, []).join(', ');
+      return _.reduce(props.base, function(prev, current) {
 
-        debugger;
+        prev.push(current);
 
-      } else {
-        return props.base.join(', ');
-      }
+        return prev;
+
+      }, []).join(', ');
 
     },
+
+    _handleResponse: function(event) {
+
+      var self = this;
+
+      self.props = [];
+
+      event.detail.response.forEach(function(prop) {
+
+        self.push('props', prop.name);
+
+      });
+
+    }
 
   });
 

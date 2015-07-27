@@ -128,9 +128,8 @@ Example:
         type: String
       },
 
-      permissions: {
+      action: {
         type: Object,
-        value: {},
         notify: true
       },
 
@@ -194,8 +193,20 @@ Example:
         self.displayPermissionsButton = true;
       }
 
-      if (self.permissions && Object.keys(self.permissions).length) {
-        _.extend(self, self.permissions);
+      if (self.action) {
+
+        //todo fix this
+
+        if (typeof self.action === 'string') {
+          self.action = JSON.parse(self.action);
+        }
+
+        _.forEach(self.action, function(el, key) {
+
+          self[key] = el;
+
+        });
+
       }
 
       if (self.tablet) {
@@ -208,7 +219,7 @@ Example:
 
         event.stopPropagation();
 
-        self.permissions.create = self.create;
+        self.action.create = self.create;
 
       });
 
@@ -216,7 +227,7 @@ Example:
 
         event.stopPropagation();
 
-        self.permissions.read = self.read;
+        self.action.read = self.read;
 
       });
 
@@ -224,7 +235,7 @@ Example:
 
         event.stopPropagation();
 
-        self.permissions.update = self.update;
+        self.action.update = self.update;
 
       });
 
@@ -232,8 +243,12 @@ Example:
 
         event.stopPropagation();
 
-        self.permissions.delete = self.delete;
+        self.action.delete = self.delete;
 
+      });
+
+      self.addEventListener('action-changed', function() {
+        debugger;
       });
 
     },

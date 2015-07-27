@@ -85,10 +85,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         test('should show the dropdown when there are results', function(done) {
 
             myEl.results = [{name: 'Arugala'}, {name: 'Breadsticks'}, {name: 'Peonies'}];
+            myEl.query = 'Potato Brains';
 
             flush(function() {
-              expect(myEl.$$('.menu--container')).to.not.be.undefined;
+
+              expect(myEl._displayDropdown(myEl.results, myEl.query)).to.be.true;
               done();
+
             });
 
         });
@@ -96,17 +99,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         test('should show a \'No results\' message in the dropdown when no results come back from the server', function(done) {
 
           myEl.results = [];
+          myEl.query = 'Salad Days';
 
           flush(function() {
-            expect(myEl.$$('.menu--container')).to.not.be.undefined;
 
-            if (myEl.type === 'user') {
-              expect(myEl.$$('.menu--container').children[1].children[0].innerHTML).to.equal('No matching role found.  Click to create it.');
-            } else {
-              expect(myEl.$$('.menu--container').children[1].children[0].innerHTML).to.equal('No results found.');
-
-            }
+            expect(myEl._displayNoResults(myEl.results)).to.be.true;
             done();
+
           });
 
         });
@@ -119,21 +118,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           myEl._hideDropdown();
 
           flush(function() {
-            expect(myEl.$$('.menu--container').attributes[1].value).to.equal('display: none;');
+            expect(myEl.results).to.be.null;
+            expect(myEl.query).to.be.null;
             done();
           });
 
         });
 
-        myEl.query = 'Potato';
         test('should hide the dropdown when the query is cleared by the user', function(done) {
 
+          var spy = sinon.spy(myEl, '_hideDropdown');
+
           myEl.query = '';
+          myEl._search();
 
           flush(function() {
-            expect(myEl.$$('.menu--container').attributes[1].value).to.equal('display: none;');
+            expect(spy).to.have.been.called;
             done();
           });
+
+          myEl._hideDropdown.restore();
 
         });
 
@@ -149,7 +153,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 }
               };
 
-          myEl._select(event, details);
+          myEl._select(fakeEvent, details);
 
           flush(function() {
             expect(stub).to.have.been.called;

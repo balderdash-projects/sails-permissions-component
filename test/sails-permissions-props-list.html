@@ -24,7 +24,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
 
     <!-- You can use the document as a place to set up your fixtures. -->
-    <sails-permissions-props-list props='[{"title":"Blog Posts","permissions":{"create":true,"read":true,"update":true,"delete":true}},{"title":"Product Pages","permissions":{"create":true,"read":true,"update":true,"delete":true}}]' type="user"></sails-permissions-props-list>
+    <sails-permissions-props-list props='[{"name":"Blog Posts","permissions":{"create":true,"read":true,"update":true,"delete":true}},{"name":"Product Pages","permissions":{"create":true,"read":true,"update":true,"delete":true}}]' type="user"></sails-permissions-props-list>
 
     <script>
       var myEl = document.querySelector("sails-permissions-props-list");
@@ -70,13 +70,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test("Should add a new sails-permissions-prop", function(done) {
 
-          var newProp = {title: 'Potato Brain'};
+          var newProp = {name: 'Potato Brain'};
 
           myEl._addNewProp(newProp);
 
           flush(function() {
 
             expect(document.querySelectorAll('sails-permissions-prop').length).to.equal(3);
+
             done();
 
           });
@@ -90,7 +91,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           flush(function() {
 
             var index = _.findIndex(myEl.props, function(obj) {
-              return obj.title === 'Potato Brain';
+              return obj.name === 'Potato Brain';
             });
 
             expect(index).to.equal(-1);

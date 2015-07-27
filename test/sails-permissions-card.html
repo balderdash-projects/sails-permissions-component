@@ -23,10 +23,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
 
     <!-- You can use the document as a place to set up your fixtures. -->
-    <sails-permissions-card type="user" model='{"title": "Ryan Quinn", "subtitle": "Ping-Pong Aficionado", "props": ["Soldier", "Sailor", "Tinker", "Spy"]}'></sails-permissions-card>
+    <sails-permissions-card type="user" model='{"username":"Ryan Quinn","roles":[{"name":"Soldier"},{"name":"Sailor"},{"name":"Tinker"},{"name":"Spy"}]}'></sails-permissions-card>
+    <sails-permissions-card type="role" model='{"name":"Admin","permissions":[{"model":"Blog Posts","action":"create, read, update, delete"},{"model":"Home Page","action":"create, read, update, delete"}]}'></sails-permissions-card>
 
     <script>
-      var myEl = document.querySelector('sails-permissions-card');
+      var myEl = document.querySelectorAll('sails-permissions-card')[0],
+          myEl2 = document.querySelectorAll('sails-permissions-card')[1];
 
       suite('<sails-permissions-card>', function() {
 
@@ -38,25 +40,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('Should set the title', function() {
 
-          expect(myEl.title).to.equal('Ryan Quinn');
-
-        });
-
-        test('Should set the subtitle', function() {
-
-          expect(myEl.subtitle).to.equal('Ping-Pong Aficionado');
+          expect(myEl.username).to.equal('Ryan Quinn');
+          expect(myEl2.name).to.equal('Admin');
 
         });
 
         test('Should set the prop title', function() {
 
             expect(myEl.propsTitle).to.equal('Roles');
+            expect(myEl2.propsTitle).to.equal('Models');
 
         });
 
         test('Should create a comma separated list of props', function() {
 
             expect(myEl.propsList).to.equal('Soldier, Sailor, Tinker, Spy');
+            expect(myEl2.propsList).to.equal('Blog Posts, Home Page');
 
         });
 

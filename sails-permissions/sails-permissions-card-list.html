@@ -129,26 +129,6 @@ Example:
 
         self.displayNewRoleButton = true;
 
-        _.forEach(self.model, function(card) {
-
-          card.permissions = _.reduce(card.permissions, function(previous, current) {
-
-            index = _.findIndex(previous, function(obj) {
-              return obj.model === current.model;
-            });
-
-            if (index === -1) {
-              previous.push(current);
-            } else {
-              previous[index].action += ', ' + current.action;
-            }
-
-            return previous;
-
-          }, []);
-
-        });
-
       }
 
     },

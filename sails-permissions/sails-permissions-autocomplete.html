@@ -132,7 +132,7 @@ Example:
     <form on-submit="_search">
       <paper-input class="border border--gray" value="{{query}}" label="{{label}}"></paper-input>
 
-      <template is="dom-if" if="[[displayDropdown]]">
+      <template is="dom-if" if="{{displayDropdown}}">
         <div on-click="_hideDropdown" class="dropdown-screen"></div>
         <section class="menu--container">
 
