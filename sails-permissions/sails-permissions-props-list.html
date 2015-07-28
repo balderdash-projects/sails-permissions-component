@@ -53,7 +53,7 @@ Example:
       <sails-permissions-autocomplete type="{{type}}" on-submit="_submit"></sails-permissions-autocomplete>
 
       <template is="dom-repeat" items="{{props}}">
-        <sails-permissions-prop title="{{item}}" type="{{type}}"/>
+        <sails-permissions-prop model="{{item}}" type="{{type}}"/>
       </template>
 
   </template>
@@ -139,23 +139,6 @@ Example:
       event.stopPropagation();
 
       self._addNewProp(event.detail.selection);
-
-    },
-
-    /**
-     * A computed expression that returns either the given item's model or name,
-     * depending on what type of card is being displayed.
-     */
-
-    _nameOrModel: function(item) {
-
-      var self = this;
-
-      if (self.type === 'user') {
-        return item.name;
-      } else if (self.type === 'role') {
-        return item.model;
-      }
 
     }
 

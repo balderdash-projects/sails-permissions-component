@@ -98,10 +98,10 @@ Example:
       <template is="dom-if" if="{{displayPermissions}}">
 
         <section class="permissions--container">
-          <paper-checkbox checked="{{create}}">Create</paper-checkbox>
-          <paper-checkbox checked="{{read}}">Read</paper-checkbox>
-          <paper-checkbox checked="{{update}}">Update</paper-checkbox>
-          <paper-checkbox checked="{{delete}}">Delete</paper-checkbox>
+          <paper-checkbox checked="{{model.action.create}}">Create</paper-checkbox>
+          <paper-checkbox checked="{{model.action.read}}">Read</paper-checkbox>
+          <paper-checkbox checked="{{model.action.update}}">Update</paper-checkbox>
+          <paper-checkbox checked="{{model.action.delete}}">Delete</paper-checkbox>
         </section>
 
       </template>
@@ -120,8 +120,13 @@ Example:
 
     properties: {
 
+      model: {
+        type: Object,
+      },
+
       title: {
         type: String,
+        computed: '_generateName(model)'
       },
 
       type: {
@@ -285,6 +290,23 @@ Example:
       var self = this;
 
       self.displayPermissions = !self.displayPermissions;
+
+    },
+
+    /**
+     * A computed expression that returns either the given item's model or name,
+     * depending on what type of card is being displayed.
+     */
+
+    _generateName: function(item) {
+
+      var self = this;
+
+      if (item.name) {
+        return item.name;
+      } else if (item.relation === 'role') {
+        return item.model.name;
+      }
 
     }
 

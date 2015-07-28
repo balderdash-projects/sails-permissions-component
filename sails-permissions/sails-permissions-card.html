@@ -325,6 +325,14 @@ Example:
       var self = this,
           baseObject;
 
+      if (props.base.length === 0) {
+        if (self.type === 'user') {
+          return ['No Roles Found'];
+        } else if (self.type === 'role') {
+          return ['No Permissions Found'];
+        }
+      }
+
       return _.reduce(props.base, function(prev, current) {
 
         if (self.type === 'user') {
@@ -349,7 +357,6 @@ Example:
 
       if (self.type === 'role') {
         response = self._dehydrate(response);
-        debugger;
       }
 
       response.forEach(function(prop) {
