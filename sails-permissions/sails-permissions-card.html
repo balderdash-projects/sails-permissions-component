@@ -248,7 +248,7 @@ Example:
       if (self.type === 'user') {
         ironAjax.url = 'http://localhost:1337/user/' + self.model.id + '/roles/';
       } else if (self.type === 'role') {
-        ironAjax.url = 'http://localhost:1337/role/' + self.model.id + '/permissions/';
+        ironAjax.url = 'http://localhost:1337/permission?where={"role":' + self.model.id + '}&populate=model';
       }
 
       ironAjax.generateRequest();
@@ -280,7 +280,10 @@ Example:
 
     },
 
-    /** A function that takes an array of permissions and condenses the role -> permissions relationship. */
+    /**
+     * A function that takes an array of permissions and condenses all the
+     * permissions for a given role into one object.  One Role to Many Perms.
+     */
 
     _dehydrate: function(perms) {
 
@@ -289,7 +292,7 @@ Example:
       reducedPerms = perms.reduce(function(prev, current) {
 
         var index = _.findIndex(prev, function(obj) {
-          return obj.model === current.model;
+          return obj.model.id === current.model.id;
         });
 
         if (index === -1) {
@@ -324,7 +327,11 @@ Example:
 
       return _.reduce(props.base, function(prev, current) {
 
-        prev.push(current);
+        if (self.type === 'user') {
+          prev.push(current.name);
+        } else if (self.type === 'role') {
+          prev.push(current.model.name);
+        }
 
         return prev;
 
@@ -337,21 +344,26 @@ Example:
       var self = this,
           response = event.detail.response;
 
+      /** Removing this is bad */
       self.props = [];
 
       if (self.type === 'role') {
-
         response = self._dehydrate(response);
-        response.forEach(function(prop) {
-          self.push('props', prop.id);
-        });
+        debugger;
+      }
 
+      response.forEach(function(prop) {
+        self.push('props', prop);
+      });
+
+    },
+
+    _printName: function(item) {
+
+      if (self.type === 'role') {
+        return item.name;
       } else if (self.type === 'user') {
-
-        response.forEach(function(prop) {
-          self.push('props', prop.name);
-        });
-
+        return item.model.name;
       }
 
     }
