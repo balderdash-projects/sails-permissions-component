@@ -50,6 +50,11 @@ Example:
 
   <template>
 
+      <iron-ajax
+        on-response="_handleRemovePropResponse"
+        headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
+        debounce-duration="300"></iron-ajax>
+
       <sails-permissions-autocomplete type="{{type}}" on-submit="_submit"></sails-permissions-autocomplete>
 
       <template is="dom-repeat" items="{{props}}">
@@ -77,6 +82,9 @@ Example:
       },
       newProp: {
         type: Object
+      },
+      owner: {
+        type: String
       }
 
     },
@@ -90,6 +98,7 @@ Example:
       //
       // This is the point where you should make modifications to the DOM (when
       // necessary), or kick off any processes the element wants to perform.
+
 
     },
 
@@ -120,15 +129,33 @@ Example:
 
     },
 
+    _handleRemovePropResponse: function(event) {
+
+      var self = this,
+          prop,
+          index;
+
+      if (event.detail.response.status === 200) {
+
+        prop = event.detail.response.role;
+        index = _.findIndex(self.props, function(obj) {
+          return obj.name === prop || obj.model === prop;
+        });
+
+        self.splice('props', index, 1);
+      }
+
+    },
+
     _removeProp: function(prop) {
 
-      var self = this;
+      var self = this,
+          ironAjax = self.$$('iron-ajax');
 
-      index = _.findIndex(self.props, function(obj) {
-        return obj.name === prop || obj.model === prop;
-      });
+      console.log('should remove ' + prop + ' from ' + self.user);
 
-      self.splice('props', index, 1);
+      ironAjax.url = 'http://localhost:1337/user/' + self.user + '/revoke/' + prop;
+      ironAjax.generateRequest();
 
     },
 
