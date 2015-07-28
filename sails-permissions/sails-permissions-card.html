@@ -296,7 +296,7 @@ Example:
         });
 
         if (index === -1) {
-          current.action = current.action.split('');
+          current.action = current.action.split();
           prev.push(current);
         } else {
           prev[index].action.push(current.action);

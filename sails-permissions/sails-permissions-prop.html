@@ -122,6 +122,7 @@ Example:
 
       model: {
         type: Object,
+        notify: true
       },
 
       title: {
@@ -220,39 +221,7 @@ Example:
         self.permissionsLabel = 'Edit';
       }
 
-      self.addEventListener('create-changed', function(event) {
-
-        event.stopPropagation();
-
-        self.action.create = self.create;
-
-      });
-
-      self.addEventListener('read-changed', function(event) {
-
-        event.stopPropagation();
-
-        self.action.read = self.read;
-
-      });
-
-      self.addEventListener('update-changed', function(event) {
-
-        event.stopPropagation();
-
-        self.action.update = self.update;
-
-      });
-
-      self.addEventListener('delete-changed', function(event) {
-
-        event.stopPropagation();
-
-        self.action.delete = self.delete;
-
-      });
-
-      self.addEventListener('action-changed', function() {
+      self.addEventListener('model-changed', function() {
         debugger;
       });
 
