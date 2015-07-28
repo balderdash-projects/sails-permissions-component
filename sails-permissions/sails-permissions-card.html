@@ -280,6 +280,43 @@ Example:
 
     },
 
+    /** A function that takes an array of permissions and condenses the role -> permissions relationship. */
+
+    _dehydrate: function(perms) {
+
+      var output, reducedPerms;
+
+      reducedPerms = perms.reduce(function(prev, current) {
+
+        var index = _.findIndex(prev, function(obj) {
+          return obj.model === current.model;
+        });
+
+        if (index === -1) {
+          current.action = current.action.split('');
+          prev.push(current);
+        } else {
+          prev[index].action.push(current.action);
+        }
+
+        return prev;
+
+      },[]);
+
+      reducedPerms.forEach(function(el) {
+        var obj = {};
+        el.action = (function() {
+          el.action.forEach(function(elem) {
+            obj[elem] = true;
+          });
+          return obj;
+        }());
+      });
+
+      return reducedPerms;
+
+    },
+
     _makePropsList: function(props) {
 
       var self = this,
@@ -297,15 +334,25 @@ Example:
 
     _handleResponse: function(event) {
 
-      var self = this;
+      var self = this,
+          response = event.detail.response;
 
       self.props = [];
 
-      event.detail.response.forEach(function(prop) {
+      if (self.type === 'role') {
 
-        self.push('props', prop.name);
+        response = self._dehydrate(response);
+        response.forEach(function(prop) {
+          self.push('props', prop.id);
+        });
 
-      });
+      } else if (self.type === 'user') {
+
+        response.forEach(function(prop) {
+          self.push('props', prop.name);
+        });
+
+      }
 
     }
 
