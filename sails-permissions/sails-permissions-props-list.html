@@ -67,6 +67,8 @@ Example:
 
 <script>
 
+  var ironAjax;
+
   Polymer({
 
     is: 'sails-permissions-props-list',
@@ -110,6 +112,10 @@ Example:
       // visual state or active behavior (measuring sizes, beginning animations,
       // loading resources, etc).
 
+      var self = this;
+
+      ironAjax = self.$$('iron-ajax');
+
     },
 
     detached: function() {
@@ -132,29 +138,51 @@ Example:
     _handleRemovePropResponse: function(event) {
 
       var self = this,
-          prop,
+          id,
           index;
 
-      if (event.detail.response.status === 200) {
+      if (event.detail.response.status >= 200) {
 
-        prop = event.detail.response.role;
+        id = event.detail.response.role.id;
+
         index = _.findIndex(self.props, function(obj) {
-          return obj.name === prop || obj.model === prop;
+          return obj.id == id.toString();
         });
 
         self.splice('props', index, 1);
+
+      } else {
+
+        console.log(event.detail.response);
+
       }
 
     },
 
-    _removeProp: function(prop) {
+    /**
+     * Makes a call to a Sails controller, passing the userid and roleid to
+     * Permissions service for removal.
+     */
 
-      var self = this,
-          ironAjax = self.$$('iron-ajax');
+    _removeRole: function(roleid) {
 
-      console.log('should remove ' + prop + ' from ' + self.user);
+      var self = this;
 
-      ironAjax.url = 'http://localhost:1337/user/' + self.user + '/revoke/' + prop;
+      userid = self.parent;
+
+      ironAjax.url = 'http://localhost:1337/user/' + userid + '/revoke/' + roleid;
+      ironAjax.generateRequest();
+
+    },
+
+    /**
+     * Makes a call to a Sails controller, passing the roleid and modelid to
+     * Permissions service for removal.
+     */
+
+    _removeModel: function(roleid, modelid) {
+
+      ironAjax.url = 'http://localhost:1337/role/' + roleid + '/revoke/' + modelid;
       ironAjax.generateRequest();
 
     },

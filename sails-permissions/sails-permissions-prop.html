@@ -245,12 +245,18 @@ Example:
 
     },
 
+    /** Passes the ID of a property and it's owner to remove. */
+
     // Element Behavior
     _removeThisProp: function(event) {
 
       var self = this;
 
-      self.parentNode._removeProp(self.model.name);
+      if (self.type === 'user') {
+        self.parentNode._removeRole(self.model.id);
+      } else if (self.type === 'role') {
+        // self.parentNode._removeModel(self.);
+      }
 
     },
 
