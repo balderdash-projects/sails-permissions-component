@@ -129,6 +129,11 @@ Example:
 
   <template>
 
+    <iron-ajax
+      on-response="_handleSearchResponse"
+      headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
+      debounce-duration="300"></iron-ajax>
+
     <form on-submit="_search">
       <paper-input class="border border--gray" value="{{query}}" label="{{label}}"></paper-input>
 
@@ -248,16 +253,21 @@ Example:
 
         });
 
+        self.ironAjax = self.$$('iron-ajax');
+
         self.helper.on('error', function(error) {
           console.log(error);
         });
 
         if (self.type === 'user') {
+
           self.label = 'New Role';
           self.noResultsMessage = 'No matching role found.  Click to create it.'
 
         } else if (self.type === 'role') {
+
           self.label = 'New Model';
+
         }
 
       },
@@ -361,13 +371,16 @@ Example:
 
         var self = this;
 
-        self.selection = {title: details.item.dataId, permissions: {}};
+        self.selection = {name: details.item.dataId, permissions: {}};
         self._hideDropdown();
+
         self.$$('paper-menu').selected = null;
 
-        if (!self.selection.title) {
+        if (!self.selection.name) {
           return;
         }
+
+        debugger;
 
         self.fire('submit', {selection: self.selection});
 
@@ -398,12 +411,26 @@ Example:
           return;
         }
 
-        self.helper.setQuery(self.query).search();
+        if (self.type === 'user') {
+          self.ironAjax.url = 'http://localhost:1337/user/search/' + self.query;
+        } else if (self.type === 'role') {
+          self.ironAjax.url = 'http://localhost:1337/role/search/' + self.query;
+        }
+
+        self.ironAjax.generateRequest();
 
         self.throttle = true;
         self.async(function() {
           self.throttle = false;
         }, 500);
+
+      },
+
+      _handleSearchResponse: function(event) {
+
+        var self = this;
+
+        self.results = event.detail.response.matches;
 
       },
 
