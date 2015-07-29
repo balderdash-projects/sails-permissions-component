@@ -209,7 +209,12 @@ Example:
 
       event.stopPropagation();
 
-      self.ironAjax.url = 'http://localhost:1337/user/' + self.parent + '/grant/' + event.detail.selection.id;
+      if (self.type === 'user') {
+        self.ironAjax.url = 'http://localhost:1337/user/' + self.parent + '/grant/' + event.detail.selection.id;
+      } else if (self.type == 'role') {
+        self.ironAjax.url = 'http://localhost:1337/role/' + self.parent + '/grant/' + event.detail.selection.id;
+      }
+
       self.ironAjax.generateRequest().completes
       .then(function() {
         self._addNewProp(event.detail.selection);

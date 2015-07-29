@@ -296,6 +296,11 @@ Example:
         });
 
         if (index === -1) {
+
+          if (current.action === null) {
+            return prev;
+          }
+
           current.action = current.action.split();
           prev.push(current);
         } else {
@@ -338,7 +343,7 @@ Example:
         if (self.type === 'user') {
           prev.push(current.name);
         } else if (self.type === 'role') {
-          prev.push(current.model.name);
+          prev.push(current.name || current.model.name);
         }
 
         return prev;

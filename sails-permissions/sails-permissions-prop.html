@@ -262,7 +262,10 @@ Example:
       if (self.type === 'user') {
         self.parentNode._removeRole(self.model.id);
       } else if (self.type === 'role') {
-        self.parentNode._removeModel(self.model.role, self.model.model.id);
+        self.parentNode._removeModel(
+          self.model.role,
+          self.model.model.id
+        );
       }
 
     },
@@ -320,9 +323,17 @@ Example:
           target = event.type.replace('-changed', '');
 
       if (self[target]) {
-        self._addPermission(self.model.role, self.model.model.id, target);
+        self._addPermission(
+          self.model.role,
+          self.model.id || self.model.model.id,
+          target
+        );
       } else {
-        self._removePermission(self.model.role, self.model.model.id, target);
+        self._removePermission(
+          self.model.role,
+          self.model.id || self.model.model.id,
+          target
+        );
       }
 
     },

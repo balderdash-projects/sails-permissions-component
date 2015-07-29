@@ -235,29 +235,7 @@ Example:
 
         var self = this;
 
-        client = algoliasearch('32IYXAAIS8', '9beb6f922d72f88e1611849dbcc8390d');
-        self.helper = algoliasearchHelper( client, 'dev_sailsPermissionsComponent', {
-          facets: ['name']
-        });
-
-        self.helper.on('result', function(data) {
-
-            /**
-             * todo - filter out unhelpful matches on the server side rather than
-             * doing it here
-             */
-
-            self.results = data.hits.filter(function(el) {
-              return el.name;
-            });
-
-        });
-
         self.ironAjax = self.$$('iron-ajax');
-
-        self.helper.on('error', function(error) {
-          console.log(error);
-        });
 
         if (self.type === 'user') {
 
