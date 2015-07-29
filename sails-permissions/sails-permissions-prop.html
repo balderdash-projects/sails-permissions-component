@@ -120,6 +120,8 @@ Example:
 
 <script>
 
+  var ironAjax;
+
   Polymer({
 
     is: 'sails-permissions-prop',
@@ -236,6 +238,10 @@ Example:
       // visual state or active behavior (measuring sizes, beginning animations,
       // loading resources, etc).
 
+      var self = this;
+
+      self.ironAjax = self.$$('iron-ajax');
+
     },
 
     detached: function() {
@@ -292,15 +298,19 @@ Example:
 
     _removePermission: function(roleid, modelid, action) {
 
-      ironAjax.url = 'http://localhost:1337/role/' + roleid + '/revoke/' + modelid + '/' + action;
-      ironAjax.generateRequest();
+      var self = this;
+
+      self.ironAjax.url = 'http://localhost:1337/role/' + roleid + '/revoke/' + modelid + '/' + action;
+      self.ironAjax.generateRequest();
 
     },
 
     _addPermission: function(roleid, modelid, action) {
 
-      ironAjax.url = 'http://localhost:1337/role/' + roleid + '/grant/' + modelid + '/' + action;
-      ironAjax.generateRequest();
+      var self = this;
+
+      self.ironAjax.url = 'http://localhost:1337/role/' + roleid + '/grant/' + modelid + '/' + action;
+      self.ironAjax.generateRequest();
 
     },
 
