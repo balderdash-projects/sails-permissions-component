@@ -67,8 +67,6 @@ Example:
 
 <script>
 
-  var ironAjax;
-
   Polymer({
 
     is: 'sails-permissions-props-list',
@@ -114,7 +112,7 @@ Example:
 
       var self = this;
 
-      ironAjax = self.$$('iron-ajax');
+      self.ironAjax = self.$$('iron-ajax');
 
     },
 
@@ -183,8 +181,8 @@ Example:
 
       userid = self.parent;
 
-      ironAjax.url = 'http://localhost:1337/user/' + userid + '/revoke/' + roleid;
-      ironAjax.generateRequest();
+      self.ironAjax.url = 'http://localhost:1337/user/' + userid + '/revoke/' + roleid;
+      self.ironAjax.generateRequest();
 
     },
 
@@ -195,8 +193,12 @@ Example:
 
     _removeModel: function(roleid, modelid) {
 
-      ironAjax.url = 'http://localhost:1337/role/' + roleid + '/revoke/' + modelid;
-      ironAjax.generateRequest();
+      var self = this;
+
+      debugger;
+
+      self.ironAjax.url = 'http://localhost:1337/role/' + roleid + '/revoke/' + modelid;
+      self.ironAjax.generateRequest();
 
     },
 
