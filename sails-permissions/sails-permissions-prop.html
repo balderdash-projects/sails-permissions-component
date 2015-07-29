@@ -255,7 +255,7 @@ Example:
       if (self.type === 'user') {
         self.parentNode._removeRole(self.model.id);
       } else if (self.type === 'role') {
-        // self.parentNode._removeModel(self.);
+        self.parentNode._removeModel(self.model.role, self.model.model.id);
       }
 
     },
