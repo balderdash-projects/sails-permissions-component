@@ -143,7 +143,7 @@ Example:
 
           <paper-menu on-iron-select="_select">
             <template is="dom-repeat" items="[[results]]">
-              <paper-item data-id="[[item.name]]">
+              <paper-item data-name="[[item.name]]" data-id="[[item.id]]">
                 <paper-item-body>
                   <div>[[item.name]]</div>
                 </paper-item-body>
@@ -371,7 +371,12 @@ Example:
 
         var self = this;
 
-        self.selection = {name: details.item.dataId, permissions: {}};
+        self.selection = {
+          name: details.item.dataName,
+          id: details.item.dataId,
+          permissions: {}
+        };
+
         self._hideDropdown();
 
         self.$$('paper-menu').selected = null;
@@ -379,8 +384,6 @@ Example:
         if (!self.selection.name) {
           return;
         }
-
-        debugger;
 
         self.fire('submit', {selection: self.selection});
 

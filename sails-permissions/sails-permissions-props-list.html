@@ -50,9 +50,7 @@ Example:
 
   <template>
 
-      <iron-ajax
-        on-response="_handleRemovePropResponse"
-        headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
+      <iron-ajax headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
         debounce-duration="300"></iron-ajax>
 
       <sails-permissions-autocomplete type="{{type}}" on-submit="_submit"></sails-permissions-autocomplete>
@@ -99,7 +97,6 @@ Example:
       // This is the point where you should make modifications to the DOM (when
       // necessary), or kick off any processes the element wants to perform.
 
-
     },
 
     attached: function() {
@@ -140,7 +137,7 @@ Example:
           index,
           response;
 
-      response = event.detail.response;
+      response = event.response;
 
       if (response.status >= 200) {
 
@@ -182,7 +179,10 @@ Example:
       userid = self.parent;
 
       self.ironAjax.url = 'http://localhost:1337/user/' + userid + '/revoke/' + roleid;
-      self.ironAjax.generateRequest();
+      self.ironAjax.generateRequest().completes
+      .then(function(response) {
+        self._handleRemovePropResponse(response);
+      });
 
     },
 
@@ -195,22 +195,25 @@ Example:
 
       var self = this;
 
-      debugger;
-
       self.ironAjax.url = 'http://localhost:1337/role/' + roleid + '/revoke/' + modelid;
-      self.ironAjax.generateRequest();
+      self.ironAjax.generateRequest().completes
+      .then(function(response) {
+        self._handleRemovePropResponse(response);
+      });
 
     },
 
     _submit: function(event) {
 
-      debugger;
-
       var self = this;
 
       event.stopPropagation();
 
-      self._addNewProp(event.detail.selection);
+      self.ironAjax.url = 'http://localhost:1337/user/' + self.parent + '/grant/' + event.detail.selection.id;
+      self.ironAjax.generateRequest().completes
+      .then(function() {
+        self._addNewProp(event.detail.selection);
+      });
 
     }
 
