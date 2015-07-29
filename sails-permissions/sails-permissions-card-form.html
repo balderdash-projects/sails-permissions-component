@@ -15,6 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../paper-item/paper-item.html">
 <link rel="import" href="../../paper-button/paper-button.html">
 <link rel="import" href="../../paper-ripple/paper-ripple.html">
+<link rel="import" href="../../iron-ajax/iron-ajax.html">
 <link rel="import" href="../lodash.html">
 
 <link rel="import" href="sails-permissions-props-list.html">
@@ -90,6 +91,11 @@ Example:
   </style>
 
   <template>
+
+    <iron-ajax
+      on-response="_handleTogglePermissionResponse"
+      headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
+      debounce-duration="300"></iron-ajax>
 
     <paper-material elevation="{{elevation}}">
       <paper-item>
@@ -182,6 +188,10 @@ Example:
       // This is a good place to perform any work related to your element's
       // visual state or active behavior (measuring sizes, beginning animations,
       // loading resources, etc).
+
+      var self = this;
+
+      self.ironAjax = self.$$('iron-ajax');
 
     },
 
