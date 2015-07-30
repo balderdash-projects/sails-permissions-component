@@ -64,6 +64,13 @@ Example:
 
   <template>
 
+      <iron-ajax
+        method="POST"
+        url="http://localhost:1337/role/create/"
+        contentType="application/json"
+        headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
+        debounce-duration="300"></iron-ajax>
+
       <template is="dom-if" if="[[displayNewRoleForm]]">
         <sails-permissions-card-form on-submit="_addNewCard"></sails-permissions-card-form>
       </template>
@@ -141,6 +148,10 @@ Example:
       // visual state or active behavior (measuring sizes, beginning animations,
       // loading resources, etc).
 
+      var self = this;
+
+      self.ironAjax = self.$$('iron-ajax');
+
     },
 
     detached: function() {
@@ -167,16 +178,26 @@ Example:
 
     _addNewCard: function(event) {
 
-      debugger;
-
       var self = this;
 
       event.stopPropagation();
 
-      self.unshift('model', event.detail.model);
+      self.ironAjax.params = {
+        name: event.detail.model.name,
+        props: JSON.stringify(event.detail.model.props)
+      };
 
-      self.displayNewRoleForm = false;
-      self.displayNewRoleButton = true;
+      self.ironAjax.generateRequest().completes
+      .then(function(server) {
+
+        event.detail.model.id = server.response.role.id;
+
+        self.unshift('model', event.detail.model);
+
+        self.displayNewRoleForm = false;
+        self.displayNewRoleButton = true;
+
+      });
 
     }
 

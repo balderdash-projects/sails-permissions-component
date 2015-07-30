@@ -319,19 +319,31 @@ Example:
 
     _togglePermission: function(event) {
 
-      var self = this,
-          target = event.type.replace('-changed', '');
+      var self = this, target;
+
+      _.extend(self.model.permissions, {
+        create: self.create,
+        read: self.read,
+        update: self.update,
+        delete: self.update
+      });
+
+      if (self.parentElement.nosubmit) {
+        return;
+      }
+
+      target = event.type.replace('-changed', '');
 
       if (self[target]) {
         self._addPermission(
           self.model.role,
-          self.model.id || self.model.model.id,
+          self.model.model.id || self.model.id,
           target
         );
       } else {
         self._removePermission(
           self.model.role,
-          self.model.id || self.model.model.id,
+          self.model.model.id || self.model.id,
           target
         );
       }

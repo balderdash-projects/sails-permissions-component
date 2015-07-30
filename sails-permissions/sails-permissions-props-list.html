@@ -83,6 +83,9 @@ Example:
       },
       owner: {
         type: String
+      },
+      nosubmit: {
+        type: Boolean
       }
 
     },
@@ -208,6 +211,10 @@ Example:
       var self = this;
 
       event.stopPropagation();
+
+      if (self.nosubmit) {
+        return self._addNewProp(event.detail.selection);
+      }
 
       if (self.type === 'user') {
         self.ironAjax.url = 'http://localhost:1337/user/' + self.parent + '/grant/' + event.detail.selection.id;

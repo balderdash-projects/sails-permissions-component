@@ -92,11 +92,6 @@ Example:
 
   <template>
 
-    <iron-ajax
-      on-response="_handleTogglePermissionResponse"
-      headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
-      debounce-duration="300"></iron-ajax>
-
     <paper-material elevation="{{elevation}}">
       <paper-item>
 
@@ -109,7 +104,7 @@ Example:
 
         <div class="input--container">
           <p class="input--instructions">Please enter at least one model for the new role.</p>
-          <sails-permissions-props-list type="role" props="{{props}}"></sails-permissions-props-list>
+          <sails-permissions-props-list type="role" props="{{props}}" nosubmit></sails-permissions-props-list>
         </div>
 
         <div class="button--container">
@@ -191,8 +186,6 @@ Example:
 
       var self = this;
 
-      self.ironAjax = self.$$('iron-ajax');
-
     },
 
     detached: function() {
@@ -203,17 +196,6 @@ Example:
     },
 
     // Element Behavior
-
-    /** A function that fires a ripple animation when the form is toggled on */
-
-    _triggerRipple: function() {
-
-      var self = this;
-
-      self.$$('paper-ripple').downAction({x: 0, y: 0});
-      self.$$('paper-ripple').upAction();
-
-    },
 
     /** A function that collects information provided by the user and performs
      * simple input validation.  If a given field is missing, an alert is
@@ -244,7 +226,7 @@ Example:
       }
 
       self.model = {
-        title: self.title,
+        name: self.title,
         props: self.props
       };
 
