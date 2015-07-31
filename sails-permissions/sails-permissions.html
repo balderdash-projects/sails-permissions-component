@@ -146,12 +146,6 @@ Example:
 
       var self = this;
 
-      _.forEach(self.roles, function(obj) {
-
-        obj.permissions = self.dehydrate(obj.permissions);
-
-      });
-
       self.$.user.url = self.sailsUrl + 'user/';
       self.$.user.headers = {Authorization: self.authorization};
       self.$.user.generateRequest().completes
