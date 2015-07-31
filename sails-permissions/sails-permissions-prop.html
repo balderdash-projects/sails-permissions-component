@@ -207,7 +207,7 @@ Example:
         self.displayPermissionsButton = true;
       }
 
-      if (self.model.action) {
+      if (self.model && self.model.action) {
 
         _.forEach(self.model.action, function(el, key) {
 

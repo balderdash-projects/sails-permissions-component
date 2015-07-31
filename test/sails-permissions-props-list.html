@@ -24,7 +24,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
 
     <!-- You can use the document as a place to set up your fixtures. -->
-    <sails-permissions-props-list props='[{"name":"Blog Posts","permissions":{"create":true,"read":true,"update":true,"delete":true}},{"name":"Product Pages","permissions":{"create":true,"read":true,"update":true,"delete":true}}]' type="user"></sails-permissions-props-list>
+    <sails-permissions-props-list type="user" props='[{"name":"registered","id":2,"permissions":{}},{"name":"admin","active":true,"createdAt":"2015-07-31T13:28:33.275Z","updatedAt":"2015-07-31T13:28:33.275Z","id":1},{"name":"registered","active":true,"createdAt":"2015-07-31T13:28:33.277Z","updatedAt":"2015-07-31T13:28:33.277Z","id":2}]'></sails-permissions-props-list>
 
     <script>
       var myEl = document.querySelector("sails-permissions-props-list");
@@ -61,7 +61,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           flush(function() {
 
-            expect(document.querySelectorAll('sails-permissions-prop').length).to.equal(2);
+            expect(document.querySelectorAll('sails-permissions-prop').length).to.equal(3);
             done();
 
           });
@@ -70,13 +70,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test("Should add a new sails-permissions-prop", function(done) {
 
-          var newProp = {name: 'Potato Brain'};
+          var newProp = {name: 'Potato Brains', id: 5};
 
           myEl._addNewProp(newProp);
 
           flush(function() {
 
-            expect(document.querySelectorAll('sails-permissions-prop').length).to.equal(3);
+            expect(document.querySelectorAll('sails-permissions-prop').length).to.equal(4);
 
             done();
 
@@ -84,18 +84,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         });
 
-        test("Should remove a specific sails-permissions-prop", function(done) {
+        test("Should handle a response from the server to remove a property", function() {
 
-          myEl._removeProp("Potato Brain");
+          var fakeEvent = {
+            response: {
+              status: 200,
+              role: {
+                name: 'Potato Brains',
+                id: 5,
+              }
+            }
+          };
+
+          myEl._handleRemovePropResponse(fakeEvent);
 
           flush(function() {
 
             var index = _.findIndex(myEl.props, function(obj) {
-              return obj.name === 'Potato Brain';
+              return obj.id === 5;
             });
 
+            expect(myEl.props.length).to.equal(3);
             expect(index).to.equal(-1);
-            done();
 
           });
 
