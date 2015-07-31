@@ -14,6 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../paper-styles/paper-styles.html">
 <link rel="import" href="../../paper-item/paper-item.html">
 <link rel="import" href="../../paper-button/paper-button.html">
+<link rel="import" href="../../iron-ajax/iron-ajax.html">
 <link rel="import" href="../lodash.html">
 
 <link rel="import" href="sails-permissions-props-list.html">
@@ -111,12 +112,19 @@ Example:
 
   <template>
 
+    <iron-ajax
+      auto="false"
+      method="get"
+      handle-as="json"
+      on-response="_handleResponse"
+      headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
+      debounce-duration="300"></iron-ajax>
+
     <paper-material elevation="{{elevation}}">
       <paper-item>
 
         <header>
-          <h3 class="title">[[title]]</h3>
-          <p class="tagline">[[subtitle]]</p>
+          <h3 class="title">[[name]]</h3>
         </header>
 
         <template is="dom-if" if="{{!expanded}}">
@@ -135,7 +143,7 @@ Example:
         <template is="dom-if" if="{{expanded}}">
 
           <section class="props">
-            <sails-permissions-props-list type="{{type}}" props="{{props}}"></sails-permissions-props-list>
+            <sails-permissions-props-list type="{{type}}" props="{{props}}" parent="[[model.id]]"></sails-permissions-props-list>
 
             <div class="button--container">
               <paper-button class="button--less" on-click="_toggleSize">Done</paper-button>
@@ -182,7 +190,8 @@ Example:
       },
 
       props: {
-        type: Array
+        type: Array,
+        value: []
       },
 
       propsList: {
@@ -217,8 +226,10 @@ Example:
 
       if (self.type === 'user') {
         self.propsTitle = 'Roles';
+        self.name = self.model.username;
       } else if (self.type === 'role') {
         self.propsTitle = 'Models';
+        self.name = self.model.name;
       }
 
     },
@@ -230,6 +241,17 @@ Example:
       // This is a good place to perform any work related to your element's
       // visual state or active behavior (measuring sizes, beginning animations,
       // loading resources, etc).
+
+      var self = this,
+          ironAjax = self.$$('iron-ajax');
+
+      if (self.type === 'user') {
+        ironAjax.url = 'http://localhost:1337/user/' + self.model.id + '/roles/';
+      } else if (self.type === 'role') {
+        ironAjax.url = 'http://localhost:1337/permission?where={"role":' + self.model.id + '}&populate=model';
+      }
+
+      ironAjax.generateRequest();
 
     },
 
@@ -258,20 +280,105 @@ Example:
 
     },
 
-    _makePropsList: function(props) {
+    /**
+     * A function that takes an array of permissions and condenses all the
+     * permissions for a given role into one object.  One Role to Many Perms.
+     */
 
-      if (_.isObject(props.base[0])) {
+    _dehydrate: function(perms) {
 
-        return _.reduce(props.base, function(prev, current) {
-          prev.push(current.title);
-          return prev;
-        }, []).join(', ');
+      var output, reducedPerms;
 
-      } else {
-        return props.base.join(', ');
-      }
+      reducedPerms = perms.reduce(function(prev, current) {
+
+        var index = _.findIndex(prev, function(obj) {
+          return obj.model.id === current.model.id;
+        });
+
+        if (index === -1) {
+
+          if (current.action === null) {
+            return prev;
+          }
+
+          current.action = current.action.split();
+          prev.push(current);
+        } else {
+          prev[index].action.push(current.action);
+        }
+
+        return prev;
+
+      },[]);
+
+      reducedPerms.forEach(function(el) {
+        var obj = {};
+        el.action = (function() {
+          el.action.forEach(function(elem) {
+            obj[elem] = true;
+          });
+          return obj;
+        }());
+      });
+
+      return reducedPerms;
 
     },
+
+    _makePropsList: function(props) {
+
+      var self = this,
+          baseObject;
+
+      if (props.base.length === 0) {
+        if (self.type === 'user') {
+          return ['No Roles Found'];
+        } else if (self.type === 'role') {
+          return ['No Permissions Found'];
+        }
+      }
+
+      return _.reduce(props.base, function(prev, current) {
+
+        if (self.type === 'user') {
+          prev.push(current.name);
+        } else if (self.type === 'role') {
+          prev.push(current.name || current.model.name);
+        }
+
+        return prev;
+
+      }, []).join(', ');
+
+    },
+
+    _handleResponse: function(event) {
+
+      var self = this,
+          response = event.detail.response;
+
+      /** Removing this is bad */
+      self.props = [];
+
+      if (self.type === 'role') {
+        response = self._dehydrate(response);
+      }
+
+      response.forEach(function(prop) {
+        self.push('props', prop);
+      });
+
+    },
+
+    _printName: function(item) {
+
+      if (self.type === 'role') {
+        return item.name;
+      } else if (self.type === 'user') {
+        return item.model.name;
+      }
+
+    }
 
   });
 

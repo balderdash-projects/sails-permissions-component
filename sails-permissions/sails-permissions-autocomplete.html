@@ -17,9 +17,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../lodash.html">
 
-<script src="../../algoliasearch/dist/algoliasearch.min.js"></script>
-<script src="../../algoliasearch-helper/dist/algoliasearch.helper.min.js"></script>
-
 <!--
 An element that provides a search box to make calls to the Algolia search service.
 When a selection has been made, it exposes the selection on an 'selection' attribute
@@ -129,16 +126,21 @@ Example:
 
   <template>
 
+    <iron-ajax
+      on-response="_handleSearchResponse"
+      headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
+      debounce-duration="300"></iron-ajax>
+
     <form on-submit="_search">
       <paper-input class="border border--gray" value="{{query}}" label="{{label}}"></paper-input>
 
-      <template is="dom-if" if="[[displayDropdown]]">
+      <template is="dom-if" if="{{displayDropdown}}">
         <div on-click="_hideDropdown" class="dropdown-screen"></div>
         <section class="menu--container">
 
           <paper-menu on-iron-select="_select">
             <template is="dom-repeat" items="[[results]]">
-              <paper-item data-id="[[item.name]]">
+              <paper-item data-name="[[item.name]]" data-id="[[item.id]]">
                 <paper-item-body>
                   <div>[[item.name]]</div>
                 </paper-item-body>
@@ -230,34 +232,17 @@ Example:
 
         var self = this;
 
-        client = algoliasearch('32IYXAAIS8', '9beb6f922d72f88e1611849dbcc8390d');
-        self.helper = algoliasearchHelper( client, 'dev_sailsPermissionsComponent', {
-          facets: ['name']
-        });
-
-        self.helper.on('result', function(data) {
-
-            /**
-             * todo - filter out unhelpful matches on the server side rather than
-             * doing it here
-             */
-
-            self.results = data.hits.filter(function(el) {
-              return el.name;
-            });
-
-        });
-
-        self.helper.on('error', function(error) {
-          console.log(error);
-        });
+        self.ironAjax = self.$$('iron-ajax');
 
         if (self.type === 'user') {
+
           self.label = 'New Role';
           self.noResultsMessage = 'No matching role found.  Click to create it.'
 
         } else if (self.type === 'role') {
+
           self.label = 'New Model';
+
         }
 
       },
@@ -361,11 +346,17 @@ Example:
 
         var self = this;
 
-        self.selection = {title: details.item.dataId, permissions: {}};
+        self.selection = {
+          name: details.item.dataName,
+          id: details.item.dataId,
+          permissions: {}
+        };
+
         self._hideDropdown();
+
         self.$$('paper-menu').selected = null;
 
-        if (!self.selection.title) {
+        if (!self.selection.name) {
           return;
         }
 
@@ -398,12 +389,26 @@ Example:
           return;
         }
 
-        self.helper.setQuery(self.query).search();
+        if (self.type === 'user') {
+          self.ironAjax.url = 'http://localhost:1337/user/search/' + self.query;
+        } else if (self.type === 'role') {
+          self.ironAjax.url = 'http://localhost:1337/role/search/' + self.query;
+        }
+
+        self.ironAjax.generateRequest();
 
         self.throttle = true;
         self.async(function() {
           self.throttle = false;
         }, 500);
+
+      },
+
+      _handleSearchResponse: function(event) {
+
+        var self = this;
+
+        self.results = event.detail.response.matches;
 
       },
 

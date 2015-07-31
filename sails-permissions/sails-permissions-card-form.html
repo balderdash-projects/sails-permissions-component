@@ -15,6 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../paper-item/paper-item.html">
 <link rel="import" href="../../paper-button/paper-button.html">
 <link rel="import" href="../../paper-ripple/paper-ripple.html">
+<link rel="import" href="../../iron-ajax/iron-ajax.html">
 <link rel="import" href="../lodash.html">
 
 <link rel="import" href="sails-permissions-props-list.html">
@@ -103,7 +104,7 @@ Example:
 
         <div class="input--container">
           <p class="input--instructions">Please enter at least one model for the new role.</p>
-          <sails-permissions-props-list type="role" props="{{props}}"></sails-permissions-props-list>
+          <sails-permissions-props-list type="role" props="{{props}}" nosubmit></sails-permissions-props-list>
         </div>
 
         <div class="button--container">
@@ -183,6 +184,8 @@ Example:
       // visual state or active behavior (measuring sizes, beginning animations,
       // loading resources, etc).
 
+      var self = this;
+
     },
 
     detached: function() {
@@ -193,17 +196,6 @@ Example:
     },
 
     // Element Behavior
-
-    /** A function that fires a ripple animation when the form is toggled on */
-
-    _triggerRipple: function() {
-
-      var self = this;
-
-      self.$$('paper-ripple').downAction({x: 0, y: 0});
-      self.$$('paper-ripple').upAction();
-
-    },
 
     /** A function that collects information provided by the user and performs
      * simple input validation.  If a given field is missing, an alert is
@@ -234,7 +226,7 @@ Example:
       }
 
       self.model = {
-        title: self.title,
+        name: self.title,
         props: self.props
       };
 

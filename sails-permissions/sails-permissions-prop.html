@@ -14,6 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../iron-icons/iron-icons.html">
 <link rel="import" href="../../iron-media-query/iron-media-query.html">
+<link rel="import" href="../../iron-ajax/iron-ajax.html">
 
 <link rel="import" href="../lodash.html">
 <link rel="import" href="../../polymer/polymer.html">
@@ -79,6 +80,11 @@ Example:
     <iron-media-query query="(min-width: 1024px)" query-matches="{{tablet}}">
     </iron-media-query>
 
+    <iron-ajax
+      on-response="_handleTogglePermissionResponse"
+      headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
+      debounce-duration="300"></iron-ajax>
+
     <paper-item>
 
       <section class="description--container">
@@ -114,23 +120,30 @@ Example:
 
 <script>
 
+  var ironAjax;
+
   Polymer({
 
     is: 'sails-permissions-prop',
 
     properties: {
 
+      model: {
+        type: Object,
+        notify: true
+      },
+
       title: {
         type: String,
+        computed: '_generateName(model)'
       },
 
       type: {
         type: String
       },
 
-      permissions: {
+      action: {
         type: Object,
-        value: {},
         notify: true
       },
 
@@ -194,8 +207,14 @@ Example:
         self.displayPermissionsButton = true;
       }
 
-      if (self.permissions && Object.keys(self.permissions).length) {
-        _.extend(self, self.permissions);
+      if (self.model.action) {
+
+        _.forEach(self.model.action, function(el, key) {
+
+          self[key] = el;
+
+        });
+
       }
 
       if (self.tablet) {
@@ -204,37 +223,10 @@ Example:
         self.permissionsLabel = 'Edit';
       }
 
-      self.addEventListener('create-changed', function(event) {
-
-        event.stopPropagation();
-
-        self.permissions.create = self.create;
-
-      });
-
-      self.addEventListener('read-changed', function(event) {
-
-        event.stopPropagation();
-
-        self.permissions.read = self.read;
-
-      });
-
-      self.addEventListener('update-changed', function(event) {
-
-        event.stopPropagation();
-
-        self.permissions.update = self.update;
-
-      });
-
-      self.addEventListener('delete-changed', function(event) {
-
-        event.stopPropagation();
-
-        self.permissions.delete = self.delete;
-
-      });
+      self.addEventListener('create-changed', self._togglePermission);
+      self.addEventListener('read-changed', self._togglePermission);
+      self.addEventListener('update-changed', self._togglePermission);
+      self.addEventListener('delete-changed', self._togglePermission);
 
     },
 
@@ -246,6 +238,10 @@ Example:
       // visual state or active behavior (measuring sizes, beginning animations,
       // loading resources, etc).
 
+      var self = this;
+
+      self.ironAjax = self.$$('iron-ajax');
+
     },
 
     detached: function() {
@@ -256,12 +252,21 @@ Example:
 
     },
 
+    /** Passes the ID of a property and it's owner to remove. */
+
     // Element Behavior
     _removeThisProp: function(event) {
 
       var self = this;
 
-      self.parentNode._removeProp(self.title);
+      if (self.type === 'user') {
+        self.parentNode._removeRole(self.model.id);
+      } else if (self.type === 'role') {
+        self.parentNode._removeModel(
+          self.model.role,
+          self.model.model.id
+        );
+      }
 
     },
 
@@ -270,6 +275,84 @@ Example:
       var self = this;
 
       self.displayPermissions = !self.displayPermissions;
+
+    },
+
+    /**
+     * A computed expression that returns either the given item's model or name,
+     * depending on what type of card is being displayed.
+     */
+
+    _generateName: function(item) {
+
+      var self = this;
+
+      if (item.name) {
+        return item.name;
+      } else if (item.relation === 'role') {
+        return item.model.name;
+      }
+
+    },
+
+    /**
+     * A function that revokes a specific action from role in relation to a model.
+     */
+
+    _removePermission: function(roleid, modelid, action) {
+
+      var self = this;
+
+      self.ironAjax.url = 'http://localhost:1337/role/' + roleid + '/revoke/' + modelid + '/' + action;
+      self.ironAjax.generateRequest();
+
+    },
+
+    _addPermission: function(roleid, modelid, action) {
+
+      var self = this;
+
+      self.ironAjax.url = 'http://localhost:1337/role/' + roleid + '/grant/' + modelid + '/' + action;
+      self.ironAjax.generateRequest();
+
+    },
+
+    _togglePermission: function(event) {
+
+      var self = this, target;
+
+      _.extend(self.model.permissions, {
+        create: self.create,
+        read: self.read,
+        update: self.update,
+        delete: self.update
+      });
+
+      if (self.parentElement.nosubmit) {
+        return;
+      }
+
+      target = event.type.replace('-changed', '');
+
+      if (self[target]) {
+        self._addPermission(
+          self.model.role,
+          self.model.model.id || self.model.id,
+          target
+        );
+      } else {
+        self._removePermission(
+          self.model.role,
+          self.model.model.id || self.model.id,
+          target
+        );
+      }
+
+    },
+
+    _handleTogglePermissionResponse: function(event) {
+
+      console.log(event.detail.response);
 
     }
 
