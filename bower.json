@@ -4,15 +4,15 @@
   "authors": [
     "W. Blaine Price <1wbprice@gmail.com>"
   ],
-  "description": "An element that provides an interface to specific sails-permissions"
+  "description": "An element that provides an interface to specific sails-permissions",
   "keywords": [
     "web-component",
     "polymer",
     "seed"
   ],
   "main": "sails-permissions.html",
-  "license": "http://polymer.github.io/LICENSE.txt",
-  "homepage": "https://github.com/<USERNAME>/seed-element/",
+  "license": "MIT",
+  "homepage": "https://github.com/balderdash-projects/sails-permissions-component",
   "ignore": [
     "/.*",
     "/test/"
@@ -31,6 +31,8 @@
     "install": "~1.0.4",
     "sinonjs": "~1.14.1",
     "sinon": "~1.15.4",
+    "algoliasearch": "~3.7.4",
+    "algoliasearch-helper": "~2.1.2",
     "paper-menu": "PolymerElements/paper-menu#~1.0.1",
     "iron-form": "PolymerElements/iron-form#~1.0.7",
     "iron-icon": "PolymerElements/iron-icon#~1.0.2",

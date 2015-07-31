@@ -21,16 +21,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 <!--
-An element providing a solution to no problem in particular.
+
+An expandable card element that represents a single User or Role.
 
 Example:
+```<sails-permissions-card model={{item}} type=[[type]]></sails-permissions-card>```
 
-  <sails-permissions-card></sails-permissions-card>
-
-@group Seed Elements
-@element seed-element
-@demo demo/index.html
-@hero hero.svg
 -->
 <dom-module id="sails-permissions-card">
 
@@ -116,7 +112,6 @@ Example:
       auto="false"
       method="get"
       handle-as="json"
-      on-response="_handleResponse"
       headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
       debounce-duration="300"></iron-ajax>
 
@@ -169,35 +164,52 @@ Example:
 
     properties: {
 
+      /** The name of the User or Role. Example: ```travis``` or ```registered```. */
       title: {
         type: String,
       },
 
+      /** Is this a ```role``` or a ```user``` card? */
       type: {
         type: String
       },
 
+      /** An object containing information pertaining to the given User or Role */
       model: {
         type: Object
       },
 
-      subtitle: {
-        type: String,
-      },
+      /**
+       * A title that describes the properties that belong to the given User or Role.
+       *
+       * Example: ```Roles``` or ```Models```
+       */
 
       propsTitle: {
         type: String
       },
+
+      /**
+       * An array of objects containing information related to specific Roles or Models.
+       */
 
       props: {
         type: Array,
         value: []
       },
 
+      /**
+       * A computed property that renders the list of Roles or Models as a String
+       */
+
       propsList: {
         type: Array,
         computed: '_makePropsList(props.*)'
       },
+
+      /**
+       * Tracks if the card is expanded or compact.
+       */
 
       expanded: {
         type: Boolean,
@@ -251,7 +263,23 @@ Example:
         ironAjax.url = 'http://localhost:1337/permission?where={"role":' + self.model.id + '}&populate=model';
       }
 
-      ironAjax.generateRequest();
+      ironAjax.generateRequest().completes
+      .then(function(event) {
+
+        response = event.response;
+
+        /** Removing this is bad */
+        self.props = [];
+
+        if (self.type === 'role') {
+          response = self._dehydrate(response);
+        }
+
+        response.forEach(function(prop) {
+          self.push('props', prop);
+        });
+
+      });
 
     },
 
@@ -264,7 +292,10 @@ Example:
 
     // Element Behavior
 
-    /** A function that toggles the compact/expanded state of <sails-permissions-card> */
+    /**
+     * A function that toggles the compact/expanded state of ```<sails-permissions-card>```.
+     * Also animates the elevation attribute of ```<paper-material>```
+     */
 
     _toggleSize: function() {
 
@@ -282,7 +313,12 @@ Example:
 
     /**
      * A function that takes an array of permissions and condenses all the
-     * permissions for a given role into one object.  One Role to Many Perms.
+     * permissions for a given role into one object.  This does not change the
+     * anything in the database, it just serves to make managing Permissions easier
+     * in the GUI.
+     *
+     * @returns {object}
+     * An object containing keys and values that relate to CRUD actions.
      */
 
     _dehydrate: function(perms) {
@@ -325,6 +361,11 @@ Example:
 
     },
 
+    /**
+     * A function that reduces an Array of properties under a User or Role into
+     * a String.
+     */
+
     _makePropsList: function(props) {
 
       var self = this,
@@ -352,23 +393,10 @@ Example:
 
     },
 
-    _handleResponse: function(event) {
-
-      var self = this,
-          response = event.detail.response;
-
-      /** Removing this is bad */
-      self.props = [];
-
-      if (self.type === 'role') {
-        response = self._dehydrate(response);
-      }
-
-      response.forEach(function(prop) {
-        self.push('props', prop);
-      });
-
-    },
+    /**
+     * Data structures for Roles and Users are different, so this function
+     * serves to print the correct name for the given card.
+     */
 
     _printName: function(item) {
 

@@ -13,16 +13,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="sails-permissions/sails-permissions-card-list.html">
 
 <!--
-A single property of the user or role.
 
-Example:
+  Provides a GUI for sails-permissions.
 
-  <sails-permissions-field-list></sails-permissions-field-list>
+  <b>Example</b>:
 
-@group Seed Elements
-@element seed-element
-@demo demo/index.html
-@hero hero.svg
+  ```<sails-permissions sails-url="http://localhost:1337/" authorization="Basic YWRtaW46YWRtaW4xMjM0"></sails-permissions>```
+
+  @demo
+
 -->
 
 <dom-module id="sails-permissions">
@@ -100,20 +99,35 @@ Example:
 
     properties: {
 
+      /**
+       * An array that contains objects relating to all the users coming back
+       * from the server.
+       */
       user: {
         type: Array,
         value: []
       },
 
+      /**
+       * An array that contains objects relating to all the roles coming back
+       * from the server.
+       */
       role: {
         type: Array,
         value: []
       },
 
+      /**
+       * A string containing the base url for the backend.
+       * Example: ```http://localhost:1337/```
+       */
       sailsUrl: {
         type: String
       },
 
+      /**
+       * String used for Basic Authorization.  Looks like ```"Basic YWRtaW46YWRtaW4xMjM0"```
+       */
       authorization: {
         type: String
       }
@@ -129,8 +143,6 @@ Example:
       //
       // This is the point where you should make modifications to the DOM (when
       // necessary), or kick off any processes the element wants to perform.
-
-      var self = this;
 
     },
 
