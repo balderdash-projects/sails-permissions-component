@@ -22,16 +22,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="sails-permissions-alerts.html">
 
 <!--
-An element providing a solution to no problem in particular.
+A form that allows the user to create a new Role, optionally creating
+relationships with existing Models and adding Permissions.  When the form is
+submitted, emits a submit event and activates a given handler.
 
 Example:
 
-  <sails-permissions-card></sails-permissions-card>
+    <sails-permissions-card-form
+      on-submit="_handler"></sails-permissions-card-form>
 
-@group Seed Elements
-@element seed-element
-@demo demo/index.html
-@hero hero.svg
 -->
 <dom-module id="sails-permissions-card-form">
 
@@ -131,30 +130,34 @@ Example:
 
     properties: {
 
+      /** The name of the Role to be created. */
       title: {
         type: String,
       },
 
+      /**
+       * An object containing configuration information relating to the new Role,
+       * passed to the parent component on submit.
+       */
       model: {
         type: Object,
         value: {}
       },
+
+      /**
+       * A array of objects that describe the Models and Permissions to be
+       * associated with the new Role.
+       */
 
       props: {
         type: Array,
         value: []
       },
 
-      permissions: {
-        type: Object,
-        value: {}
-      },
-
-      expanded: {
-        type: Boolean,
-        value: true,
-        readOnly: true
-      },
+      /**
+       * An array that contains error objects that are created when input validation
+       * fails after user attempts to submit the form.
+       */
 
       errors: {
         type: Array,
@@ -183,8 +186,6 @@ Example:
       // This is a good place to perform any work related to your element's
       // visual state or active behavior (measuring sizes, beginning animations,
       // loading resources, etc).
-
-      var self = this;
 
     },
 

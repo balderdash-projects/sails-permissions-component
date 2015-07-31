@@ -20,11 +20,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../lodash.html">
 
 <!--
-A single property of the user or role.
+A set of cards that display various Users and Roles that are registered with Sails.
 
 Example:
 
-  <sails-permissions-field-list></sails-permissions-field-list>
+    <sails-permissions-card-list
+      type="user"
+      model="{{user}}"></sails-permissions-card-list>
+
 
 @group Seed Elements
 @element seed-element
@@ -66,7 +69,7 @@ Example:
 
       <iron-ajax
         method="POST"
-        url="http://localhost:1337/role/create/"
+        url="http://localhost:1337/role/make/"
         contentType="application/json"
         headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
         debounce-duration="300"></iron-ajax>
@@ -102,15 +105,29 @@ Example:
 
     properties: {
 
+      /**
+       * An array of objects that contain Models or Roles coming back from
+       * the server.
+       */
+
       model: {
-        type: Object,
-        notify: true
+        type: Array,
       },
+
+      /**
+       * A boolean that determines if the 'New Role+' button should be displayed.
+       * Should only be true if the list type is 'Role'
+       */
 
       displayNewRoleButton: {
         type: Boolean,
         value: false
       },
+
+      /**
+       * A boolean that determines if the 'New Role Creator' form should be
+       * displayed.
+       */
 
       displayNewRoleForm: {
         type: Boolean,
@@ -174,7 +191,12 @@ Example:
 
     },
 
-    /** Adds a new card to the list by mutating the list. */
+    /**
+     * Adds a new card to the list by mutating the array.  Makes a call to the
+     * API.  On success, will add the new card to the list.
+     *
+     * _addNewCard is passed as the event handler for submit on ```<sails-permission-card-form>```
+     */
 
     _addNewCard: function(event) {
 

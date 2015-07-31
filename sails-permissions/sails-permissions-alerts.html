@@ -14,16 +14,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../iron-icons/iron-icons.html">
 
 <!--
-An element providing a solution to no problem in particular.
+
+An element providing simple user feedback.
 
 Example:
 
-  <sails-permissions-alerts></sails-permissions-alerts>
+    <sails-permissions-alerts
+      status="good"
+      message="Everything is fine here."></sails-permissions-alerts>
 
-@group Seed Elements
-@element seed-element
-@demo demo/index.html
-@hero hero.svg
 -->
 
 <dom-module id="sails-permissions-alerts">
@@ -94,14 +93,17 @@ Example:
 
     properties: {
 
+      /** How concerned should I be? Example: ```good```, ```warning```, ```error``` */
       status: {
         type: String
       },
 
+      /** What is the text of the message? */
       message: {
         type: String
       },
 
+      /** Which icon should be used? Determined using passed in status. */
       icon: {
         type: String
       }

@@ -23,8 +23,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
 
     <!-- You can use the document as a place to set up your fixtures. -->
-    <sails-permissions-card type="user" model='{"username":"Ryan Quinn","roles":[{"name":"Soldier"},{"name":"Sailor"},{"name":"Tinker"},{"name":"Spy"}]}'></sails-permissions-card>
-    <sails-permissions-card type="role" model='{"name":"Admin","permissions":[{"model":"Blog Posts","action":"create, read, update, delete"},{"model":"Home Page","action":"create, read, update, delete"}]}'></sails-permissions-card>
+    <sails-permissions-card type="user" model='{"username":"travis","email":"travis@theemail.com","createdAt":"2015-07-31T13:28:33.988Z","updatedAt":"2015-07-31T13:28:34.001Z","id":2,"owner":2,"gravatarUrl":"https://gravatar.com/avatar/c1bfd7ed55991fdcded7e95d356de5f7"}'></sails-permissions-card>
+    <sails-permissions-card type="role" model='{"name":"registered","active":true,"createdAt":"2015-07-31T13:28:33.277Z","updatedAt":"2015-07-31T13:28:33.277Z","id":2}'></sails-permissions-card>
 
     <script>
       var myEl = document.querySelectorAll('sails-permissions-card')[0],
@@ -40,8 +40,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('Should set the title', function() {
 
-          expect(myEl.username).to.equal('Ryan Quinn');
-          expect(myEl2.name).to.equal('Admin');
+          expect(myEl.name).to.equal('travis');
+          expect(myEl2.name).to.equal('registered');
 
         });
 
@@ -52,11 +52,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         });
 
-        test('Should create a comma separated list of props', function() {
+        test('Should create a comma separated list of props', function(done) {
 
-            expect(myEl.propsList).to.equal('Soldier, Sailor, Tinker, Spy');
-            expect(myEl2.propsList).to.equal('Blog Posts, Home Page');
+            myEl.props = JSON.parse('[{"name":"admin","active":true,"createdAt":"2015-07-31T13:28:33.275Z","updatedAt":"2015-07-31T13:28:33.275Z","id":1},{"name":"registered","active":true,"createdAt":"2015-07-31T13:28:33.277Z","updatedAt":"2015-07-31T13:28:33.277Z","id":2}]');
 
+            flush(function() {
+
+              expect(myEl.propsList).to.equal('admin, registered');
+
+              done();
+
+            });
         });
 
       });

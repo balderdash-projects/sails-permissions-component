@@ -68,7 +68,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('shouldn\'t search if there isn\'t a query', function(done) {
 
-          var stub = sinon.stub(myEl.helper, 'search', function() {
+          var ironAjax = myEl.$$('iron-ajax');
+
+          var stub = sinon.stub(ironAjax, 'generateRequest', function() {
             return true;
           });
 
@@ -76,7 +78,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           flush(function() {
             expect(stub).to.have.not.been.called;
-            myEl.helper.search.restore();
+            ironAjax.generateRequest.restore();
             done();
           });
 
@@ -149,7 +151,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               fakeEvent,
               details = {
                 item: {
-                  dataId: 'Arugala'
+                  dataId: '5',
+                  dataName: 'Arugala'
                 }
               };
 
@@ -165,7 +168,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('shouldn\'t search if the throttle is active', function(done) {
 
-          var stub = sinon.stub(myEl.helper, 'search', function() {
+          var ironAjax = myEl.$$('iron-ajax');
+
+          var stub = sinon.stub(ironAjax, 'generateRequest', function() {
             return true;
           });
 
@@ -174,7 +179,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           flush(function() {
             expect(stub).to.have.not.been.called;
-            myEl.helper.search.restore();
+            ironAjax.generateRequest.restore();
             done();
           });
 

@@ -1,18 +1,18 @@
 {
-  "name": "seed-element",
-  "version": "1.0.0",
+  "name": "sails-permissions",
+  "version": "0.1.0",
   "authors": [
-    "Anonymous <anonymous@example.com>"
+    "W. Blaine Price <1wbprice@gmail.com>"
   ],
-  "description": "An element providing a solution to no problem in particular.",
+  "description": "An element that provides an interface to specific sails-permissions",
   "keywords": [
     "web-component",
     "polymer",
     "seed"
   ],
-  "main": "seed-element.html",
-  "license": "http://polymer.github.io/LICENSE.txt",
-  "homepage": "https://github.com/<USERNAME>/seed-element/",
+  "main": "sails-permissions.html",
+  "license": "MIT",
+  "homepage": "https://github.com/balderdash-projects/sails-permissions-component",
   "ignore": [
     "/.*",
     "/test/"
