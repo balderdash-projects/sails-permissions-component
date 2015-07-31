@@ -20,16 +20,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../polymer/polymer.html">
 
 <!--
-A single property of the user or role.
+A single property of the user or role.  If the type is ```role```, optionally
+displays a series of checkboxes which allow the user to toggle the allowed
+actions on the model by the role.
 
 Example:
 
-  <sails-permissions-field></sails-permissions-field>
+    <sails-permissions-prop
+      model="{{item}}"
+      type="{{type}}"></sails-permissions-prop>
 
-@group Seed Elements
-@element seed-element
-@demo demo/index.html
-@hero hero.svg
 -->
 
 <dom-module id="sails-permissions-prop">
@@ -81,7 +81,6 @@ Example:
     </iron-media-query>
 
     <iron-ajax
-      on-response="_handleTogglePermissionResponse"
       headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
       debounce-duration="300"></iron-ajax>
 
@@ -128,28 +127,43 @@ Example:
 
     properties: {
 
+      /**
+       * An object passed to sails-permissions-prop containing the name,
+       * id, and actions of a given Model or Role.
+       */
+
       model: {
         type: Object,
         notify: true
       },
+
+      /** Computed property, is title of the Role or Model */
 
       title: {
         type: String,
         computed: '_generateName(model)'
       },
 
+      /** User or Role? */
+
       type: {
         type: String
       },
+
+      /** What actions are allowed on this Model? */
 
       action: {
         type: Object,
         notify: true
       },
 
+      /** What is the text of the 'Edit Permissions' button? */
+
       permissionsLabel: {
         type: String
       },
+
+      /** Is the ```create``` action allowed on this Model for this Role? */
 
       create: {
         type: Boolean,
@@ -157,11 +171,15 @@ Example:
         notify: true
       },
 
+      /** Is the ```read``` action allowed on this Model for this Role? */
+
       read: {
         type: Boolean,
         value: false,
         notify: true
       },
+
+      /** Is the ```update``` action allowed on this Model for this Role? */
 
       update: {
         type: Boolean,
@@ -169,20 +187,28 @@ Example:
         notify: true
       },
 
+      /** Is the ```delete``` action allowed on this Model for this Role? */
+
       delete: {
         type: Boolean,
         value: false,
         notify: true
       },
 
+      /** Is the user on a tablet or bigger sized device? */
+
       tablet: {
         type: Boolean
       },
+
+      /** Should the ```Edit Permissions``` button be displayed? */
 
       displayPermissionsButton: {
         type: Boolean,
         value: false
       },
+
+      /** Should the Permission Action checkboxes be displayed? */
 
       displayPermissions: {
         type: Boolean,
@@ -250,11 +276,20 @@ Example:
       //
       // Use this to clean up anything you did in `attached`.
 
+      self.removeEventListener('create-changed', self._togglePermission);
+      self.removeEventListener('read-changed', self._togglePermission);
+      self.removeEventListener('update-changed', self._togglePermission);
+      self.removeEventListener('delete-changed', self._togglePermission);
+
     },
 
-    /** Passes the ID of a property and it's owner to remove. */
-
     // Element Behavior
+
+    /**
+     * Calls the parent element's _removeRole or _removeModel methods when the
+     * delete button on the prop is clicked.
+     */
+
     _removeThisProp: function(event) {
 
       var self = this;
@@ -269,6 +304,11 @@ Example:
       }
 
     },
+
+    /**
+     * Toggles the visibility of checkboxes which modify the actions available to
+     * the given role for a specific model.  Only applicable to Role cards.
+     */
 
     _toggleDisplayPermissions: function(event) {
 
@@ -296,7 +336,9 @@ Example:
     },
 
     /**
-     * A function that revokes a specific action from role in relation to a model.
+     * A function that revokes a specific action belonging to a role in relation
+     * to a model. If action is not defined, remove all actions belonging to the
+     * role for that model.
      */
 
     _removePermission: function(roleid, modelid, action) {
@@ -308,6 +350,11 @@ Example:
 
     },
 
+    /**
+     * A function that grants a specific action to a role in relation
+     * to a model.
+     */
+
     _addPermission: function(roleid, modelid, action) {
 
       var self = this;
@@ -316,6 +363,11 @@ Example:
       self.ironAjax.generateRequest();
 
     },
+
+    /**
+     * A method to toggle the state of a specific action belonging to a role in
+     * relation to a model.
+     */
 
     _togglePermission: function(event) {
 
@@ -349,6 +401,11 @@ Example:
       }
 
     },
+
+    /**
+     * Logs the response from the server to the console when a
+     * action is granted or revoked.
+     */
 
     _handleTogglePermissionResponse: function(event) {
 

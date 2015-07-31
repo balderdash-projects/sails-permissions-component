@@ -18,13 +18,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../lodash.html">
 
 <!--
-An element that provides a search box to make calls to the Algolia search service.
-When a selection has been made, it exposes the selection on an 'selection' attribute
-and fires off a 'submit' event, which can be handled with a callback on the component.
+An element which provides a text input with simple text completion.  When the
+user begins typing the name of a Role or User, it makes a call to the server
+and fills a dropdown menu with the results.
 
 Example:
 
-    <app-algolia-search on-submit="callback"/>
+    <sails-permissions-autocomplete
+      type="{{type}}"
+      on-submit="_submit"></sails-permissions-autocomplete>
 
 @demo
 -->
@@ -32,24 +34,6 @@ Example:
 <dom-module id="sails-permissions-autocomplete">
 
   <style>
-
-    /**
-     * Provisional Colors: Should be moved into a centralized style sheet and
-     * guide at some point.
-     *
-     * gray-darker: #808286;
-     * gray-dark: #85878A;
-     * gray: #8A8D8F;
-     * gray-light: #E2E3E4;
-     *
-     * .border {
-     *   border: 1px solid #efefef;
-     * }
-     *
-     * .border--gray {
-     *   border-color: #E2E3E4;
-     * }
-     */
 
      a {
        text-decoration: none;
@@ -182,10 +166,11 @@ Example:
         label: {
           type: String
         },
+        /** Is this a User or Role related autocomplete?*/
         type: {
           type: String
         },
-        /** Results coming from Algolia */
+        /** Results coming from the server */
         results: {
           type: Array
         },
@@ -194,6 +179,10 @@ Example:
           type: Boolean,
           computed: '_displayDropdown(results, query)'
         },
+        /**
+         * A computed property that determines whether or not to display
+         * the `no results` message.
+         */
         displayNoResults: {
           type: Boolean,
           computed: '_displayNoResults(results)'
@@ -208,7 +197,7 @@ Example:
         helper: {
           type: Object
         },
-        /** A throttle property */
+        /** A throttle boolean. If true, search request is stopped doesn't happen. */
         throttle: {
           type: Boolean
         },
@@ -306,7 +295,7 @@ Example:
        * be displayed
        *
        * @param {array} results
-       * The array of current results coming from Algolia
+       * The array of current results coming from the server.
        */
 
       _displayNoResults: function(results) {
@@ -320,9 +309,7 @@ Example:
        * returns the result. 
        *
        * @param {boolean} results
-       * Statement One
        * @param {boolean} query
-       * Statment Two
        */
 
       _displayDropdown: function(results, query) {
@@ -365,9 +352,8 @@ Example:
       },
 
       /**
-       * Makes a throttled search call to Algolia.
+       * Makes a throttled search call to the server.
        * @param {string} query
-       * The contents of the input field.
        */
 
       _search: function(event) {
@@ -395,7 +381,10 @@ Example:
           self.ironAjax.url = 'http://localhost:1337/role/search/' + self.query;
         }
 
-        self.ironAjax.generateRequest();
+        self.ironAjax.generateRequest().completes
+        .then(function(response) {
+          self.results = event.response.matches;
+        });
 
         self.throttle = true;
         self.async(function() {
@@ -404,13 +393,7 @@ Example:
 
       },
 
-      _handleSearchResponse: function(event) {
-
-        var self = this;
-
-        self.results = event.detail.response.matches;
-
-      },
+      /** Toggles the state of the `New Role` form. */
 
       _toggleNewRoleForm: function() {
 
