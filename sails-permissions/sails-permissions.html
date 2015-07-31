@@ -76,8 +76,6 @@ Example:
       <iron-ajax id="user"
         auto="false"
         method="get"
-        url="http://localhost:1337/user/"
-        headers='{"Authorization": "Basic YWRtaW46YWRtaW4xMjM0"}'
         handleAs='json'
         on-response='_handleUserResponse'
         debounce-duration="300"></iron-ajax>
@@ -161,10 +159,10 @@ Example:
       });
 
       self.$.user.url = self.sailsUrl + 'user/';
-      self.$.user.headers = '{"Authorization":' + self.authorization + '}'
+      self.$.role.headers = '{"Authorization": "' + self.authorization + '"}'
 
       self.$.role.url = self.sailsUrl + 'role/';
-      self.$.role.headers = '{"Authorization":' + self.authorization + '}'
+      self.$.role.headers = '{"Authorization": "' + self.authorization + '"}'
 
     },
 
